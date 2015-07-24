@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/drawer_menu_group_general">
+        <item
+            android:id="@+id/drawer_home"
+            android:icon="@drawable/ic_dashboard"
+            android:title="@string/drawer_home_title"
+            />
+
+        <item
+            android:id="@+id/drawer_notifications"
+            android:icon="@drawable/ic_notifications_black_24dp"
+            android:title="@string/drawer_notifications_title"
+            />
+
+        <item
+            android:id="@+id/drawer_settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/drawer_settings_title"
+            />
+
+    </group>
+
+    <item android:title="@string/drawer_servers_title">
+        <menu>
+            <group android:id="@+id/drawer_menu_group_servers">
+                <item
+                    android:icon="@drawable/ic_dashboard"
+                    android:title="Server 1" />
+                <item
+                    android:icon="@drawable/ic_dashboard"
+                    android:title="Server 2" />
+            </group>
+        </menu>
+    </item>
+
+</menu>

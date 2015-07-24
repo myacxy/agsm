@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_color1">#6EC2EB</color>
+    <color name="primary_color2">#43B1E6</color>
+    <color name="primary_color3">#1BA1E2</color>
+    <color name="primary_color4">#0696DC</color>
+    <color name="primary_color5">#036797</color>
+
+    <color name="secondary_color1">#FFD770</color>
+    <color name="secondary_color2">#FFCA41</color>
+    <color name="secondary_color3">#FFBE13</color>
+    <color name="secondary_color4">#FFB800</color>
+    <color name="secondary_color5">#EFAD00</color>
+
+
+    <color name="tertiary_color1">#FF8E70</color>
+    <color name="tertiary_color2">#FF6841</color>
+    <color name="tertiary_color3">#FF4413</color>
+    <color name="tertiary_color4">#FF3500</color>
+    <color name="tertiary_color5">#EF3200</color>
+
+
+    <color name="complement_color1">#FFBD70</color>
+    <color name="complement_color2">#FFA741</color>
+    <color name="complement_color3">#FF9113</color>
+    <color name="complement_color4">#FF8900</color>
+    <color name="complement_color5">#EF8000</color>
+
+    <color name="ideal_foreground_color">#FFFFFFFF</color>
+</resources>
