@@ -6,11 +6,14 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -22,9 +25,12 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.ViewById;
 
 @EFragment(R.layout.fragment_server)
+@OptionsMenu(R.menu.menu_server)
 public class ServerFragment extends BaseToolbarFragment
 {
     @ViewById(R.id.viewpager)
@@ -88,8 +94,15 @@ public class ServerFragment extends BaseToolbarFragment
     @Click(R.id.fab)
     void refresh()
     {
-        Snackbar.make(refreshButton, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+        Snackbar.make(refreshButton, "Here's a Snackbar.", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }
 
+    @OptionsItem(android.R.id.home)
+    boolean homeSelected(MenuItem item)
+    {
+        DrawerLayout drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        drawerLayout.openDrawer(GravityCompat.START);
+        return true;
+    }
 }

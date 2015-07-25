@@ -24,7 +24,6 @@ public abstract class BaseToolbarFragment extends Fragment
         ab.setDisplayHomeAsUpEnabled(true);
     }
 
-
     protected void showToastMessage(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }

@@ -1,53 +1,58 @@
 package net.myacxy.agsm.fragments;
 
-import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import net.myacxy.agsm.R;
 
-public class AddServerFragment extends DialogFragment
-{
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.ViewById;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+@EFragment(R.layout.fragment_add_server)
+@OptionsMenu(R.menu.menu_add_server)
+public class AddServerFragment extends BaseToolbarFragment
+{
+    @ViewById(R.id.fab)
+    FloatingActionButton doneButton;
+
+    @AfterViews
+    void initialize()
+    {
+        super.initialize();
+
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
         actionBar.setTitle(getString(R.string.server_add_title));
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    @OptionsItem(R.id.menu_add_server_save)
+    boolean saveSelected(MenuItem item)
     {
-        View view = inflater.inflate(R.layout.fragment_add_server, container, false);
-        return view;
+        Toast.makeText(getActivity(), "save", Toast.LENGTH_SHORT).show();
+        return true;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_add_server, menu);
-        super.onCreateOptionsMenu(menu, inflater);
+    @OptionsItem(android.R.id.home)
+    boolean closeSelected(MenuItem item)
+    {
+        getFragmentManager().popBackStack();
+        return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
-            case(R.id.save):
-                Toast.makeText(getActivity(), "save", Toast.LENGTH_SHORT);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
+    @Click(R.id.fab)
+    void doneSelected()
+    {
+        Snackbar.make(doneButton, "Here's a Snackbar.", Snackbar.LENGTH_LONG)
+                .setAction("Action", null)
+                .show();
     }
 } // AddServerFragment

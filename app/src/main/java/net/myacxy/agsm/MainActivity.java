@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity
     @OptionsItem(android.R.id.home)
     boolean homeSelected(MenuItem item)
     {
-        drawerLayout.openDrawer(GravityCompat.START);
-        return true;
+        // let child fragments handle what happens
+        return false;
     }
 
     private void setupDrawerContent(final NavigationView navigationView)
