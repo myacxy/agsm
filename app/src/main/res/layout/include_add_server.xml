@@ -11,9 +11,9 @@
 
     <!--game selection-->
     <fr.ganfra.materialspinner.MaterialSpinner
+        android:id="@+id/server_add_game"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/server_add_game"
         android:enabled="true"
         android:spinnerMode="dropdown"
         app:ms_hint="@string/server_add_game_hint"
@@ -22,6 +22,7 @@
 
     <!--server address -->
     <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/server_add_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/server_add_address_hint"
@@ -33,6 +34,7 @@
 
     <!--server port-->
     <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/server_add_port"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"

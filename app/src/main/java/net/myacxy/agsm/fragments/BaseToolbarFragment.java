@@ -1,5 +1,6 @@
 package net.myacxy.agsm.fragments;
 
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,9 @@ import android.widget.Toast;
 
 import net.myacxy.agsm.R;
 
+import org.androidannotations.annotations.EFragment;
+
+@EFragment
 public abstract class BaseToolbarFragment extends Fragment
 {
     Toolbar toolbar;
@@ -24,6 +28,7 @@ public abstract class BaseToolbarFragment extends Fragment
         ab.setDisplayHomeAsUpEnabled(true);
     }
 
+    @UiThread
     protected void showToastMessage(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
