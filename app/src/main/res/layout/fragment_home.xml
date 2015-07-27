@@ -4,7 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/include_home"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/home_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    </android.support.v7.widget.RecyclerView>
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -28,6 +36,7 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/spacing_normal"
         android:src="@drawable/ic_add_white_24dp"
+        app:borderWidth="0dp"
         />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,21 +1,26 @@
 package net.myacxy.agsm.fragments;
 
-import android.os.Looper;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.orm.SugarRecord;
+import com.orm.query.Condition;
+import com.orm.query.Select;
 
 import net.myacxy.agsm.R;
-import net.myacxy.agsm.fragments.interfaces.AddServerListener;
+import net.myacxy.agsm.interfaces.AddServerListener;
+import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.jgsq.factory.GameFactory;
 import net.myacxy.jgsq.factory.GameServerFactory;
-import net.myacxy.jgsq.misc.Utilities;
+import net.myacxy.jgsq.utils.Utilities;
 import net.myacxy.jgsq.model.Game;
 import net.myacxy.jgsq.model.GameServer;
 
@@ -26,9 +31,9 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.api.BackgroundExecutor;
 
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @EFragment(R.layout.fragment_add_server)
@@ -86,10 +91,28 @@ public class AddServerFragment extends BaseToolbarFragment
         server.connect(address, port);
         server.update();
 
-        if(listener != null)
+        boolean duplicate = Select.from(GameServerEntity.class)
+                .where(Condition.prop("ip_address").eq(server.ipAddress))
+                .and(Condition.prop("port").eq(server.port)).count() > 0;
+
+        if(duplicate)
         {
-            listener.onServerAdded(server);
+            Snackbar.make(doneButton,
+                    String.format("%s is already known.", server.hostName),
+                    Snackbar.LENGTH_LONG)
+                    .show();
+        }
+        else
+        {
+            GameServerEntity gse = new GameServerEntity(server);
+            gse.save();
+
             getFragmentManager().popBackStack();
+
+            if(listener != null)
+            {
+                listener.onServerAdded(gse);
+            }
         }
     }
 

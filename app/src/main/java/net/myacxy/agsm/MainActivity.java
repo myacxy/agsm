@@ -2,16 +2,13 @@ package net.myacxy.agsm;
 
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import net.myacxy.agsm.fragments.HomeFragment_;
 import net.myacxy.agsm.fragments.ServerFragment_;
@@ -92,14 +89,17 @@ public class MainActivity extends AppCompatActivity
     private void changeFragment(int id)
     {
         Fragment fragment;
+        String tag = "";
         switch (id)
         {
             case R.id.drawer_home:
                 if(homeFragment == null) homeFragment = new HomeFragment_();
+                tag = "home";
                 fragment = homeFragment;
                 break;
             case R.id.drawer_notifications:
                 if(serverFragment == null) serverFragment = new ServerFragment_();
+                tag = "server";
                 fragment = serverFragment;
                 break;
             default:
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            ft.replace(R.id.main_content_layout, fragment)
+            ft.replace(R.id.main_content_layout, fragment, tag)
                     .addToBackStack(null).commit();
         }
     }
