@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId "net.myacxy.agsm"
-        minSdkVersion 22
+        minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
         versionName "0.1-" + getRevision()
@@ -62,6 +62,8 @@ dependencies {
     }
 
     compile 'com.github.satyan:sugar:1.3'
+
+    compile 'com.github.clans:fab:1.5.5'
 
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'com.jayway.android.robotium:robotium-solo:5.0.1'

@@ -29,11 +29,11 @@
     <string name="server_add_game_hint">select a game</string>
     <string name="server_add_game_title">Game</string>
     <!--RCON-->
-    <string name="server_add_rcon_hint">rcon</string>
+    <string name="server_add_rcon_hint">rcon (optional)</string>
     <string name="server_add_rcon_title">RCON</string>
     <!--Query Port-->
     <string name="server_add_query_port_helper">e.g. 27960</string>
-    <string name="server_add_query_port_hint">query port</string>
+    <string name="server_add_query_port_hint">query port (optional)</string>
     <string name="server_add_query_port_title">Query Port</string>
     <!--END Server Add-->
 </resources>

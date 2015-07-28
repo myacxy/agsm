@@ -30,10 +30,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/server_add_address_hint"
+            android:singleLine="true"
             app:met_floatingLabel="normal"
             app:met_helperText="@string/server_add_address_helper"
             app:met_floatingLabelText="@string/server_add_address_title"
-            android:enabled="true"
             />
 
         <!--server port-->
@@ -46,7 +46,6 @@
             app:met_floatingLabel="normal"
             app:met_helperText="@string/server_add_port_helper"
             app:met_floatingLabelText="@string/server_add_port_title"
-            android:enabled="true"
             />
 
         <!--rcon-->
@@ -56,9 +55,9 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:hint="@string/server_add_rcon_hint"
+            android:singleLine="true"
             app:met_floatingLabel="normal"
             app:met_floatingLabelText="@string/server_add_rcon_title"
-            android:enabled="true"
             />
         <!--query port-->
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -70,7 +69,6 @@
             app:met_floatingLabel="normal"
             app:met_floatingLabelText="@string/server_add_query_port_title"
             app:met_helperText="@string/server_add_query_port_helper"
-            android:enabled="true"
             />
 
     </LinearLayout>
