@@ -8,20 +8,23 @@ import org.androidannotations.annotations.EBean;
 import java.util.List;
 
 @EBean
-public class InDatabaseServerFinder implements ServerFinder
+public class DatabaseServerFinder implements ServerFinder
 {
     @Override
-    public List<GameServerEntity> findAll() {
+    public List<GameServerEntity> findAll()
+    {
         return GameServerEntity.listAll(GameServerEntity.class);
     }
 
     @Override
-    public List<GameServerEntity> findOnline() {
+    public List<GameServerEntity> findOnline()
+    {
         return GameServerEntity.find(GameServerEntity.class, "online = ?", "true");
     }
 
     @Override
-    public List<GameServerEntity> findOffline() {
+    public List<GameServerEntity> findOffline()
+    {
         return GameServerEntity.find(GameServerEntity.class, "online = ?", "false");
     }
 }
