@@ -5,15 +5,17 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.activeandroid.ActiveAndroid;
+import com.activeandroid.query.Select;
 import com.github.clans.fab.FloatingActionButton;
-import com.orm.query.Condition;
-import com.orm.query.Select;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import net.myacxy.agsm.R;
 import net.myacxy.agsm.interfaces.AddServerListener;
 import net.myacxy.agsm.interfaces.GameFinder;
+import net.myacxy.agsm.models.GameEntity;
 import net.myacxy.agsm.models.GameServerEntity;
+import net.myacxy.agsm.models.PlayerEntity;
 import net.myacxy.agsm.utils.IpAddressAndDomainValidator;
 import net.myacxy.agsm.utils.JsonGameFinder;
 import net.myacxy.agsm.utils.PortValidator;
@@ -21,6 +23,7 @@ import net.myacxy.agsm.views.adapters.GameSpinnerAdapter;
 import net.myacxy.jgsq.factory.GameServerFactory;
 import net.myacxy.jgsq.model.Game;
 import net.myacxy.jgsq.model.GameServer;
+import net.myacxy.jgsq.model.Player;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -28,6 +31,7 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.regex.Pattern;
@@ -39,32 +43,32 @@ import fr.ganfra.materialspinner.MaterialSpinner;
 public class AddServerFragment extends BaseToolbarFragment
 {
     @ViewById(R.id.fab)
-    FloatingActionButton doneButton;
+    protected FloatingActionButton doneButton;
 
     @ViewById(R.id.server_add_game)
-    MaterialSpinner gameSpinner;
+    protected MaterialSpinner gameSpinner;
 
     @ViewById(R.id.server_add_address)
-    MaterialEditText addressTextView;
+    protected MaterialEditText addressTextView;
 
     @ViewById(R.id.server_add_port)
-    MaterialEditText portTextView;
+    protected MaterialEditText portTextView;
 
     @ViewById(R.id.server_add_query_port)
-    MaterialEditText queryPortTextView;
+    protected MaterialEditText queryPortTextView;
 
     private AddServerListener listener;
     private GameServer server;
 
     @Bean(JsonGameFinder.class)
-    GameFinder gameFinder;
+    protected GameFinder gameFinder;
 
     @Bean(GameSpinnerAdapter.class)
-    GameSpinnerAdapter gameSpinnerAdapter;
+    protected GameSpinnerAdapter gameSpinnerAdapter;
 
 
     @AfterViews
-    void initialize()
+    protected void initialize()
     {
         super.initialize();
 
@@ -79,7 +83,7 @@ public class AddServerFragment extends BaseToolbarFragment
     }
 
     @AfterViews
-    void bindAdapter()
+    protected void bindAdapter()
     {
         gameSpinner.setAdapter(gameSpinnerAdapter);
 
@@ -89,16 +93,18 @@ public class AddServerFragment extends BaseToolbarFragment
     }
 
     @Background
-    void initializeServer(Game game, String address, int port)
+    protected void initializeServer(Game game, String address, int port)
     {
         GameServerFactory gsf = new GameServerFactory();
         server = gsf.getGameServer(game);
         server.connect(address, port);
         server.update();
 
-        boolean duplicate = Select.from(GameServerEntity.class)
-                .where(Condition.prop("ip_address").eq(server.ipAddress))
-                .and(Condition.prop("port").eq(server.port)).count() > 0;
+        boolean duplicate = new Select()
+                .from(GameServerEntity.class)
+                .where("ip_address = ? AND port = ?", server.ipAddress, server.port)
+                .execute()
+                .size() > 0;
 
         if(duplicate)
         {
@@ -106,12 +112,45 @@ public class AddServerFragment extends BaseToolbarFragment
                     String.format("%s is already known.", server.hostName),
                     Snackbar.LENGTH_LONG)
                     .show();
-            doneButton.setShowProgressBackground(false);
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            hideProgress(doneButton);
         }
         else
         {
             GameServerEntity gse = new GameServerEntity(server);
+            GameEntity knownGame = new Select()
+                    .from(GameEntity.class)
+                    .where("name = ?", gse.game.name)
+                    .executeSingle();
+
+            if(knownGame == null)
+            {
+                gse.game.save();
+            }
+            else
+            {
+                gse.game = knownGame;
+            }
+
             gse.save();
+
+            ActiveAndroid.beginTransaction();
+            try
+            {
+                for (Player player: server.players) {
+                    PlayerEntity pe = new PlayerEntity(player);
+                    pe.gameServer = gse;
+                    pe.save();
+                }
+                ActiveAndroid.setTransactionSuccessful();
+            }
+            finally {
+                ActiveAndroid.endTransaction();
+            }
 
             getFragmentManager().popBackStack();
 
@@ -122,6 +161,13 @@ public class AddServerFragment extends BaseToolbarFragment
         }
     } // initializeServer
 
+    @UiThread
+    protected void hideProgress(FloatingActionButton fab)
+    {
+        fab.setIndeterminate(false);
+        fab.setClickable(true);
+    }
+
     @OptionsItem(android.R.id.home)
     boolean closeSelected(MenuItem item)
     {
@@ -130,7 +176,7 @@ public class AddServerFragment extends BaseToolbarFragment
     }
 
     @Click(R.id.fab)
-    void doneSelected()
+    protected void doneSelected()
     {
         if(validateInput())
         {
@@ -139,11 +185,12 @@ public class AddServerFragment extends BaseToolbarFragment
             int port = Integer.parseInt(portTextView.getText().toString());
 
             initializeServer(game, address, port);
-            doneButton.setShowProgressBackground(true);
+            doneButton.setIndeterminate(true);
+            doneButton.setClickable(false);
         }
     }
 
-    private boolean validateInput()
+    protected boolean validateInput()
     {
         boolean valid = true;
         if(!validateGame(gameSpinner)) valid = false;
@@ -156,7 +203,7 @@ public class AddServerFragment extends BaseToolbarFragment
         return valid;
     }
 
-    private boolean validateGame(MaterialSpinner spinner)
+    protected boolean validateGame(MaterialSpinner spinner)
     {
         String gameName = spinner.getSelectedItem().toString();
         if(gameName.equals("select a game"))
@@ -167,12 +214,12 @@ public class AddServerFragment extends BaseToolbarFragment
         return true;
     }
 
-    private boolean validateText(MaterialEditText text)
+    protected boolean validateText(MaterialEditText text)
     {
         return text.validate();
     }
 
-    private void showSnackbar(String message)
+    protected void showSnackbar(String message)
     {
         Snackbar.make(doneButton, message, Snackbar.LENGTH_LONG)
                 .show();

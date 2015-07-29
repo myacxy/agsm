@@ -27,4 +27,6 @@
     <color name="complement_color5">#EF8000</color>
 
     <color name="ideal_foreground_color">#FFFFFFFF</color>
+    <color name="spinner_base_color">#44000000</color>
+
 </resources>

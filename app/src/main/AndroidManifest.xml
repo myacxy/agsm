@@ -9,12 +9,26 @@
         android:allowBackup="true"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        android:name="com.orm.SugarApp">
+        android:name="com.activeandroid.app.Application">
 
-        <meta-data android:name="DATABASE" android:value="agsm.db" />
-        <meta-data android:name="VERSION" android:value="1" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="net.myacxy.agsm.models" />
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="agsm.db"
+            />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="5"
+            />
+        <meta-data
+            android:name="AA_MODELS"
+            android:value=  "net.myacxy.agsm.models.GameEntity,
+                             net.myacxy.agsm.models.GameServerEntity,
+                             net.myacxy.agsm.models.PlayerEntity"
+            />
+        <meta-data
+            android:name="AA_SERIALIZERS"
+            android:value="net.myacxy.agsm.utils.MapStringStringToJsonSerializer"
+            />
 
         <activity
             android:name=".MainActivity_"

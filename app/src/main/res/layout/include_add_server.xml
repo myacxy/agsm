@@ -20,8 +20,11 @@
             android:layout_height="wrap_content"
             android:enabled="true"
             android:spinnerMode="dropdown"
+            android:paddingLeft="0dp"
             app:ms_hint="@string/server_add_game_hint"
             app:ms_floatingLabelText="@string/server_add_game_title"
+            app:ms_alignLabels="false"
+            app:ms_baseColor="@color/spinner_base_color"
             />
 
         <!--server address -->
@@ -58,6 +61,7 @@
             android:singleLine="true"
             app:met_floatingLabel="normal"
             app:met_floatingLabelText="@string/server_add_rcon_title"
+            app:met_helperText=""
             />
         <!--query port-->
         <com.rengwuxian.materialedittext.MaterialEditText

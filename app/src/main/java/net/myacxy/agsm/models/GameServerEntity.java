@@ -1,42 +1,51 @@
 package net.myacxy.agsm.models;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
-import net.myacxy.jgsq.model.Game;
 import net.myacxy.jgsq.model.GameServer;
-import net.myacxy.jgsq.model.Player;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-public class GameServerEntity extends SugarRecord<GameServerEntity>
+@Table(name = "game_servers")
+public class GameServerEntity extends Model
 {
+    @Column(name = "game")
     public GameEntity game;
+    @Column(name = "colored_host_name")
     public String coloredHostName;
+    @Column(name = "host_name")
     public String hostName;
+    @Column(name = "map_anme")
     public String mapName;
+    @Column(name = "ip_address")
     public String ipAddress;
+    @Column(name = "port")
     public int port;
+    @Column(name = "max_clients")
     public int maxClients;
+    @Column(name = "online")
     public boolean isOnline;
-    public String parametersJson; // Map<String, String>
-    public String playersJson; // ArrayList<PlayerEntity>
+    @Column(name = "rcon")
     public String rcon;
+    @Column(name = "query_port")
     public String queryPort;
-
-    @Ignore
+    @Column(name ="parameters")
     public Map<String, String> parameters;
 
-    @Ignore
-    public ArrayList<PlayerEntity> players;
+    public transient ArrayList<PlayerEntity> players;
 
-    public GameServerEntity() { }
+    public GameServerEntity()
+    {
+        super();
+    }
 
     public GameServerEntity(GameServer server)
     {
+        super();
         game = new GameEntity(server.game);
         coloredHostName = server.coloredHostName;
         hostName = server.hostName;
@@ -48,35 +57,11 @@ public class GameServerEntity extends SugarRecord<GameServerEntity>
         parameters = server.parameters;
         rcon = server.rcon;
         queryPort = server.queryPort;
-
-        setPlayers(server.players);
     }
 
-    public void setPlayers(ArrayList<Player> players)
+    public List<PlayerEntity> getPlayers()
     {
-        // ArrayList<Player> -> ArrayList<PlayerEntity>
-        this.players = new ArrayList<>();
-        for (Player player: players)
-        {
-            this.players.add(new PlayerEntity(player));
-        }
+        return getMany(PlayerEntity.class, "game_server");
     }
 
-    @Override
-    public void save()
-    {
-        // ArrayList<Player> -> JSON
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
-        playersJson = gson.toJson(players);
-
-        // Map<String, String> -> JSON
-        gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
-        parametersJson = gson.toJson(parameters);
-
-        super.save();
-    }
 } // GameServerEntity

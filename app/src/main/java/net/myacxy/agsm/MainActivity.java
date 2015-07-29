@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity
     private MenuItem previousMenuItem;
     private Menu mDrawerMenu;
 
-    private HomeFragment_ homeFragment;
-    private ServerFragment_ serverFragment;
+    protected HomeFragment_ homeFragment;
+    protected ServerFragment_ serverFragment;
 
     @AfterViews
     void initialize()

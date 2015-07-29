@@ -1,5 +1,9 @@
 package net.myacxy.agsm.utils;
 
+import android.support.annotation.Nullable;
+
+import com.activeandroid.query.Select;
+
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
 
@@ -13,18 +17,26 @@ public class DatabaseServerFinder implements ServerFinder
     @Override
     public List<GameServerEntity> findAll()
     {
-        return GameServerEntity.listAll(GameServerEntity.class);
+        return new Select()
+                .from(GameServerEntity.class)
+                .execute();
     }
 
     @Override
     public List<GameServerEntity> findOnline()
     {
-        return GameServerEntity.find(GameServerEntity.class, "online = ?", "true");
+        return new Select()
+                .from(GameServerEntity.class)
+                .where("online = ?", true)
+                .execute();
     }
 
     @Override
     public List<GameServerEntity> findOffline()
     {
-        return GameServerEntity.find(GameServerEntity.class, "online = ?", "false");
+        return new Select()
+                .from(GameServerEntity.class)
+                .where("online = ?", false)
+                .execute();
     }
-}
+} // DatabaseServerFinder
