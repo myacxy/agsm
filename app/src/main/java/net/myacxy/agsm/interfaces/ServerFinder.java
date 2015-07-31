@@ -11,4 +11,8 @@ public interface ServerFinder
     List<GameServerEntity> findOnline();
 
     List<GameServerEntity> findOffline();
+
+    GameServerEntity getEntity(String ipAddress, int port);
+
+    boolean isRegistered(String ipAddress, int port);
 }

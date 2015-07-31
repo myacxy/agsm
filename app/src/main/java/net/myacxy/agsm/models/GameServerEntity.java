@@ -6,7 +6,6 @@ import com.activeandroid.annotation.Table;
 
 import net.myacxy.jgsq.model.GameServer;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,8 +34,6 @@ public class GameServerEntity extends Model
     public String queryPort;
     @Column(name ="parameters")
     public Map<String, String> parameters;
-
-    public transient ArrayList<PlayerEntity> players;
 
     public GameServerEntity()
     {

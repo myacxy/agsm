@@ -14,7 +14,7 @@ import org.androidannotations.annotations.EFragment;
 @EFragment
 public abstract class BaseToolbarFragment extends Fragment
 {
-    Toolbar toolbar;
+    protected Toolbar toolbar;
 
     void initialize()
     {

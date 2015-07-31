@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
-import net.myacxy.agsm.utils.DatabaseServerFinder;
+import net.myacxy.agsm.utils.ActiveServerFinder;
 import net.myacxy.agsm.views.ServerCardView;
 import net.myacxy.agsm.views.ServerCardView_;
 import net.myacxy.agsm.views.ViewWrapper;
@@ -18,7 +18,7 @@ import org.androidannotations.annotations.RootContext;
 @EBean
 public class ServerCardAdapter extends RecyclerViewAdapterBase<GameServerEntity, ServerCardView> {
 
-    @Bean(DatabaseServerFinder.class)
+    @Bean(ActiveServerFinder.class)
     ServerFinder serverFinder;
 
     @RootContext

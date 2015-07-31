@@ -1,7 +1,5 @@
 package net.myacxy.agsm.utils;
 
-import android.support.annotation.Nullable;
-
 import com.activeandroid.query.Select;
 
 import net.myacxy.agsm.interfaces.ServerFinder;
@@ -11,8 +9,11 @@ import org.androidannotations.annotations.EBean;
 
 import java.util.List;
 
+/***
+ * ServerFinder for ActiveAndroid ORM database
+ */
 @EBean
-public class DatabaseServerFinder implements ServerFinder
+public class ActiveServerFinder implements ServerFinder
 {
     @Override
     public List<GameServerEntity> findAll()
@@ -39,4 +40,20 @@ public class DatabaseServerFinder implements ServerFinder
                 .where("online = ?", false)
                 .execute();
     }
-} // DatabaseServerFinder
+
+    @Override
+    public GameServerEntity getEntity(String ipAddress, int port)
+    {
+        return new Select()
+                .from(GameServerEntity.class)
+                .where("ip_address = ? AND port = ?", ipAddress, port)
+                .executeSingle();
+    }
+
+    @Override
+    public boolean isRegistered(String ipAddress, int port)
+    {
+        return getEntity(ipAddress, port) != null;
+    }
+
+} // ActiveServerFinder

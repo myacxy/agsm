@@ -13,6 +13,8 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import net.myacxy.agsm.R;
 import net.myacxy.agsm.interfaces.AddServerListener;
 import net.myacxy.agsm.interfaces.GameFinder;
+import net.myacxy.agsm.interfaces.ServerManager;
+import net.myacxy.agsm.managers.JgsqServerManager;
 import net.myacxy.agsm.models.GameEntity;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.models.PlayerEntity;
@@ -20,10 +22,10 @@ import net.myacxy.agsm.utils.IpAddressAndDomainValidator;
 import net.myacxy.agsm.utils.JsonGameFinder;
 import net.myacxy.agsm.utils.PortValidator;
 import net.myacxy.agsm.views.adapters.GameSpinnerAdapter;
-import net.myacxy.jgsq.factory.GameServerFactory;
-import net.myacxy.jgsq.model.Game;
-import net.myacxy.jgsq.model.GameServer;
-import net.myacxy.jgsq.model.Player;
+import net.myacxy.jgsq.factories.GameServerFactory;
+import net.myacxy.jgsq.models.Game;
+import net.myacxy.jgsq.models.GameServer;
+import net.myacxy.jgsq.models.Player;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -33,8 +35,6 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-
-import java.util.regex.Pattern;
 
 import fr.ganfra.materialspinner.MaterialSpinner;
 
@@ -66,6 +66,8 @@ public class AddServerFragment extends BaseToolbarFragment
     @Bean(GameSpinnerAdapter.class)
     protected GameSpinnerAdapter gameSpinnerAdapter;
 
+    @Bean(JgsqServerManager.class)
+    protected ServerManager serverManager;
 
     @AfterViews
     protected void initialize()
@@ -95,16 +97,15 @@ public class AddServerFragment extends BaseToolbarFragment
     @Background
     protected void initializeServer(Game game, String address, int port)
     {
+        if(serverManager.isOnline(game, address, port))
+        {
+            serverManager.create(game,address, port);
+        }
+
         GameServerFactory gsf = new GameServerFactory();
         server = gsf.getGameServer(game);
         server.connect(address, port);
         server.update();
-
-        boolean duplicate = new Select()
-                .from(GameServerEntity.class)
-                .where("ip_address = ? AND port = ?", server.ipAddress, server.port)
-                .execute()
-                .size() > 0;
 
         if(duplicate)
         {
@@ -121,36 +122,7 @@ public class AddServerFragment extends BaseToolbarFragment
         }
         else
         {
-            GameServerEntity gse = new GameServerEntity(server);
-            GameEntity knownGame = new Select()
-                    .from(GameEntity.class)
-                    .where("name = ?", gse.game.name)
-                    .executeSingle();
 
-            if(knownGame == null)
-            {
-                gse.game.save();
-            }
-            else
-            {
-                gse.game = knownGame;
-            }
-
-            gse.save();
-
-            ActiveAndroid.beginTransaction();
-            try
-            {
-                for (Player player: server.players) {
-                    PlayerEntity pe = new PlayerEntity(player);
-                    pe.gameServer = gse;
-                    pe.save();
-                }
-                ActiveAndroid.setTransactionSuccessful();
-            }
-            finally {
-                ActiveAndroid.endTransaction();
-            }
 
             getFragmentManager().popBackStack();
 
@@ -180,9 +152,9 @@ public class AddServerFragment extends BaseToolbarFragment
     {
         if(validateInput())
         {
-            Game game = gameFinder.get(gameSpinner.getSelectedItem().toString());
-            String address = addressTextView.getText().toString();
-            int port = Integer.parseInt(portTextView.getText().toString());
+            Game game = (Game) gameSpinner.getSelectedItem();
+            String address = addressTextView.getText().toString().trim();
+            int port = Integer.parseInt(portTextView.getText().toString().trim());
 
             initializeServer(game, address, port);
             doneButton.setIndeterminate(true);
@@ -205,8 +177,8 @@ public class AddServerFragment extends BaseToolbarFragment
 
     protected boolean validateGame(MaterialSpinner spinner)
     {
-        String gameName = spinner.getSelectedItem().toString();
-        if(gameName.equals("select a game"))
+        String selection = spinner.getSelectedItem().toString();
+        if(selection.equals("select a game"))
         {
             gameSpinner.setError("game selection required");
             return false;
