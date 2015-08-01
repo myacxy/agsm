@@ -5,27 +5,26 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.activeandroid.ActiveAndroid;
-import com.activeandroid.query.Select;
 import com.github.clans.fab.FloatingActionButton;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import net.myacxy.agsm.R;
 import net.myacxy.agsm.interfaces.AddServerListener;
+import net.myacxy.agsm.interfaces.DatabaseManager;
 import net.myacxy.agsm.interfaces.GameFinder;
+import net.myacxy.agsm.interfaces.OnServerCreatedListener;
 import net.myacxy.agsm.interfaces.ServerManager;
+import net.myacxy.agsm.managers.ActiveDatabaseManager;
 import net.myacxy.agsm.managers.JgsqServerManager;
-import net.myacxy.agsm.models.GameEntity;
 import net.myacxy.agsm.models.GameServerEntity;
-import net.myacxy.agsm.models.PlayerEntity;
 import net.myacxy.agsm.utils.IpAddressAndDomainValidator;
 import net.myacxy.agsm.utils.JsonGameFinder;
 import net.myacxy.agsm.utils.PortValidator;
 import net.myacxy.agsm.views.adapters.GameSpinnerAdapter;
 import net.myacxy.jgsq.factories.GameServerFactory;
+import net.myacxy.jgsq.helpers.ServerResponseStatus;
 import net.myacxy.jgsq.models.Game;
 import net.myacxy.jgsq.models.GameServer;
-import net.myacxy.jgsq.models.Player;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -58,7 +57,6 @@ public class AddServerFragment extends BaseToolbarFragment
     protected MaterialEditText queryPortTextView;
 
     private AddServerListener listener;
-    private GameServer server;
 
     @Bean(JsonGameFinder.class)
     protected GameFinder gameFinder;
@@ -68,6 +66,9 @@ public class AddServerFragment extends BaseToolbarFragment
 
     @Bean(JgsqServerManager.class)
     protected ServerManager serverManager;
+
+    @Bean(ActiveDatabaseManager.class)
+    protected DatabaseManager databaseManager;
 
     @AfterViews
     protected void initialize()
@@ -94,44 +95,51 @@ public class AddServerFragment extends BaseToolbarFragment
         queryPortTextView.addValidator(new PortValidator("port out of range"));
     }
 
-    @Background
     protected void initializeServer(Game game, String address, int port)
     {
-        if(serverManager.isOnline(game, address, port))
-        {
-            serverManager.create(game,address, port);
-        }
-
-        GameServerFactory gsf = new GameServerFactory();
-        server = gsf.getGameServer(game);
-        server.connect(address, port);
-        server.update();
-
-        if(duplicate)
-        {
-            Snackbar.make(doneButton,
-                    String.format("%s is already known.", server.hostName),
-                    Snackbar.LENGTH_LONG)
-                    .show();
-            try {
-                Thread.sleep(4000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            hideProgress(doneButton);
-        }
-        else
-        {
-
-
-            getFragmentManager().popBackStack();
-
-            if(listener != null)
+        showProgress(doneButton);
+        serverManager.create(game, address, port, new OnServerCreatedListener() {
+            @Override
+            public void onServerCreated(GameServer gameServer)
             {
-                listener.onServerAdded(gse);
-            }
-        }
+                if (gameServer.connect() == ServerResponseStatus.Connected)
+                {
+                    GameServerEntity gameServerEntity = databaseManager.getGameServerEntity(gameServer);
+                    if (gameServerEntity != null)
+                    {
+                        showSnackbar(String.format("%s is already known.", gameServerEntity.hostName));
+                    }
+                    else if (gameServer.update() == ServerResponseStatus.OK)
+                    {
+                        gameServerEntity = databaseManager.save(gameServer);
+                        getFragmentManager().popBackStack();
+
+                        if (listener != null)
+                        {
+                            listener.onServerAdded(gameServerEntity);
+                        }
+                    }
+                    else
+                    {
+                        showSnackbar(String.format("%s", gameServer.getProtocol().getResponseStatus()));
+                    }
+                }
+                else
+                {
+                    showSnackbar(String.format("%s", gameServer.getProtocol().getResponseStatus()));
+                }
+                hideProgress(doneButton);
+            } // onServerCreated
+        });
+
     } // initializeServer
+
+    @UiThread
+    protected void showProgress(FloatingActionButton fab)
+    {
+        fab.setIndeterminate(true);
+        fab.setClickable(false);
+    }
 
     @UiThread
     protected void hideProgress(FloatingActionButton fab)
@@ -141,8 +149,7 @@ public class AddServerFragment extends BaseToolbarFragment
     }
 
     @OptionsItem(android.R.id.home)
-    boolean closeSelected(MenuItem item)
-    {
+    boolean closeSelected(MenuItem item) {
         getFragmentManager().popBackStack();
         return true;
     }

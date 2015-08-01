@@ -4,7 +4,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-import net.myacxy.jgsq.model.Game;
+import net.myacxy.jgsq.models.Game;
 
 @Table(name = "games")
 public class GameEntity extends Model

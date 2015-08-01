@@ -4,7 +4,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-import net.myacxy.jgsq.model.GameServer;
+import net.myacxy.jgsq.models.GameServer;
 
 import java.util.List;
 import java.util.Map;

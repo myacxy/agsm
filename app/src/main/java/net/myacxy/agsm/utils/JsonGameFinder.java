@@ -1,9 +1,9 @@
 package net.myacxy.agsm.utils;
 
 import net.myacxy.agsm.interfaces.GameFinder;
-import net.myacxy.jgsq.factory.GameFactory;
-import net.myacxy.jgsq.model.Game;
-import net.myacxy.jgsq.model.ServerProtocolType;
+import net.myacxy.jgsq.factories.GameFactory;
+import net.myacxy.jgsq.models.Game;
+import net.myacxy.jgsq.helpers.ServerProtocolType;
 import net.myacxy.jgsq.utils.Utilities;
 
 import org.androidannotations.annotations.EBean;

@@ -13,7 +13,7 @@ import net.myacxy.agsm.views.GameSpinnerDropdownItemView;
 import net.myacxy.agsm.views.GameSpinnerDropdownItemView_;
 import net.myacxy.agsm.views.GameSpinnerItemView;
 import net.myacxy.agsm.views.GameSpinnerItemView_;
-import net.myacxy.jgsq.model.Game;
+import net.myacxy.jgsq.models.Game;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;

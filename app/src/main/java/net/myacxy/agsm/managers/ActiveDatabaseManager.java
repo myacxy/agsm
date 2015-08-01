@@ -1,62 +1,83 @@
 package net.myacxy.agsm.managers;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.query.Select;
 
 import net.myacxy.agsm.interfaces.DatabaseManager;
 import net.myacxy.agsm.models.GameEntity;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.models.PlayerEntity;
-import net.myacxy.jgsq.model.Game;
-import net.myacxy.jgsq.model.GameServer;
-import net.myacxy.jgsq.model.Player;
+import net.myacxy.jgsq.models.Game;
+import net.myacxy.jgsq.models.GameServer;
+import net.myacxy.jgsq.models.Player;
 
-import java.util.List;
+import org.androidannotations.annotations.EBean;
 
 /**
  * DatabaseManager for ActiveAndroid ORM database
  */
+@EBean
 public class ActiveDatabaseManager implements DatabaseManager
 {
-    public void save(Game game)
+    public GameEntity save(Game game)
     {
         GameEntity gameEntity = getGameEntity(game);
+        // not in database? -> save
         if(gameEntity == null)
         {
             gameEntity = new GameEntity(game);
             gameEntity.save();
+            return gameEntity;
         }
+        // in database? -> update
         else
         {
-            update(game);
+            return update(game);
         }
-    }
+    } // save game
 
-    public void save(GameServer gameServer)
+    public GameServerEntity save(GameServer gameServer)
     {
         GameServerEntity gameServerEntity = getGameServerEntity(gameServer);
+        // not in database? -> save
         if(gameServerEntity == null)
         {
+            // save server entity before saving players
             gameServerEntity = new GameServerEntity(gameServer);
             save(gameServer.game);
             gameServerEntity.save();
 
-            for (Player player: gameServer.players)
+            // bulk insert players
+            ActiveAndroid.beginTransaction();
+            try
             {
-                save(player, gameServerEntity);
+                for (Player player: gameServer.players)
+                {
+                    PlayerEntity pe = new PlayerEntity(player);
+                    pe.gameServer = gameServerEntity;
+                    pe.save();
+                }
+                ActiveAndroid.setTransactionSuccessful();
             }
+            finally
+            {
+                ActiveAndroid.endTransaction();
+            }
+            return gameServerEntity;
         }
+        // in database? -> update
         else
         {
-            update(gameServer);
+            return update(gameServer);
         }
-    }
+    } // save gameServer
 
-    public void save(Player player, GameServerEntity gameServerEntity)
+    public PlayerEntity save(Player player, GameServerEntity gameServerEntity)
     {
+        throw  new UnsupportedOperationException();
+    } // save player, gameServerEntity
 
-    }
-
-    public void update(Game game)
+    public GameEntity update(Game game)
     {
         GameEntity gameEntity = getGameEntity(game);
         gameEntity.name = game.name;
@@ -65,14 +86,16 @@ public class ActiveDatabaseManager implements DatabaseManager
         gameEntity.defaultPort = game.defaultPort;
         gameEntity.serverProtocolType = game.serverProtocolType.toString();
         gameEntity.save();
-    }
 
-    public void update(Player player)
+        return gameEntity;
+    } // update game
+
+    public PlayerEntity update(Player player)
     {
+        throw  new UnsupportedOperationException();
+    } // update player
 
-    }
-
-    public void update(GameServer gameServer)
+    public GameServerEntity update(GameServer gameServer)
     {
         // update parameters
         GameServerEntity gameServerEntity = getGameServerEntity(gameServer);
@@ -100,23 +123,24 @@ public class ActiveDatabaseManager implements DatabaseManager
         {
             save(player, gameServerEntity);
         }
-    }
 
-    protected GameEntity getGameEntity(Game game)
+        return gameServerEntity;
+    } // update gameServer
+
+    public GameEntity getGameEntity(Game game)
     {
         return new Select()
                 .from(GameEntity.class)
                 .where("name = ?", game.name)
                 .executeSingle();
-    }
+    } // getGameEntity
 
-
-    protected GameServerEntity getGameServerEntity(GameServer gameServer)
+    public GameServerEntity getGameServerEntity(GameServer gameServer)
     {
         return new Select()
                 .from(GameServerEntity.class)
                 .where("ip_address = ?", gameServer.ipAddress)
                 .and("port = ?", gameServer.port)
                 .executeSingle();
-    }
-}
+    } // getGameServerEntity
+} // ActiveDatabaseManager

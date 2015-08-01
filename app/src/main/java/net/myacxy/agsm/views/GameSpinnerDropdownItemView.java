@@ -6,7 +6,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import net.myacxy.agsm.R;
-import net.myacxy.jgsq.model.Game;
+import net.myacxy.jgsq.models.Game;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;

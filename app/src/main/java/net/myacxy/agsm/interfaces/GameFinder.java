@@ -1,7 +1,7 @@
 package net.myacxy.agsm.interfaces;
 
-import net.myacxy.jgsq.model.Game;
-import net.myacxy.jgsq.model.ServerProtocolType;
+import net.myacxy.jgsq.models.Game;
+import net.myacxy.jgsq.helpers.ServerProtocolType;
 
 import java.util.Map;
 
