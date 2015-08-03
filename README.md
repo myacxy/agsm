@@ -25,8 +25,9 @@ TODO
   * Settings
   	* Update interval
   	* Timeout
+  	* ...
   * About
-* Service
+* Background service
 * Create notifications / alarms
   * Player X on server Y for Z time?
   * Server Y has more players than X for Z time?
