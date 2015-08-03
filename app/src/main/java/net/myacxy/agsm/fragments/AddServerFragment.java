@@ -102,7 +102,7 @@ public class AddServerFragment extends BaseToolbarFragment
             @Override
             public void onServerCreated(GameServer gameServer)
             {
-                if (gameServer.connect() == ServerResponseStatus.Connected)
+                if (gameServer.connect() == ServerResponseStatus.CONNECTED)
                 {
                     GameServerEntity gameServerEntity = databaseManager.getGameServerEntity(gameServer);
                     if (gameServerEntity != null)
