@@ -5,16 +5,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    >
 
-    <include layout="@layout/include_add_server"/>
+    <include layout="@layout/include_add_server" />
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:elevation="5dp">
+        android:elevation="@dimen/spacing_tiny"
+        >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"

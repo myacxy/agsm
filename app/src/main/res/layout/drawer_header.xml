@@ -4,9 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
-    android:padding="16dp"
+    android:padding="@dimen/spacing_normal"
     android:orientation="vertical"
-    android:gravity="bottom">
+    android:gravity="bottom"
+    >
 
     <TextView
         android:layout_width="match_parent"

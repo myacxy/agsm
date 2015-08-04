@@ -4,14 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
     <ImageView
         android:id="@+id/add_server_spinner_item_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:paddingEnd="4dp"
+        android:padding="@dimen/spacing_small"
+        android:paddingRight="@dimen/spacing_tiny"
         tools:ignore="ContentDescription"
         />
 
@@ -21,8 +22,8 @@
         android:layout_height="wrap_content"
         android:singleLine="true"
         android:ellipsize="marquee"
-        android:padding="8dp"
-        android:paddingStart="4dp"
+        android:padding="@dimen/spacing_small"
+        android:paddingLeft="@dimen/spacing_tiny"
         android:layout_gravity="center_vertical"
         />
 
