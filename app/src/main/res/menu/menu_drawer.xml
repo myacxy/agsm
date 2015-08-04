@@ -26,12 +26,7 @@
     <item android:title="@string/drawer_servers_title">
         <menu>
             <group android:id="@+id/drawer_menu_group_servers">
-                <item
-                    android:icon="@drawable/ic_dashboard"
-                    android:title="Server 1" />
-                <item
-                    android:icon="@drawable/ic_dashboard"
-                    android:title="Server 2" />
+
             </group>
         </menu>
     </item>

@@ -9,7 +9,7 @@ import com.github.clans.fab.FloatingActionButton;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import net.myacxy.agsm.R;
-import net.myacxy.agsm.interfaces.AddServerListener;
+import net.myacxy.agsm.interfaces.OnServerAddedListener;
 import net.myacxy.agsm.interfaces.DatabaseManager;
 import net.myacxy.agsm.interfaces.GameFinder;
 import net.myacxy.agsm.interfaces.OnServerCreatedListener;
@@ -21,13 +21,11 @@ import net.myacxy.agsm.utils.IpAddressAndDomainValidator;
 import net.myacxy.agsm.utils.JsonGameFinder;
 import net.myacxy.agsm.utils.PortValidator;
 import net.myacxy.agsm.views.adapters.GameSpinnerAdapter;
-import net.myacxy.jgsq.factories.GameServerFactory;
 import net.myacxy.jgsq.helpers.ServerResponseStatus;
 import net.myacxy.jgsq.models.Game;
 import net.myacxy.jgsq.models.GameServer;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
@@ -56,7 +54,7 @@ public class AddServerFragment extends BaseToolbarFragment
     @ViewById(R.id.server_add_query_port)
     protected MaterialEditText queryPortTextView;
 
-    private AddServerListener listener;
+    private OnServerAddedListener listener;
 
     @Bean(JsonGameFinder.class)
     protected GameFinder gameFinder;
@@ -100,32 +98,25 @@ public class AddServerFragment extends BaseToolbarFragment
         showProgress(doneButton);
         serverManager.create(game, address, port, new OnServerCreatedListener() {
             @Override
-            public void onServerCreated(GameServer gameServer)
-            {
-                if (gameServer.connect() == ServerResponseStatus.CONNECTED)
-                {
+            public void onServerCreated(GameServer gameServer) {
+                if (gameServer.connect() == ServerResponseStatus.CONNECTED) {
                     GameServerEntity gameServerEntity = databaseManager.getGameServerEntity(gameServer);
-                    if (gameServerEntity != null)
-                    {
-                        showSnackbar(String.format("%s is already known.", gameServerEntity.hostName));
-                    }
-                    else if (gameServer.update() == ServerResponseStatus.OK)
-                    {
+                    if (gameServerEntity != null) {
+                        showSnackbar(
+                                String.format("%s:%s is already known.",
+                                        gameServerEntity.ipAddress,
+                                        gameServerEntity.port));
+                    } else if (gameServer.update() == ServerResponseStatus.OK) {
                         gameServerEntity = databaseManager.save(gameServer);
                         getFragmentManager().popBackStack();
 
-                        if (listener != null)
-                        {
+                        if (listener != null) {
                             listener.onServerAdded(gameServerEntity);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         showSnackbar(String.format("%s", gameServer.getProtocol().getResponseStatus()));
                     }
-                }
-                else
-                {
+                } else {
                     showSnackbar(String.format("%s", gameServer.getProtocol().getResponseStatus()));
                 }
                 hideProgress(doneButton);
@@ -204,7 +195,7 @@ public class AddServerFragment extends BaseToolbarFragment
                 .show();
     }
 
-    public void setAddServerListener(AddServerListener listener)
+    public void setOnServerAddedListener(OnServerAddedListener listener)
     {
         this.listener = listener;
     }
