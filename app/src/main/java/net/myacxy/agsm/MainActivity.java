@@ -19,9 +19,13 @@ import com.activeandroid.query.Select;
 
 import net.myacxy.agsm.fragments.HomeFragment_;
 import net.myacxy.agsm.fragments.ServerFragment_;
+import net.myacxy.agsm.interfaces.ServerFinder;
+import net.myacxy.agsm.interfaces.ServerManager;
 import net.myacxy.agsm.models.GameServerEntity;
+import net.myacxy.agsm.utils.ActiveServerFinder;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ViewById;
@@ -40,6 +44,9 @@ public class MainActivity extends AppCompatActivity
 
     @ViewById(R.id.main_content_layout)
     FrameLayout mainLayout;
+
+    @Bean(ActiveServerFinder.class)
+    ServerFinder serverFinder;
 
     private MenuItem previousMenuItem;
     private Menu mDrawerMenu;
@@ -60,22 +67,19 @@ public class MainActivity extends AppCompatActivity
             mServerMenu = mDrawerMenu.getItem(mDrawerMenu.size() - 1).getSubMenu();
         }
 
-
-
         changeFragment(R.id.drawer_home);
     }
 
     @OptionsItem(android.R.id.home)
     boolean homeSelected(MenuItem item)
     {
-        mServerMenu.clear();
+        List<GameServerEntity> serverEntities = serverFinder.findAll();
 
-        List<GameServerEntity> servers = new Select().all().from(GameServerEntity.class).execute();
-
-        for (GameServerEntity server : servers) {
-            addServerToDrawer(server);
+        if(mServerMenu.size() != serverEntities.size())
+        {
+            mServerMenu.clear();
+            addServersToDrawer(serverEntities);
         }
-
         // let child fragments handle what happens
         return false;
     }
@@ -148,15 +152,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    protected void addServerToDrawer(GameServerEntity server)
+    protected void addServersToDrawer(List<GameServerEntity> serverEntities)
     {
-        MenuItem menuItem = mServerMenu.add(
-                R.id.drawer_menu_group_servers, // group id
-                server.getId().intValue(),      // item id
-                0,                              // order
-                server.hostName);               // title
+        for (GameServerEntity serverEntity : serverEntities)
+        {
+            MenuItem menuItem = mServerMenu.add(
+                    R.id.drawer_menu_group_servers, // group id
+                    serverEntity.getId().intValue(),      // item id
+                    0,                              // order
+                    serverEntity.hostName);               // title
 
-        menuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_dashboard));
+            menuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_dashboard));
+        }
 
         getNavigationMenuPresenter(mDrawerView).updateMenuView(true);
     }

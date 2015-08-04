@@ -44,7 +44,7 @@ public class ActiveDatabaseManager implements DatabaseManager
         {
             // save server entity before saving players
             gameServerEntity = new GameServerEntity(gameServer);
-            save(gameServer.game);
+            gameServerEntity.game = save(gameServer.game);
             gameServerEntity.save();
 
             // bulk insert players

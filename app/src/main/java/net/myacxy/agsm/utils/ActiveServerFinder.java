@@ -19,6 +19,7 @@ public class ActiveServerFinder implements ServerFinder
     public List<GameServerEntity> findAll()
     {
         return new Select()
+                .all()
                 .from(GameServerEntity.class)
                 .execute();
     }
