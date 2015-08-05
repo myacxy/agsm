@@ -6,13 +6,13 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.Map;
+import java.util.TreeMap;
 
-public class MapStringStringToJsonSerializer extends TypeSerializer
+public class TreeMapStringStringToJsonSerializer extends TypeSerializer
 {
     private Gson gson;
 
-    public MapStringStringToJsonSerializer()
+    public TreeMapStringStringToJsonSerializer()
     {
         gson = new GsonBuilder()
                 .setPrettyPrinting()
@@ -21,7 +21,7 @@ public class MapStringStringToJsonSerializer extends TypeSerializer
 
     @Override
     public Class<?> getDeserializedType() {
-        return new TypeToken<Map<String, String>>() {}.getRawType();
+        return new TypeToken<TreeMap<String, String>>() {}.getRawType();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class MapStringStringToJsonSerializer extends TypeSerializer
     }
 
     @Override
-    public Map<String, String> deserialize(Object data)
+    public TreeMap<String, String> deserialize(Object data)
     {
         if(data == null)
         {
@@ -49,8 +49,8 @@ public class MapStringStringToJsonSerializer extends TypeSerializer
         }
 
         String json = data.toString();
-        Type type = new TypeToken<Map<String, String>>() {}.getType();
+        Type type = new TypeToken<TreeMap<String, String>>() {}.getType();
 
         return gson.fromJson(json, type);
     }
-}
+} // TreeMapStringStringToJsonSerializer

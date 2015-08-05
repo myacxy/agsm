@@ -32,6 +32,7 @@ public class ServerDetailsFragment extends Fragment
 
         detailsList.setLayoutManager(layoutManager);
 
+        serverDetailsParameterAdapter.setGameServerId(gameServerId);
         detailsList.setAdapter(serverDetailsParameterAdapter);
     }
 } // ServerDetailsFragment

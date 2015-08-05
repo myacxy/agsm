@@ -10,7 +10,6 @@ import net.myacxy.agsm.utils.ActiveServerFinder;
 import net.myacxy.agsm.views.ItemServerDetailsParameterView;
 import net.myacxy.agsm.views.ItemServerDetailsParameterView_;
 
-import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
@@ -18,24 +17,26 @@ import org.androidannotations.annotations.RootContext;
 import java.util.Map;
 
 @EBean
-public class ServerDetailsParameterAdapter extends RecyclerViewAdapterBase<Pair<String, String>, ItemServerDetailsParameterView> {
+public class ServerDetailsParameterAdapter extends RecyclerViewAdapterBase<Pair<String, String>, ItemServerDetailsParameterView>
+{
 
+    private int gameServerId;
     @Bean(ActiveServerFinder.class)
     ServerFinder serverFinder;
 
     @RootContext
     Context context;
 
-    @AfterInject
     void initAdapter()
     {
-        GameServerEntity gameServerEntity = serverFinder.findById(1);
+        GameServerEntity gameServerEntity = serverFinder.findById(gameServerId);
         if(gameServerEntity != null)
         {
             for (Map.Entry entry : gameServerEntity.parameters.entrySet())
             {
                 items.add(new Pair<>(entry.getKey().toString(), entry.getValue().toString()));
             }
+
         }
     } // initAdapter
 
@@ -45,10 +46,16 @@ public class ServerDetailsParameterAdapter extends RecyclerViewAdapterBase<Pair<
     }
 
     @Override
-    public void onBindViewHolder(ViewWrapper<ItemServerDetailsParameterView> holder, int position) {
+    public void onBindViewHolder(ViewWrapper<ItemServerDetailsParameterView> holder, int position)
+    {
         ItemServerDetailsParameterView view = holder.getView();
         Pair<String, String> pair = items.get(position);
 
         view.bind(pair.first, pair.second);
+    }
+
+    public void setGameServerId(int gameServerId) {
+        this.gameServerId = gameServerId;
+        initAdapter();
     }
 } // ServerCardAdapter

@@ -28,7 +28,7 @@
             />
         <meta-data
             android:name="AA_SERIALIZERS"
-            android:value="net.myacxy.agsm.utils.MapStringStringToJsonSerializer"
+            android:value="net.myacxy.agsm.utils.TreeMapStringStringToJsonSerializer"
             />
 
         <activity

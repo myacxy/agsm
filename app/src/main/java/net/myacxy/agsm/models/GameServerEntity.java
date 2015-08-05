@@ -7,7 +7,7 @@ import com.activeandroid.annotation.Table;
 import net.myacxy.jgsq.models.GameServer;
 
 import java.util.List;
-import java.util.Map;
+import java.util.TreeMap;
 
 @Table(name = "game_servers")
 public class GameServerEntity extends Model
@@ -33,7 +33,7 @@ public class GameServerEntity extends Model
     @Column(name = "query_port")
     public String queryPort;
     @Column(name ="parameters")
-    public Map<String, String> parameters;
+    public TreeMap<String, String> parameters;
 
     public GameServerEntity()
     {
