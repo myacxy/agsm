@@ -9,6 +9,7 @@ import net.myacxy.agsm.R;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 
 @EFragment(R.layout.fragment_server_overview)
@@ -16,6 +17,9 @@ public class ServerRconFragment extends Fragment
 {
     @ViewById(R.id.server_overview_text)
     TextView overviewText;
+
+    @FragmentArg
+    int gameServerId;
 
     @AfterViews
     void initialize()

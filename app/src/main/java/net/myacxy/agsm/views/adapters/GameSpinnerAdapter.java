@@ -1,18 +1,16 @@
 package net.myacxy.agsm.views.adapters;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import net.myacxy.agsm.R;
 import net.myacxy.agsm.interfaces.GameFinder;
 import net.myacxy.agsm.utils.JsonGameFinder;
 import net.myacxy.agsm.views.GameSpinnerDropdownItemView;
 import net.myacxy.agsm.views.GameSpinnerDropdownItemView_;
-import net.myacxy.agsm.views.GameSpinnerItemView;
-import net.myacxy.agsm.views.GameSpinnerItemView_;
+import net.myacxy.agsm.views.ItemGameSpinnerView;
+import net.myacxy.agsm.views.ItemGameSpinnerView_;
 import net.myacxy.jgsq.models.Game;
 
 import org.androidannotations.annotations.AfterInject;
@@ -66,15 +64,15 @@ public class GameSpinnerAdapter extends BaseAdapter
 
     private View createItemView(int position, View convertView, ViewGroup parent)
     {
-        GameSpinnerItemView item;
+        ItemGameSpinnerView item;
 
         if(convertView == null)
         {
-            item = GameSpinnerItemView_.build(context);
+            item = ItemGameSpinnerView_.build(context);
         }
         else
         {
-            item = (GameSpinnerItemView) convertView;
+            item = (ItemGameSpinnerView) convertView;
         }
         item.bind(getItem(position));
         return item;

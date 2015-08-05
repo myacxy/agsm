@@ -12,7 +12,7 @@ import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
 @EViewGroup(R.layout.item_game_spinner)
-public class GameSpinnerItemView extends LinearLayout
+public class ItemGameSpinnerView extends LinearLayout
 {
 
     @ViewById(R.id.add_server_spinner_item_icon)
@@ -21,7 +21,7 @@ public class GameSpinnerItemView extends LinearLayout
     @ViewById(R.id.add_server_spinner_item_name)
     TextView name;
 
-    public GameSpinnerItemView(Context context) {
+    public ItemGameSpinnerView(Context context) {
         super(context);
     }
 

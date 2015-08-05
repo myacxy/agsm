@@ -8,7 +8,6 @@ import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
 import net.myacxy.agsm.views.ServerCardView;
 import net.myacxy.agsm.views.ServerCardView_;
-import net.myacxy.agsm.views.ViewWrapper;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;

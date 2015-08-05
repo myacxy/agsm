@@ -44,8 +44,8 @@ public class GameServerEntity extends Model
     {
         super();
         game = new GameEntity(server.game);
-        coloredHostName = server.coloredHostName;
-        hostName = server.hostName;
+        coloredHostName = server.coloredHostName.trim();
+        hostName = server.hostName.trim();
         mapName = server.mapName;
         port = server.port;
         ipAddress = server.ipAddress;

@@ -65,6 +65,7 @@
             app:met_floatingLabelText="@string/server_add_rcon_title"
             app:met_helperText=""
             />
+
         <!--query port-->
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/server_add_query_port"

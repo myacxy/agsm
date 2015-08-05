@@ -10,7 +10,7 @@ import org.androidannotations.annotations.EBean;
 
 import java.util.Map;
 
-@EBean
+@EBean(scope = EBean.Scope.Singleton)
 public class JsonGameFinder implements GameFinder
 {
     private final GameFactory gameFactory = new GameFactory();

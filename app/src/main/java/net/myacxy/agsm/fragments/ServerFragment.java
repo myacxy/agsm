@@ -1,21 +1,13 @@
 package net.myacxy.agsm.fragments;
 
 import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import net.myacxy.agsm.R;
@@ -23,8 +15,8 @@ import net.myacxy.agsm.views.adapters.ServerFragmentPagerAdapter;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.ViewById;
@@ -33,6 +25,7 @@ import org.androidannotations.annotations.ViewById;
 @OptionsMenu(R.menu.menu_server)
 public class ServerFragment extends BaseToolbarFragment
 {
+    public static final String ARG_GAME_SERVER_ID = "game_server_id";
     @ViewById(R.id.viewpager)
     ViewPager viewPager;
 
@@ -42,9 +35,12 @@ public class ServerFragment extends BaseToolbarFragment
     @ViewById(R.id.fab)
     FloatingActionButton refreshButton;
 
-    private ServerOverviewFragment_ overviewFragment;
-    private ServerDetailsFragment_ detailsFragment;
-    private ServerRconFragment_ rconFragment;
+    @FragmentArg
+    int gameServerId;
+
+    private ServerOverviewFragment overviewFragment;
+    private ServerDetailsFragment detailsFragment;
+    private ServerRconFragment rconFragment;
     private ServerFragmentPagerAdapter adapter;
 
     @AfterViews
@@ -52,12 +48,14 @@ public class ServerFragment extends BaseToolbarFragment
     {
         super.initialize();
 
-        overviewFragment = new ServerOverviewFragment_();
-        detailsFragment = new ServerDetailsFragment_();
-        rconFragment = new ServerRconFragment_();
-
         setupViewPager(viewPager);
-        tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                tabLayout.setupWithViewPager(viewPager);
+            }
+        });
 
         if (Build.VERSION.SDK_INT >= 99) // replace 21
         {
@@ -71,10 +69,25 @@ public class ServerFragment extends BaseToolbarFragment
             toolbar.setMinimumHeight(toolbar.getHeight() + toolbar.getPaddingTop());
         }
 
-    }
+    } // initialize
 
     private void setupViewPager(ViewPager viewPager)
     {
+        overviewFragment = ServerOverviewFragment_
+                .builder()
+                .gameServerId(gameServerId)
+                .build();
+
+        detailsFragment = ServerDetailsFragment_
+                .builder()
+                .gameServerId(gameServerId)
+                .build();
+
+        rconFragment = ServerRconFragment_
+                .builder()
+                .gameServerId(gameServerId)
+                .build();
+
         adapter = new ServerFragmentPagerAdapter(getActivity().getSupportFragmentManager());
         adapter.addFragment(overviewFragment, "Overview");
         adapter.addFragment(detailsFragment, "Details");
@@ -94,8 +107,8 @@ public class ServerFragment extends BaseToolbarFragment
     @Click(R.id.fab)
     void refresh()
     {
-        Snackbar.make(refreshButton, "Here's a Snackbar.", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+        Snackbar.make(refreshButton, "refresh", Snackbar.LENGTH_LONG)
+                .show();
     }
 
     @OptionsItem(android.R.id.home)
@@ -105,4 +118,4 @@ public class ServerFragment extends BaseToolbarFragment
         drawerLayout.openDrawer(GravityCompat.START);
         return true;
     }
-}
+} // ServerFragment

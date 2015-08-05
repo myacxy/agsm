@@ -12,7 +12,7 @@ import java.util.List;
 /***
  * ServerFinder for ActiveAndroid ORM database
  */
-@EBean
+@EBean(scope = EBean.Scope.Singleton)
 public class ActiveServerFinder implements ServerFinder
 {
     @Override
@@ -43,7 +43,7 @@ public class ActiveServerFinder implements ServerFinder
     }
 
     @Override
-    public GameServerEntity getEntity(String ipAddress, int port)
+    public GameServerEntity findByAddress(String ipAddress, int port)
     {
         return new Select()
                 .from(GameServerEntity.class)
@@ -52,9 +52,17 @@ public class ActiveServerFinder implements ServerFinder
     }
 
     @Override
-    public boolean isRegistered(String ipAddress, int port)
+    public GameServerEntity findById(int id)
     {
-        return getEntity(ipAddress, port) != null;
+        return new Select()
+                .from(GameServerEntity.class)
+                .where("Id = ?", id)
+                .executeSingle();
     }
 
+    @Override
+    public boolean isRegistered(String ipAddress, int port)
+    {
+        return findByAddress(ipAddress, port) != null;
+    }
 } // ActiveServerFinder

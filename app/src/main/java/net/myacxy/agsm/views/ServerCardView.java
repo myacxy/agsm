@@ -14,11 +14,19 @@ import org.androidannotations.annotations.ViewById;
 @EViewGroup(R.layout.item_server_card)
 public class ServerCardView extends CardView
 {
+    private GameServerEntity mGameServer;
+
+    @ViewById(R.id.server_card_game)
+    TextView game;
+
     @ViewById(R.id.server_card_title)
     TextView title;
 
-    @ViewById(R.id.server_card_text)
-    TextView text;
+    @ViewById(R.id.server_card_map)
+    TextView map;
+
+    @ViewById(R.id.server_card_player_count)
+    TextView playerCount;
 
     public ServerCardView(Context context)
     {
@@ -29,9 +37,20 @@ public class ServerCardView extends CardView
         super(context, attrs);
     }
 
-    public void bind(GameServerEntity server)
+    public void bind(GameServerEntity gameServerEntity)
     {
-        title.setText(server.hostName);
-        text.setText(server.mapName);
+        mGameServer = gameServerEntity;
+        game.setText(gameServerEntity.game.alternativeName);
+        title.setText(gameServerEntity.hostName);
+        map.setText(gameServerEntity.mapName);
+        playerCount.setText(String.format(
+                "%d / %d",
+                gameServerEntity.getPlayers().size(),
+                gameServerEntity.maxClients));
     }
-}
+
+    public GameServerEntity getGameServer()
+    {
+        return mGameServer;
+    }
+} // ServerCardView

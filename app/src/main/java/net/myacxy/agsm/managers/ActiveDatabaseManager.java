@@ -16,7 +16,7 @@ import org.androidannotations.annotations.EBean;
 /**
  * DatabaseManager for ActiveAndroid ORM database
  */
-@EBean
+@EBean(scope = EBean.Scope.Singleton)
 public class ActiveDatabaseManager implements DatabaseManager
 {
     public GameEntity save(Game game)

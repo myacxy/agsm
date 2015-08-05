@@ -15,12 +15,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.SubMenu;
 import android.widget.FrameLayout;
 
-import com.activeandroid.query.Select;
-
 import net.myacxy.agsm.fragments.HomeFragment_;
+import net.myacxy.agsm.fragments.ServerFragment;
 import net.myacxy.agsm.fragments.ServerFragment_;
 import net.myacxy.agsm.interfaces.ServerFinder;
-import net.myacxy.agsm.interfaces.ServerManager;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
 
@@ -53,10 +51,10 @@ public class MainActivity extends AppCompatActivity
     private SubMenu mServerMenu;
 
     protected HomeFragment_ homeFragment;
-    protected ServerFragment_ serverFragment;
+    protected ServerFragment serverFragment;
 
     private int mCurrentPosition = 0;
-    final static String ARG_POSITION = "drawer_position";
+    final static String ARG_DRAWER_POSITION = "drawer_position";
 
     @AfterViews
     void initialize()
@@ -109,8 +107,10 @@ public class MainActivity extends AppCompatActivity
                         navigationView.invalidate();
                         mDrawerMenu.getItem(mDrawerMenu.size() - 1).setTitle(getString(R.string.drawer_servers_title));
 
-                        changeFragment(menuItem.getItemId());
-
+                        if(menuItem.getGroupId() != R.id.drawer_menu_group_servers)
+                        {
+                            changeFragment(menuItem.getItemId());
+                        }
                         return true;
                     }
                 });
@@ -134,9 +134,8 @@ public class MainActivity extends AppCompatActivity
                 fragment = null;
                 break;
             default:
-                if(serverFragment == null) serverFragment = new ServerFragment_();
-                tag = "server";
-                fragment = serverFragment;
+                fragment = null;
+                break;
         }
 
         mCurrentPosition = id;
@@ -148,23 +147,53 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction ft = fm.beginTransaction();
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             ft.replace(R.id.main_content_layout, fragment, tag)
-                    .addToBackStack(null).commit();
+                    .addToBackStack(null)
+                    .commit();
         }
+    }
+
+    private void transitionToServerFragment(GameServerEntity gameServerEntity)
+    {
+        ServerFragment serverFragment = ServerFragment_
+                .builder()
+                .gameServerId(gameServerEntity.getId().intValue())
+                .build();
+
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.replace(R.id.main_content_layout, serverFragment, "server " + gameServerEntity.getId())
+                .addToBackStack(null)
+                .commit();
     }
 
     protected void addServersToDrawer(List<GameServerEntity> serverEntities)
     {
-        for (GameServerEntity serverEntity : serverEntities)
+        for (final GameServerEntity serverEntity : serverEntities)
         {
-            MenuItem menuItem = mServerMenu.add(
+            // create menu entry
+            final MenuItem menuItem = mServerMenu.add(
                     R.id.drawer_menu_group_servers, // group id
                     serverEntity.getId().intValue(),      // item id
                     0,                              // order
                     serverEntity.hostName);               // title
 
+            // switch to server fragment on click
+            menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+
+                    transitionToServerFragment(serverEntity);
+
+                    // let onNavigationItemSelected do the rest
+                    return false;
+                }
+            });
+            // TODO set game logo
             menuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_dashboard));
         }
 
+        // workaround to refresh navigation drawer to show new menu entries
         getNavigationMenuPresenter(mDrawerView).updateMenuView(true);
     }
 
@@ -172,7 +201,7 @@ public class MainActivity extends AppCompatActivity
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
 
-        outState.putInt(ARG_POSITION, mCurrentPosition);
+        outState.putInt(ARG_DRAWER_POSITION, mCurrentPosition);
     }
 
     private static NavigationMenuPresenter getNavigationMenuPresenter(NavigationView view){

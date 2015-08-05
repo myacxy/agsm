@@ -1,6 +1,5 @@
 package net.myacxy.agsm.fragments;
 
-import android.app.Activity;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;

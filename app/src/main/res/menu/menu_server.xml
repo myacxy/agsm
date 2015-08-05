@@ -5,8 +5,8 @@
     tools:context=".MainActivity">
 
     <item
-      android:id="@+id/action_settings"
-      android:title="@string/action_settings"
+      android:id="@+id/action_server_edit"
+      android:title="@string/action_server_edit"
       android:orderInCategory="100"
       app:showAsAction="never"
       />

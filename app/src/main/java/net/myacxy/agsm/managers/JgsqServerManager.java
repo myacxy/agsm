@@ -1,6 +1,5 @@
 package net.myacxy.agsm.managers;
 
-
 import net.myacxy.agsm.interfaces.OnServerCreatedListener;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.interfaces.ServerManager;
@@ -14,7 +13,7 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
-@EBean
+@EBean(scope = EBean.Scope.Singleton)
 public class JgsqServerManager implements ServerManager
 {
     private final GameServerFactory gameServerFactory = new GameServerFactory();

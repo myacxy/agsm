@@ -35,5 +35,6 @@
     <string name="server_add_query_port_helper">e.g. 27960</string>
     <string name="server_add_query_port_hint">query port (optional)</string>
     <string name="server_add_query_port_title">Query Port</string>
+    <string name="action_server_edit">Edit</string>
     <!--END Server Add-->
 </resources>
