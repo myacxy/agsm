@@ -13,20 +13,24 @@ TODO
 
 * Views
   * Drawer
-    * Server selection
+    * ~~Server selection~~
+    * Count indicators
+      * Players on server
+      * Number of notifications
+      * ...
   * Home
     * Quick info server card
     * Remove server?
-  * Server
-  	* Editable
-  	* RCON
-  	* Notifications?
   * Notifications
   * Settings
   	* Update interval
   	* Timeout
   	* ...
   * About
+  * Server
+  	* Editable
+  	* RCON
+  	* Notifications page?
 * Background service
 * Create notifications / alarms
   * Player X on server Y for Z time?
@@ -34,4 +38,4 @@ TODO
 * Content provider?
 * Widget?
 * DashClock extension
-  * Invidivdual settings
+  * Invidividual settings
