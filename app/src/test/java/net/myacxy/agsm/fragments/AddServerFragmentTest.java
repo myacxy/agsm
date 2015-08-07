@@ -5,7 +5,7 @@ import net.myacxy.agsm.MainActivity_;
 import net.myacxy.agsm.R;
 import net.myacxy.agsm.interfaces.GameFinder;
 import net.myacxy.agsm.utils.JsonGameFinder_;
-import net.myacxy.jgsq.model.Game;
+import net.myacxy.jgsq.models.Game;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -17,14 +17,14 @@ import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 @EBean
-public class ServerDetailsParameterAdapter2 extends BaseAdapter
+public class ServerOverviewGeneralAdapter extends BaseAdapter
 {
-    private Map<String, String> parametersMap = new TreeMap<>();
-    private ArrayList<String> parametersList = new ArrayList<>();
+    private Map<String, String> map = new LinkedHashMap<>();
+    private ArrayList<String> list = new ArrayList<>();
 
     @Bean(ActiveServerFinder.class)
     ServerFinder serverFinder;
@@ -36,14 +36,14 @@ public class ServerDetailsParameterAdapter2 extends BaseAdapter
 
     @Override
     public int getCount() {
-        return parametersMap.size();
+        return map.size();
     }
 
     @Override
     public String getItem(int position)
     {
-        String key = parametersList.get(position);
-        String value = parametersMap.get(key);
+        String key = list.get(position);
+        String value = map.get(key);
         return value;
     }
 
@@ -66,7 +66,7 @@ public class ServerDetailsParameterAdapter2 extends BaseAdapter
         {
             item = (ItemServerDetailsParameterView) convertView;
         }
-        item.bind(parametersList.get(position), getItem(position));
+        item.bind(list.get(position), getItem(position));
         return item;
     } // getView
 
@@ -76,8 +76,15 @@ public class ServerDetailsParameterAdapter2 extends BaseAdapter
         GameServerEntity gameServerEntity = serverFinder.findById(gameServerId);
         if(gameServerEntity != null)
         {
-            parametersMap = gameServerEntity.parameters;
-            parametersList = new ArrayList<>(parametersMap.keySet());
+            map.put("IP address", gameServerEntity.ipAddress);
+            map.put("Port", String.valueOf(gameServerEntity.port));
+            map.put("Status", gameServerEntity.isOnline == true ? "online" : "offline");
+            map.put("Game", gameServerEntity.game.name);
+            map.put("Host name", gameServerEntity.hostName);
+            map.put("Map name", gameServerEntity.mapName);
+            map.put("Maximum clients", String.valueOf(gameServerEntity.maxClients));
+
+            list = new ArrayList<>(map.keySet());
         }
     } // initAdapter
 
@@ -86,4 +93,4 @@ public class ServerDetailsParameterAdapter2 extends BaseAdapter
         this.gameServerId = gameServerId;
         initAdapter();
     }
-} // ServerDetailsParameterAdapter2
+} // ServerOverviewGeneralAdapter

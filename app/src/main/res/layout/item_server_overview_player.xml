@@ -4,18 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:weightSum="2"
+    android:weightSum="3"
     >
 
+    <!--Player name-->
     <TextView
-        android:id="@+id/server_details_parameter_item_title"
+        android:id="@+id/server_overview_player_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         />
 
+    <!--Player score-->
     <TextView
-        android:id="@+id/server_details_parameter_item_value"
+        android:id="@+id/server_overview_player_score"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        />
+
+    <!--Player ping-->
+    <TextView
+        android:id="@+id/server_overview_player_ping"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

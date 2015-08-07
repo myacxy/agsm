@@ -12,11 +12,11 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 
-@EFragment(R.layout.fragment_server_overview)
+@EFragment(R.layout.fragment_server_rcon)
 public class ServerRconFragment extends Fragment
 {
-    @ViewById(R.id.server_overview_text)
-    TextView overviewText;
+    @ViewById(R.id.server_rcon_text)
+    TextView rconText;
 
     @FragmentArg
     int gameServerId;
@@ -24,6 +24,6 @@ public class ServerRconFragment extends Fragment
     @AfterViews
     void initialize()
     {
-        overviewText.setText(Lorem.getParagraphs(3, 5));
+        rconText.setText(Lorem.getParagraphs(3, 5));
     }
 }

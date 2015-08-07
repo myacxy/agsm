@@ -10,15 +10,42 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         >
 
         <TextView
-            android:id="@+id/server_overview_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_normal"
+            android:text="General"
+            android:paddingBottom="8dp"
+            />
+
+        <ListView
+            android:id="@+id/server_overview_general_list"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="fill_vertical"
+            android:orientation="vertical"
+            android:divider="@null"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Players"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            />
+
+        <ListView
+            android:id="@+id/server_overview_players_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:divider="@null"
             />
 
     </LinearLayout>
