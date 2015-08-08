@@ -31,6 +31,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 @EFragment(R.layout.fragment_server)
@@ -140,18 +141,20 @@ public class ServerFragment extends BaseToolbarFragment
             @Override
             public void onServerUpdated(GameServer gameServer) {
                 databaseManager.update(gameServer);
-                viewPager.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        overviewFragment.update();
-                        detailsFragment.update();
-                        rconFragment.update();
-                        // TODO less workaround-ish refresh
-                        viewPager.setAdapter(adapter);
-                    }
-                });
+
+                reinitialize();
             }
         });
+    }
+
+    @UiThread
+    void reinitialize()
+    {
+//        overviewFragment.update();
+//        detailsFragment.update();
+//        rconFragment.update();
+        
+        adapter.notifyDataSetChanged();
     }
 
     @OptionsItem(android.R.id.home)

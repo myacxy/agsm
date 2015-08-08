@@ -1,6 +1,5 @@
 package net.myacxy.agsm.fragments;
 
-import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.widget.TextView;
 
@@ -11,6 +10,7 @@ import net.myacxy.agsm.R;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 @EFragment(R.layout.fragment_server_rcon)
