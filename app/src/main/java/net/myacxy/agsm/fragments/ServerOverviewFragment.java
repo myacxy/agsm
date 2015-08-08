@@ -47,7 +47,7 @@ public class ServerOverviewFragment extends Fragment
 
     }
 
-    private int getTotalListViewHeight(ListView listView)
+    private int getTotalHeightOfChildren(ListView listView)
     {
         if(listView.getAdapter() == null) return 0;
         else if(listView.getAdapter().getCount() == 0) return 0;
@@ -55,8 +55,8 @@ public class ServerOverviewFragment extends Fragment
         View view = listView.getAdapter().getView(0, null, listView);
         view.measure(0, 0);
 
-        int totalViewHeight = view.getMeasuredHeight() * (generalAdapter.getCount() + 1);
-        int totalDividerHeight = generalList.getDividerHeight() * (generalAdapter.getCount() - 1);
+        int totalViewHeight = view.getMeasuredHeight() * (listView.getAdapter().getCount() + 1);
+        int totalDividerHeight = listView.getDividerHeight() * (listView.getAdapter().getCount() - 1);
 
         return totalViewHeight + totalDividerHeight;
     }
@@ -65,7 +65,7 @@ public class ServerOverviewFragment extends Fragment
     {
         ViewGroup.LayoutParams params = listView.getLayoutParams();
 
-        params.height = getTotalListViewHeight(listView);
+        params.height = getTotalHeightOfChildren(listView);
         listView.setLayoutParams(params);
         listView.requestLayout();
     }
