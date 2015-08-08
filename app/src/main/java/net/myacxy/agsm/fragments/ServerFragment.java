@@ -1,13 +1,15 @@
 package net.myacxy.agsm.fragments;
 
 import android.os.Build;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.WindowManager;
+
+import com.github.clans.fab.FloatingActionButton;
 
 import net.myacxy.agsm.R;
 import net.myacxy.agsm.interfaces.DatabaseManager;
@@ -21,6 +23,7 @@ import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
 import net.myacxy.agsm.utils.JgsqGameFinder;
 import net.myacxy.agsm.views.adapters.ServerFragmentPagerAdapter;
+import net.myacxy.jgsq.helpers.ServerResponseStatus;
 import net.myacxy.jgsq.models.Game;
 import net.myacxy.jgsq.models.GameServer;
 
@@ -33,6 +36,8 @@ import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+
+import java.util.Collections;
 
 @EFragment(R.layout.fragment_server)
 @OptionsMenu(R.menu.menu_server)
@@ -137,14 +142,37 @@ public class ServerFragment extends BaseToolbarFragment
 
         Game game = gameFinder.find(gameServerEntity.game.name);
 
+        showProgress(refreshButton);
+
         serverManager.update(game, gameServerEntity.ipAddress, gameServerEntity.port, new OnServerUpdatedListener() {
             @Override
             public void onServerUpdated(GameServer gameServer) {
-                databaseManager.update(gameServer);
-
-                reinitialize();
+                if (gameServer.getProtocol().getResponseStatus() == ServerResponseStatus.OK) {
+                    databaseManager.update(gameServer);
+                    reinitialize();
+                } else {
+                    Snackbar.make(refreshButton,
+                            gameServer.getProtocol().getResponseStatus().toString(),
+                            Snackbar.LENGTH_SHORT)
+                            .show();
+                }
+                hideProgress(refreshButton);
             }
         });
+    }
+
+    @UiThread
+    protected void showProgress(FloatingActionButton fab)
+    {
+        fab.setIndeterminate(true);
+        fab.setClickable(false);
+    }
+
+    @UiThread
+    protected void hideProgress(FloatingActionButton fab)
+    {
+        fab.setIndeterminate(false);
+        fab.setClickable(true);
     }
 
     @UiThread
@@ -153,7 +181,7 @@ public class ServerFragment extends BaseToolbarFragment
 //        overviewFragment.update();
 //        detailsFragment.update();
 //        rconFragment.update();
-        
+
         adapter.notifyDataSetChanged();
     }
 
