@@ -1,5 +1,6 @@
 package net.myacxy.agsm.fragments;
 
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.widget.TextView;
 
@@ -26,4 +27,10 @@ public class ServerRconFragment extends Fragment
     {
         rconText.setText(Lorem.getParagraphs(3, 5));
     }
-}
+
+    @UiThread
+    public void update()
+    {
+
+    }
+} // ServerRconFragment

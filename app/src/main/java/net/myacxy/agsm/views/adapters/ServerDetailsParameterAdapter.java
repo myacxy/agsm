@@ -17,12 +17,13 @@ import org.androidannotations.annotations.RootContext;
 import java.util.Map;
 
 @EBean
-public class ServerDetailsParameterAdapter extends RecyclerViewAdapterBase<Pair<String, String>, ItemServerDetailsParameterView>
+public class ServerDetailsParameterAdapter
+        extends RecyclerViewAdapterBase<Pair<String, String>, ItemServerDetailsParameterView>
 {
-
-    private int gameServerId;
     @Bean(ActiveServerFinder.class)
     ServerFinder serverFinder;
+
+    private int gameServerId;
 
     @RootContext
     Context context;
@@ -41,7 +42,8 @@ public class ServerDetailsParameterAdapter extends RecyclerViewAdapterBase<Pair<
     } // initAdapter
 
     @Override
-    protected ItemServerDetailsParameterView onCreateItemView(ViewGroup parent, int viewType) {
+    protected ItemServerDetailsParameterView onCreateItemView(ViewGroup parent, int viewType)
+    {
         return ItemServerDetailsParameterView_.build(context);
     }
 
@@ -54,7 +56,8 @@ public class ServerDetailsParameterAdapter extends RecyclerViewAdapterBase<Pair<
         view.bind(pair.first, pair.second);
     }
 
-    public void setGameServerId(int gameServerId) {
+    public void setGameServerId(int gameServerId)
+    {
         this.gameServerId = gameServerId;
         initAdapter();
     }

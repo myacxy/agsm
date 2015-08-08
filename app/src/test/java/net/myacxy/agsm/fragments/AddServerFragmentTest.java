@@ -4,7 +4,7 @@ import net.myacxy.agsm.BuildConfig;
 import net.myacxy.agsm.MainActivity_;
 import net.myacxy.agsm.R;
 import net.myacxy.agsm.interfaces.GameFinder;
-import net.myacxy.agsm.utils.JsonGameFinder_;
+import net.myacxy.agsm.utils.JgsqGameFinder_;
 import net.myacxy.jgsq.models.Game;
 
 import org.junit.Before;
@@ -67,7 +67,7 @@ public class AddServerFragmentTest
         assertNotSame(spinner.getAdapter(), fragment.gameSpinnerAdapter);
 
         // compare supported games size
-        GameFinder gf = JsonGameFinder_.getInstance_(activity);
+        GameFinder gf = JgsqGameFinder_.getInstance_(activity);
         gf.setConfig("games.conf.json");
         Map<String, Game> gamesMap = gf.findAll();
         List<Game> gamesList = new ArrayList<>(gamesMap.values());

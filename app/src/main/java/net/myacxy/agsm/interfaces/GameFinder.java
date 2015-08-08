@@ -11,7 +11,7 @@ public interface GameFinder
 
     Map<String, Game> findWithType(ServerProtocolType protocolType);
 
-    Game get(String name);
+    Game find(String name);
 
     void setConfig(String configName);
 }

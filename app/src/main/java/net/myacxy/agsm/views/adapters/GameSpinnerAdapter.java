@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import net.myacxy.agsm.interfaces.GameFinder;
-import net.myacxy.agsm.utils.JsonGameFinder;
+import net.myacxy.agsm.utils.JgsqGameFinder;
 import net.myacxy.agsm.views.GameSpinnerDropdownItemView;
 import net.myacxy.agsm.views.GameSpinnerDropdownItemView_;
 import net.myacxy.agsm.views.ItemGameSpinnerView;
@@ -28,7 +28,7 @@ public class GameSpinnerAdapter extends BaseAdapter
     private Map<String, Game> gamesMap = new HashMap<>();
     private ArrayList<Game> gamesList = new ArrayList<>();
 
-    @Bean(JsonGameFinder.class)
+    @Bean(JgsqGameFinder.class)
     GameFinder gameFinder;
 
     @RootContext
@@ -116,7 +116,7 @@ public class GameSpinnerAdapter extends BaseAdapter
     {
         if(!gamesMap.containsKey(name))
         {
-            Game game = gameFinder.get(name);
+            Game game = gameFinder.find(name);
             if(game != null)
             {
                 addGame(game);
@@ -141,7 +141,7 @@ public class GameSpinnerAdapter extends BaseAdapter
         }
         else
         {
-            Game game = gameFinder.get(name);
+            Game game = gameFinder.find(name);
             if(game != null)
             {
                 removeGame(game);

@@ -1,5 +1,6 @@
 package net.myacxy.agsm.fragments;
 
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,5 +68,12 @@ public class ServerOverviewFragment extends Fragment
         params.height = getTotalListViewHeight(listView);
         listView.setLayoutParams(params);
         listView.requestLayout();
+    }
+
+    @UiThread
+    public void update()
+    {
+        generalAdapter.notifyDataSetChanged();
+        playersAdapter.notifyDataSetChanged();
     }
 } // ServerOverviewFragment

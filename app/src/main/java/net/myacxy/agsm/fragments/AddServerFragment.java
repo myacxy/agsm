@@ -18,7 +18,7 @@ import net.myacxy.agsm.managers.ActiveDatabaseManager;
 import net.myacxy.agsm.managers.JgsqServerManager;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.IpAddressAndDomainValidator;
-import net.myacxy.agsm.utils.JsonGameFinder;
+import net.myacxy.agsm.utils.JgsqGameFinder;
 import net.myacxy.agsm.utils.PortValidator;
 import net.myacxy.agsm.views.adapters.GameSpinnerAdapter;
 import net.myacxy.jgsq.helpers.ServerResponseStatus;
@@ -56,7 +56,7 @@ public class AddServerFragment extends BaseToolbarFragment
 
     private OnServerAddedListener listener;
 
-    @Bean(JsonGameFinder.class)
+    @Bean(JgsqGameFinder.class)
     protected GameFinder gameFinder;
 
     @Bean(GameSpinnerAdapter.class)

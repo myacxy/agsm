@@ -2,7 +2,6 @@ package net.myacxy.agsm.fragments;
 
 import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -11,9 +10,22 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 
 import net.myacxy.agsm.R;
+import net.myacxy.agsm.interfaces.DatabaseManager;
+import net.myacxy.agsm.interfaces.GameFinder;
+import net.myacxy.agsm.interfaces.OnServerUpdatedListener;
+import net.myacxy.agsm.interfaces.ServerFinder;
+import net.myacxy.agsm.interfaces.ServerManager;
+import net.myacxy.agsm.managers.ActiveDatabaseManager;
+import net.myacxy.agsm.managers.JgsqServerManager;
+import net.myacxy.agsm.models.GameServerEntity;
+import net.myacxy.agsm.utils.ActiveServerFinder;
+import net.myacxy.agsm.utils.JgsqGameFinder;
 import net.myacxy.agsm.views.adapters.ServerFragmentPagerAdapter;
+import net.myacxy.jgsq.models.Game;
+import net.myacxy.jgsq.models.GameServer;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
@@ -26,6 +38,7 @@ import org.androidannotations.annotations.ViewById;
 public class ServerFragment extends BaseToolbarFragment
 {
     public static final String ARG_GAME_SERVER_ID = "game_server_id";
+
     @ViewById(R.id.viewpager)
     ViewPager viewPager;
 
@@ -37,6 +50,18 @@ public class ServerFragment extends BaseToolbarFragment
 
     @FragmentArg
     int gameServerId;
+
+    @Bean(JgsqServerManager.class)
+    ServerManager serverManager;
+
+    @Bean(JgsqGameFinder.class)
+    GameFinder gameFinder;
+
+    @Bean(ActiveServerFinder.class)
+    ServerFinder serverFinder;
+
+    @Bean(ActiveDatabaseManager.class)
+    DatabaseManager databaseManager;
 
     private ServerOverviewFragment overviewFragment;
     private ServerDetailsFragment detailsFragment;
@@ -107,8 +132,26 @@ public class ServerFragment extends BaseToolbarFragment
     @Click(R.id.fab)
     void refresh()
     {
-        Snackbar.make(refreshButton, "refresh", Snackbar.LENGTH_LONG)
-                .show();
+        GameServerEntity gameServerEntity = serverFinder.findById(gameServerId);
+
+        Game game = gameFinder.find(gameServerEntity.game.name);
+
+        serverManager.update(game, gameServerEntity.ipAddress, gameServerEntity.port, new OnServerUpdatedListener() {
+            @Override
+            public void onServerUpdated(GameServer gameServer) {
+                databaseManager.update(gameServer);
+                viewPager.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        overviewFragment.update();
+                        detailsFragment.update();
+                        rconFragment.update();
+                        // TODO less workaround-ish refresh
+                        viewPager.setAdapter(adapter);
+                    }
+                });
+            }
+        });
     }
 
     @OptionsItem(android.R.id.home)

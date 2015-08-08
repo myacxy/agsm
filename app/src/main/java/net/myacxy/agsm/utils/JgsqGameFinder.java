@@ -11,10 +11,15 @@ import org.androidannotations.annotations.EBean;
 import java.util.Map;
 
 @EBean(scope = EBean.Scope.Singleton)
-public class JsonGameFinder implements GameFinder
+public class JgsqGameFinder implements GameFinder
 {
     private final GameFactory gameFactory = new GameFactory();
     private boolean configLoaded;
+
+    public JgsqGameFinder()
+    {
+        setConfig("games.conf.json");
+    }
 
     @Override
     public Map<String, Game> findAll()
@@ -31,7 +36,7 @@ public class JsonGameFinder implements GameFinder
     }
 
     @Override
-    public Game get(String name)
+    public Game find(String name)
     {
         if(configLoaded) return gameFactory.getGame(name);
         return null;
@@ -43,4 +48,4 @@ public class JsonGameFinder implements GameFinder
         Map<String, Game> games = gameFactory.loadConfig(Utilities.getResourceAsStream(configName));
         if(games != null) configLoaded = true;
     }
-} // JsonGameFinder
+} // JgsqGameFinder

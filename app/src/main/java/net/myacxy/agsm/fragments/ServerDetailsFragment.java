@@ -1,5 +1,6 @@
 package net.myacxy.agsm.fragments;
 
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,5 +35,11 @@ public class ServerDetailsFragment extends Fragment
 
         serverDetailsParameterAdapter.setGameServerId(gameServerId);
         detailsList.setAdapter(serverDetailsParameterAdapter);
+    }
+
+    @UiThread
+    public void update()
+    {
+        serverDetailsParameterAdapter.notifyDataSetChanged();
     }
 } // ServerDetailsFragment

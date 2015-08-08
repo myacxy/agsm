@@ -118,10 +118,21 @@ public class ActiveDatabaseManager implements DatabaseManager
 
         gameServerEntity.save();
 
-        // register current players
-        for (Player player: gameServer.players)
+        // bulk register current players
+        ActiveAndroid.beginTransaction();
+        try
         {
-            save(player, gameServerEntity);
+            for (Player player: gameServer.players)
+            {
+                PlayerEntity pe = new PlayerEntity(player);
+                pe.gameServer = gameServerEntity;
+                pe.save();
+            }
+            ActiveAndroid.setTransactionSuccessful();
+        }
+        finally
+        {
+            ActiveAndroid.endTransaction();
         }
 
         return gameServerEntity;

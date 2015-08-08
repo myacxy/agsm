@@ -6,6 +6,7 @@ public interface ServerManager
 {
     boolean isOnline(Game game, String ipAddress, int port);
 
-    // TODO serverCreatedListener return server
     void create(Game game, String ipAddress, int port, OnServerCreatedListener listener);
+
+    void update(Game game, String ipAddress, int port, OnServerUpdatedListener listener);
 }

@@ -1,6 +1,7 @@
 package net.myacxy.agsm.managers;
 
 import net.myacxy.agsm.interfaces.OnServerCreatedListener;
+import net.myacxy.agsm.interfaces.OnServerUpdatedListener;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.interfaces.ServerManager;
 import net.myacxy.agsm.utils.ActiveServerFinder;
@@ -30,15 +31,29 @@ public class JgsqServerManager implements ServerManager
     @Background
     public void create(Game game, String ipAddress, int port, OnServerCreatedListener listener)
     {
-        GameServer server = gameServerFactory.getGameServer(game);
-        server.connect(ipAddress, port);
+        GameServer gameServer = gameServerFactory.getGameServer(game);
+        gameServer.connect(ipAddress, port);
 
         if(listener != null)
         {
-            listener.onServerCreated(server);
+            listener.onServerCreated(gameServer);
         }
     }
 
+    @Background
+    public void update(Game game, String ipAddress, int port, OnServerUpdatedListener listener)
+    {
+        GameServer gameServer = gameServerFactory.getGameServer(game);
+        gameServer.connect(ipAddress, port);
+        gameServer.update();
+
+        if(listener != null)
+        {
+            listener.onServerUpdated(gameServer);
+        }
+    }
+
+    @Override
     public boolean isOnline(Game game, String ipAddress, int port)
     {
         return false;
