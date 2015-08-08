@@ -3,7 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/menu_add_server_save"
-        app:showAsAction="always|withText"
-        android:title="@string/save"/>
+        android:id="@+id/menu_add_server_tfj"
+        app:showAsAction="never"
+        android:title="@string/menu_add_server_tfj_title"
+        />
+    <item
+        android:id="@+id/menu_add_server_myacxy"
+        app:showAsAction="never"
+        android:title="@string/menu_add_server_myacxy_title"
+        />
 </menu>

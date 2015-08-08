@@ -30,6 +30,7 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
@@ -37,6 +38,7 @@ import fr.ganfra.materialspinner.MaterialSpinner;
 
 
 @EFragment(R.layout.fragment_add_server)
+@OptionsMenu(R.menu.menu_add_server)
 public class AddServerFragment extends BaseToolbarFragment
 {
     @ViewById(R.id.fab)
@@ -143,6 +145,28 @@ public class AddServerFragment extends BaseToolbarFragment
     boolean closeSelected(MenuItem item) {
         getFragmentManager().popBackStack();
         return true;
+    }
+
+    @OptionsItem(R.id.menu_add_server_tfj)
+    void addTfj(MenuItem item)
+    {
+        Game game = gameSpinnerAdapter.getItem("Star Wars Jedi Knight 2: Jedi Outcast");
+        int position = gameSpinnerAdapter.getPosition(game);
+        gameSpinner.setSelection(position, true);
+
+        addressTextView.setText("85.25.149.26");
+        portTextView.setText("28070");
+    }
+
+    @OptionsItem(R.id.menu_add_server_myacxy)
+    void addMyacxy(MenuItem item)
+    {
+        Game game = gameSpinnerAdapter.getItem("Star Wars Jedi Knight 2: Jedi Outcast");
+        int position = gameSpinnerAdapter.getPosition(game);
+        gameSpinner.setSelection(position, true);
+
+        addressTextView.setText("myacxy.net");
+        portTextView.setText("28070");
     }
 
     @Click(R.id.fab)

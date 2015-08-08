@@ -56,6 +56,16 @@ public class GameSpinnerAdapter extends BaseAdapter
         return createDropDownItemView(position, convertView, parent);
     }
 
+    public Game getItem(String name)
+    {
+        return gamesMap.get(name);
+    }
+
+    public int getPosition(Game game)
+    {
+        return gamesList.indexOf(game) + 1;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
