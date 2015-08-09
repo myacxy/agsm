@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity
     private SubMenu mServerMenu;
 
     protected HomeFragment_ homeFragment;
-    protected ServerFragment serverFragment;
 
     private int mCurrentPosition = 0;
     final static String ARG_DRAWER_POSITION = "drawer_position";
@@ -139,7 +138,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         mCurrentPosition = id;
-        System.out.println(id);
 
         if(fragment != null)
         {

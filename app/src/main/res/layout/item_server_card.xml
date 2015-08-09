@@ -10,6 +10,9 @@
     android:layout_margin="@dimen/spacing_small"
     app:cardCornerRadius="@dimen/spacing_tiny"
     app:cardElevation="@dimen/spacing_tiny"
+    android:focusable="true"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     >
 
     <LinearLayout
@@ -42,8 +45,6 @@
                 android:textSize="14sp"
                 />
         </RelativeLayout>
-
-
 
         <RelativeLayout
             android:layout_width="match_parent"

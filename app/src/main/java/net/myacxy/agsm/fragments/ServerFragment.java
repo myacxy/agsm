@@ -37,8 +37,6 @@ import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
-import java.util.Collections;
-
 @EFragment(R.layout.fragment_server)
 @OptionsMenu(R.menu.menu_server)
 public class ServerFragment extends BaseToolbarFragment
