@@ -24,6 +24,8 @@ public class GameServerEntity extends Model
     public String ipAddress;
     @Column(name = "port")
     public int port;
+    @Column(name = "ping")
+    public int ping;
     @Column(name = "max_clients")
     public int maxClients;
     @Column(name = "online")
@@ -48,6 +50,7 @@ public class GameServerEntity extends Model
         hostName = server.hostName.trim();
         mapName = server.mapName;
         port = server.port;
+        ping = server.ping;
         ipAddress = server.ipAddress;
         maxClients = server.maxClients;
         isOnline = server.isOnline;

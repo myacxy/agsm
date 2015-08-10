@@ -45,7 +45,7 @@ public class ServerCardView extends CardView
     }
 
     @Click(R.id.server_card)
-    void click()
+    void openServerFragment()
     {
         ServerFragment serverFragment = ServerFragment_
                 .builder()

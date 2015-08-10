@@ -107,6 +107,7 @@ public class ActiveDatabaseManager implements DatabaseManager
         gameServerEntity.maxClients = gameServer.maxClients;
         gameServerEntity.parameters = gameServer.parameters;
         gameServerEntity.port = gameServer.port;
+        gameServerEntity.ping = gameServer.ping;
         gameServerEntity.queryPort = gameServer.queryPort;
         gameServerEntity.rcon = gameServer.rcon;
 

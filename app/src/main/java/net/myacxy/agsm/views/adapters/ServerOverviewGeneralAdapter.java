@@ -79,8 +79,9 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
             map.put("IP address", gameServerEntity.ipAddress);
             map.put("Port", String.valueOf(gameServerEntity.port));
             map.put("Status", gameServerEntity.isOnline == true ? "online" : "offline");
+            map.put("Ping", String.format("%d ms", gameServerEntity.ping));
             map.put("Game", gameServerEntity.game.name);
-            map.put("Host name", gameServerEntity.hostName);
+            map.put("Host name", gameServerEntity.hostName.trim());
             map.put("Map name", gameServerEntity.mapName);
             map.put("Maximum clients", String.valueOf(gameServerEntity.maxClients));
 

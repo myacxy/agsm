@@ -16,6 +16,7 @@
         android:paddingRight="8dp"
         >
 
+        <!--General information-->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,6 +24,7 @@
             android:paddingBottom="8dp"
             />
 
+        <!-- add information via ServerOverViewGeneralAdapter -->
         <ListView
             android:id="@+id/server_overview_general_list"
             android:layout_width="match_parent"
@@ -32,6 +34,7 @@
             android:divider="@null"
             />
 
+        <!--Current player-->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,6 +43,7 @@
             android:paddingBottom="8dp"
             />
 
+        <!-- add information via ServerOverViewPlayersAdapter -->
         <ListView
             android:id="@+id/server_overview_players_list"
             android:layout_width="match_parent"
