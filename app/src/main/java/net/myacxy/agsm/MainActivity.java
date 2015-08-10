@@ -2,13 +2,10 @@ package net.myacxy.agsm;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -22,10 +19,6 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
-import net.myacxy.agsm.fragments.AddServerFragment_;
-import net.myacxy.agsm.fragments.ServerFragment;
-import net.myacxy.agsm.fragments.ServerFragment_;
-import net.myacxy.agsm.interfaces.OnServerAddedListener;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
@@ -35,20 +28,21 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
 
 @EActivity(R.layout.activity_main)
-public class MainActivity extends AppCompatActivity implements OnServerAddedListener
+public class MainActivity extends AppCompatActivity
 {
     protected static final int IDENTIFIER_HOME = -1;
     protected static final int IDENTIFIER_NOTIFICATIONS = -2;
     protected static final int IDENTIFIER_SETTINGS = -3;
     protected static final int IDENTIFIER_ADD_SERVER = -4;
+    public static final String RECEIVER_SERVER_ADDED = "net.myacxy.agsm.SERVER_ADDED";
 
-    @ViewById(R.id.toolbar)
+    @ViewById(R.id.home_toolbar)
     Toolbar toolbar;
 
     @ViewById(R.id.main_content_layout)
@@ -114,8 +108,8 @@ public class MainActivity extends AppCompatActivity implements OnServerAddedList
                     @Override
                     public boolean onItemClick(AdapterView<?> adapterView, View view, int position, long id, IDrawerItem iDrawerItem) {
                         int identifier = iDrawerItem.getIdentifier();
-                        switch (identifier)
-                        {
+
+                        switch (identifier) {
                             case IDENTIFIER_HOME:
                                 break;
                             case IDENTIFIER_NOTIFICATIONS:
@@ -123,9 +117,9 @@ public class MainActivity extends AppCompatActivity implements OnServerAddedList
                             case IDENTIFIER_SETTINGS:
                                 break;
                             case IDENTIFIER_ADD_SERVER:
+                                AddServerActivity_.intent(MainActivity.this).start();
                                 break;
                             default:
-                                transitionToServerFragment(serverFinder.findById(identifier));
                                 break;
                         }
                         return false;
@@ -134,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements OnServerAddedList
                 .withSavedInstance(savedInstanceState)
                 .build();
     }
-    
+
     void setupViews()
     {
         GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
@@ -155,6 +149,12 @@ public class MainActivity extends AppCompatActivity implements OnServerAddedList
     }
 
     @Override
+    protected void onResume() {
+        drawer.setSelection(0);
+        super.onResume();
+    }
+
+    @Override
     public void onBackPressed()
     {
         if (drawer != null && drawer.isDrawerOpen())
@@ -170,47 +170,35 @@ public class MainActivity extends AppCompatActivity implements OnServerAddedList
     @Click(R.id.fab)
     void showAddServerDialog()
     {
-        AddServerFragment_ fragment = new AddServerFragment_();
-        fragment.setOnServerAddedListener(this);
-
-        FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.main_content_layout, fragment, "add_server")
-                .addToBackStack(null)
-                .commit();
+        AddServerActivity_.intent(MainActivity.this).start();
     }
 
-    private void transitionToServerFragment(GameServerEntity gameServerEntity)
-    {
-        ServerFragment serverFragment = ServerFragment_
-                .builder()
-                .gameServerId(gameServerEntity.getId().intValue())
-                .build();
 
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.replace(R.id.main_content_layout, serverFragment, "server " + gameServerEntity.getId())
-                .addToBackStack(null)
-                .commit();
-    }
-
-    protected void addServersToDrawer(Drawer drawer, List<GameServerEntity> serverEntities)
-    {
+    protected void addServersToDrawer(Drawer drawer, List<GameServerEntity> serverEntities) {
         for (final GameServerEntity serverEntity : serverEntities) {
             drawer.addItem(new SecondaryDrawerItem()
-                    .withIcon(FontAwesome.Icon.faw_server)
-                    .withName(serverEntity.hostName.trim())
+                            .withIcon(FontAwesome.Icon.faw_server)
+                            .withName(serverEntity.hostName.trim())
                     .withBadge(String.valueOf(serverEntity.getPlayers().size()))
-                    .withIdentifier(serverEntity.getId().intValue()));
+                    .withIdentifier(serverEntity.getId().intValue()),
+                    drawer.getDrawerItems().size() - 1);
         }
     }
 
-    @Override
-    public void onServerAdded(GameServerEntity server)
+    @Receiver(actions = MainActivity.RECEIVER_SERVER_ADDED)
+    public void onServerAdded(@Receiver.Extra("id") int id)
     {
-        serverCardAdapter.addItem(server);
+        GameServerEntity serverEntity = serverFinder.findById(id);
+        serverCardAdapter.addItem(serverEntity);
+        recyclerView.getAdapter().notifyDataSetChanged();
+
+        drawer.addItem(new SecondaryDrawerItem()
+                .withIcon(FontAwesome.Icon.faw_server)
+                .withName(serverEntity.hostName.trim())
+                .withBadge(String.valueOf(serverEntity.getPlayers().size()))
+                .withIdentifier(serverEntity.getId().intValue()),
+                drawer.getDrawerItems().size() - 1);
+
     }
 
 } // MainActivity

@@ -1,15 +1,16 @@
-package net.myacxy.agsm.fragments;
+package net.myacxy.agsm;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-import net.myacxy.agsm.R;
-import net.myacxy.agsm.interfaces.OnServerAddedListener;
 import net.myacxy.agsm.interfaces.DatabaseManager;
 import net.myacxy.agsm.interfaces.GameFinder;
 import net.myacxy.agsm.interfaces.OnServerCreatedListener;
@@ -28,7 +29,7 @@ import net.myacxy.jgsq.models.GameServer;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
@@ -37,9 +38,9 @@ import org.androidannotations.annotations.ViewById;
 import fr.ganfra.materialspinner.MaterialSpinner;
 
 
-@EFragment(R.layout.activity_add_server)
+@EActivity(R.layout.activity_add_server)
 @OptionsMenu(R.menu.menu_add_server)
-public class AddServerFragment extends BaseToolbarFragment
+public class AddServerActivity extends AppCompatActivity
 {
     @ViewById(R.id.fab)
     protected FloatingActionButton doneButton;
@@ -56,8 +57,6 @@ public class AddServerFragment extends BaseToolbarFragment
     @ViewById(R.id.server_add_query_port)
     protected MaterialEditText queryPortTextView;
 
-    private OnServerAddedListener listener;
-
     @Bean(JgsqGameFinder.class)
     protected GameFinder gameFinder;
 
@@ -73,16 +72,11 @@ public class AddServerFragment extends BaseToolbarFragment
     @AfterViews
     protected void initialize()
     {
-        super.initialize();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(false);
+        getSupportActionBar().setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(18));
+        getSupportActionBar().setTitle(getString(R.string.server_add_title));
 
-        setHasOptionsMenu(true);
-
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
-        actionBar.setTitle(getString(R.string.server_add_title));
-
-        gameFinder.setConfig("games.conf.json");
     }
 
     @AfterViews
@@ -110,11 +104,12 @@ public class AddServerFragment extends BaseToolbarFragment
                                         gameServerEntity.port));
                     } else if (gameServer.update() == ServerResponseStatus.OK) {
                         gameServerEntity = databaseManager.save(gameServer);
-                        getFragmentManager().popBackStack();
 
-                        if (listener != null) {
-                            listener.onServerAdded(gameServerEntity);
-                        }
+                        Intent data = new Intent(MainActivity.RECEIVER_SERVER_ADDED);
+                        data.putExtra("id", gameServerEntity.getId().intValue());
+                        sendBroadcast(data);
+
+                        back();
                     } else {
                         showSnackbar(String.format("%s", gameServer.getProtocol().getResponseStatus()));
                     }
@@ -126,6 +121,7 @@ public class AddServerFragment extends BaseToolbarFragment
         });
 
     } // initializeServer
+
 
     @UiThread
     protected void showProgress(FloatingActionButton fab)
@@ -141,10 +137,10 @@ public class AddServerFragment extends BaseToolbarFragment
         fab.setClickable(true);
     }
 
-    @OptionsItem(android.R.id.home)
-    boolean closeSelected(MenuItem item) {
-        getFragmentManager().popBackStack();
-        return true;
+    @UiThread
+    protected void back()
+    {
+        onBackPressed();
     }
 
     @OptionsItem(R.id.menu_add_server_tfj)
@@ -184,6 +180,13 @@ public class AddServerFragment extends BaseToolbarFragment
         }
     }
 
+    @OptionsItem(android.R.id.home)
+    boolean homePressed()
+    {
+        onBackPressed();
+        return false;
+    }
+
     protected boolean validateInput()
     {
         boolean valid = true;
@@ -219,8 +222,4 @@ public class AddServerFragment extends BaseToolbarFragment
                 .show();
     }
 
-    public void setOnServerAddedListener(OnServerAddedListener listener)
-    {
-        this.listener = listener;
-    }
 } // AddServerFragment

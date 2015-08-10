@@ -15,8 +15,8 @@ import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
 @EBean
-public class ServerCardAdapter extends RecyclerViewAdapterBase<GameServerEntity, ServerCardView> {
-
+public class ServerCardAdapter extends RecyclerViewAdapterBase<GameServerEntity, ServerCardView>
+{
     @Bean(ActiveServerFinder.class)
     ServerFinder serverFinder;
 
@@ -30,15 +30,18 @@ public class ServerCardAdapter extends RecyclerViewAdapterBase<GameServerEntity,
     }
 
     @Override
-    protected ServerCardView onCreateItemView(ViewGroup parent, int viewType) {
+    protected ServerCardView onCreateItemView(ViewGroup parent, int viewType)
+    {
         return ServerCardView_.build(context);
     }
 
     @Override
-    public void onBindViewHolder(ViewWrapper<ServerCardView> holder, int position) {
+    public void onBindViewHolder(ViewWrapper<ServerCardView> holder, int position)
+    {
         ServerCardView view = holder.getView();
         GameServerEntity server = items.get(position);
 
         view.bind(server);
     }
+
 } // ServerCardAdapter
