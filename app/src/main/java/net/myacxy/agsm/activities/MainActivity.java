@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity
     @ViewById(R.id.home_toolbar)        Toolbar toolbar;
     @ViewById(R.id.main_content_layout) FrameLayout mainLayout;
     @ViewById(R.id.home_recycler_view)  RecyclerView recyclerView;
-    @ViewById(R.id.fab)                 FloatingActionButton addServerButton;
+    @ViewById(R.id.server_fab)                 FloatingActionButton addServerButton;
     @Bean(ActiveServerFinder.class)     ServerFinder serverFinder;
     @Bean                               ServerCardAdapter serverCardAdapter;
 
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Click(R.id.fab)
+    @Click(R.id.server_fab)
     void showAddServerDialog()
     {
         AddServerActivity_.intent(MainActivity.this).start();
@@ -196,7 +196,6 @@ public class MainActivity extends AppCompatActivity
                 .withBadge(String.valueOf(serverEntity.getPlayers().size()))
                 .withIdentifier(serverEntity.getId().intValue()),
                 drawer.getDrawerItems().size() - 1);
-
     }
 
 } // MainActivity

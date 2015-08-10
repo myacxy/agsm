@@ -50,9 +50,9 @@ public class ServerActivity extends AppCompatActivity
     public static final String ARG_GAME_SERVER_ID = "game_server_id";
 
     @ViewById(R.id.server_toolbar)      Toolbar toolbar;
-    @ViewById(R.id.tabs)                TabLayout tabLayout;
-    @ViewById(R.id.viewpager)           ViewPager viewPager;
-    @ViewById(R.id.fab)                 FloatingActionButton refreshButton;
+    @ViewById(R.id.server_tabs)                TabLayout tabLayout;
+    @ViewById(R.id.server_viewpager)           ViewPager viewPager;
+    @ViewById(R.id.server_fab)                 FloatingActionButton refreshButton;
     @Bean(JgsqServerManager.class)      ServerManager serverManager;
     @Bean(JgsqGameFinder.class)         GameFinder gameFinder;
     @Bean(ActiveServerFinder.class)     ServerFinder serverFinder;
@@ -113,7 +113,7 @@ public class ServerActivity extends AppCompatActivity
     }
 
 
-    @Click(R.id.fab)
+    @Click(R.id.server_fab)
     void refresh()
     {
         GameServerEntity gameServerEntity = serverFinder.findById(gameServerId);
