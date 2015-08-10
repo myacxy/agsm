@@ -6,6 +6,8 @@ import com.activeandroid.annotation.Table;
 
 import net.myacxy.jgsq.models.GameServer;
 
+import org.joda.time.DateTime;
+
 import java.util.List;
 import java.util.TreeMap;
 
@@ -18,7 +20,7 @@ public class GameServerEntity extends Model
     public String coloredHostName;
     @Column(name = "host_name")
     public String hostName;
-    @Column(name = "map_anme")
+    @Column(name = "map_name")
     public String mapName;
     @Column(name = "ip_address")
     public String ipAddress;
@@ -34,8 +36,10 @@ public class GameServerEntity extends Model
     public String rcon;
     @Column(name = "query_port")
     public String queryPort;
-    @Column(name ="parameters")
+    @Column(name = "parameters")
     public TreeMap<String, String> parameters;
+    @Column(name = "last_update")
+    public DateTime lastUpdate;
 
     public GameServerEntity()
     {

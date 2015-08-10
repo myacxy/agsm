@@ -28,7 +28,8 @@
             />
         <meta-data
             android:name="AA_SERIALIZERS"
-            android:value="net.myacxy.agsm.utils.TreeMapStringStringToJsonSerializer"
+            android:value=  "net.myacxy.agsm.utils.TreeMapStringStringToJsonSerializer,
+                             net.myacxy.agsm.utils.JodaDateTimeSerializer"
             />
 
         <activity
