@@ -1,4 +1,4 @@
-package net.myacxy.agsm;
+package net.myacxy.agsm.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,6 +11,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import net.myacxy.agsm.R;
 import net.myacxy.agsm.interfaces.DatabaseManager;
 import net.myacxy.agsm.interfaces.GameFinder;
 import net.myacxy.agsm.interfaces.OnServerCreatedListener;

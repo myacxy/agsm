@@ -1,4 +1,4 @@
-package net.myacxy.agsm;
+package net.myacxy.agsm.activities;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -16,6 +16,8 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
+
+import net.myacxy.agsm.R;
 
 import java.util.List;
 

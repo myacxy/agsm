@@ -1,4 +1,4 @@
-package net.myacxy.agsm;
+package net.myacxy.agsm.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +19,8 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import net.myacxy.agsm.AddServerActivity_;
+import net.myacxy.agsm.R;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
@@ -73,12 +75,13 @@ public class MainActivity extends AppCompatActivity
     void initialize()
     {
         setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.drawer_home_title);
 
         setupDrawer();
         addServersToDrawer(drawer, serverFinder.findAll());
         setupViews();
         bindAdapter();
+
+        toolbar.setTitle(R.string.drawer_home_title);
     }
 
     void setupDrawer()
