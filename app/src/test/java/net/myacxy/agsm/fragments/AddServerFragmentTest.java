@@ -1,7 +1,7 @@
 package net.myacxy.agsm.fragments;
 
 import net.myacxy.agsm.BuildConfig;
-import net.myacxy.agsm.MainActivity_;
+import net.myacxy.agsm.activities.MainActivity_;
 import net.myacxy.agsm.R;
 import net.myacxy.agsm.interfaces.GameFinder;
 import net.myacxy.agsm.utils.JgsqGameFinder_;

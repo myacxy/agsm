@@ -19,7 +19,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
-import net.myacxy.agsm.AddServerActivity_;
+import net.myacxy.agsm.activities.AddServerActivity_;
 import net.myacxy.agsm.R;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
