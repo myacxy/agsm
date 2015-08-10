@@ -1,16 +1,13 @@
 package net.myacxy.agsm.views;
 
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
 import net.myacxy.agsm.R;
-import net.myacxy.agsm.fragments.ServerFragment;
-import net.myacxy.agsm.fragments.ServerFragment_;
+import net.myacxy.agsm.activities.ServerActivity_;
 import net.myacxy.agsm.models.GameServerEntity;
 
 import org.androidannotations.annotations.Click;
@@ -34,30 +31,28 @@ public class ServerCardView extends CardView
     @ViewById(R.id.server_card_player_count)
     TextView playerCount;
 
+    private Context context;
+
     public ServerCardView(Context context)
     {
         super(context);
+        this.context = context;
     }
-
     public ServerCardView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+        this.context = context;
     }
 
     @Click(R.id.server_card)
-    void openServerFragment()
+    void startServerActivity()
     {
-        ServerFragment serverFragment = ServerFragment_
-                .builder()
-                .gameServerId(mGameServer.getId().intValue())
-                .build();
+        Intent intent = ServerActivity_
+                .intent(context)
+                .extra("game_server_id", mGameServer.getId().intValue())
+                .get();
 
-        FragmentManager fm = ((AppCompatActivity) getContext()).getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.replace(R.id.main_content_layout, serverFragment, "server " + mGameServer.getId())
-                .addToBackStack(null)
-                .commit();
+        context.startActivity(intent);
     }
 
     public void bind(GameServerEntity gameServerEntity)

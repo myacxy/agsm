@@ -1,5 +1,6 @@
 package net.myacxy.agsm.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +20,6 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
-import net.myacxy.agsm.activities.AddServerActivity_;
 import net.myacxy.agsm.R;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
@@ -38,29 +38,19 @@ import java.util.List;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity
 {
+    public static final String RECEIVER_SERVER_ADDED = "net.myacxy.agsm.SERVER_ADDED";
+
     protected static final int IDENTIFIER_HOME = -1;
     protected static final int IDENTIFIER_NOTIFICATIONS = -2;
     protected static final int IDENTIFIER_SETTINGS = -3;
     protected static final int IDENTIFIER_ADD_SERVER = -4;
-    public static final String RECEIVER_SERVER_ADDED = "net.myacxy.agsm.SERVER_ADDED";
 
-    @ViewById(R.id.home_toolbar)
-    Toolbar toolbar;
-
-    @ViewById(R.id.main_content_layout)
-    FrameLayout mainLayout;
-
-    @ViewById(R.id.home_recycler_view)
-    RecyclerView recyclerView;
-
-    @ViewById(R.id.fab)
-    FloatingActionButton addServerButton;
-
-    @Bean(ActiveServerFinder.class)
-    ServerFinder serverFinder;
-
-    @Bean
-    ServerCardAdapter serverCardAdapter;
+    @ViewById(R.id.home_toolbar)        Toolbar toolbar;
+    @ViewById(R.id.main_content_layout) FrameLayout mainLayout;
+    @ViewById(R.id.home_recycler_view)  RecyclerView recyclerView;
+    @ViewById(R.id.fab)                 FloatingActionButton addServerButton;
+    @Bean(ActiveServerFinder.class)     ServerFinder serverFinder;
+    @Bean                               ServerCardAdapter serverCardAdapter;
 
     protected Drawer drawer;
     protected Bundle savedInstanceState;
@@ -123,6 +113,11 @@ public class MainActivity extends AppCompatActivity
                                 AddServerActivity_.intent(MainActivity.this).start();
                                 break;
                             default:
+                                Intent intent = ServerActivity_
+                                        .intent(MainActivity.this)
+                                        .extra("game_server_id", identifier)
+                                        .get();
+                                startActivity(intent);
                                 break;
                         }
                         return false;
@@ -189,7 +184,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Receiver(actions = MainActivity.RECEIVER_SERVER_ADDED)
-    public void onServerAdded(@Receiver.Extra("id") int id)
+    public void onServerAdded(@Receiver.Extra("game_server_id") int id)
     {
         GameServerEntity serverEntity = serverFinder.findById(id);
         serverCardAdapter.addItem(serverEntity);

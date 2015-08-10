@@ -16,6 +16,12 @@
         <item name="colorAccent">@color/complement_color5</item>
     </style>
 
+    <style name="ServerTheme" parent="MaterialDrawerTheme.Light">
+        <item name="colorPrimary">@color/primary_color3</item>
+        <item name="colorPrimaryDark">@color/primary_color5</item>
+        <item name="colorAccent">@color/complement_color5</item>
+    </style>
+
     <style name="Widget.CardContent" parent="android:Widget">
         <item name="android:paddingLeft">16dp</item>
         <item name="android:paddingRight">16dp</item>

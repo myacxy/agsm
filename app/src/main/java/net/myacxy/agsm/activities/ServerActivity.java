@@ -1,17 +1,24 @@
-package net.myacxy.agsm.fragments;
+package net.myacxy.agsm.activities;
 
-import android.os.Build;
+import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.WindowManager;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import net.myacxy.agsm.R;
+import net.myacxy.agsm.fragments.ServerDetailsFragment;
+import net.myacxy.agsm.fragments.ServerDetailsFragment_;
+import net.myacxy.agsm.fragments.ServerOverviewFragment;
+import net.myacxy.agsm.fragments.ServerOverviewFragment_;
+import net.myacxy.agsm.fragments.ServerRconFragment;
+import net.myacxy.agsm.fragments.ServerRconFragment_;
 import net.myacxy.agsm.interfaces.DatabaseManager;
 import net.myacxy.agsm.interfaces.GameFinder;
 import net.myacxy.agsm.interfaces.OnServerUpdatedListener;
@@ -30,52 +37,44 @@ import net.myacxy.jgsq.models.GameServer;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
-@EFragment(R.layout.fragment_server)
+@EActivity(R.layout.activity_server)
 @OptionsMenu(R.menu.menu_server)
-public class ServerFragment extends BaseToolbarFragment
+public class ServerActivity extends AppCompatActivity
 {
     public static final String ARG_GAME_SERVER_ID = "game_server_id";
 
-    @ViewById(R.id.viewpager)
-    ViewPager viewPager;
+    @ViewById(R.id.server_toolbar)      Toolbar toolbar;
+    @ViewById(R.id.tabs)                TabLayout tabLayout;
+    @ViewById(R.id.viewpager)           ViewPager viewPager;
+    @ViewById(R.id.fab)                 FloatingActionButton refreshButton;
+    @Bean(JgsqServerManager.class)      ServerManager serverManager;
+    @Bean(JgsqGameFinder.class)         GameFinder gameFinder;
+    @Bean(ActiveServerFinder.class)     ServerFinder serverFinder;
+    @Bean(ActiveDatabaseManager.class)  DatabaseManager databaseManager;
 
-    @ViewById(R.id.tabs)
-    TabLayout tabLayout;
-
-    @ViewById(R.id.fab)
-    FloatingActionButton refreshButton;
-
-    @FragmentArg
-    int gameServerId;
-
-    @Bean(JgsqServerManager.class)
-    ServerManager serverManager;
-
-    @Bean(JgsqGameFinder.class)
-    GameFinder gameFinder;
-
-    @Bean(ActiveServerFinder.class)
-    ServerFinder serverFinder;
-
-    @Bean(ActiveDatabaseManager.class)
-    DatabaseManager databaseManager;
-
-    private ServerOverviewFragment overviewFragment;
-    private ServerDetailsFragment detailsFragment;
-    private ServerRconFragment rconFragment;
+    private int gameServerId;
     private ServerFragmentPagerAdapter adapter;
 
     @AfterViews
     void initialize()
     {
-        super.initialize();
+        gameServerId = getIntent().getExtras().getInt("game_server_id");
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(false);
+        getSupportActionBar().setHomeAsUpIndicator(
+                new IconicsDrawable(
+                        this,
+                        GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(18)
+        );
+        getSupportActionBar().setTitle(serverFinder.findById(gameServerId).hostName.trim());
 
         setupViewPager(viewPager);
 
@@ -86,52 +85,33 @@ public class ServerFragment extends BaseToolbarFragment
             }
         });
 
-        if (Build.VERSION.SDK_INT >= 99) // replace 21
-        {
-            // Set the status bar to dark-semi-transparentish
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-            // Set paddingTop of toolbar to height of status bar.
-            // Fixes statusbar covers toolbar issue
-            toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-            toolbar.setMinimumHeight(toolbar.getHeight() + toolbar.getPaddingTop());
-        }
 
     } // initialize
 
     private void setupViewPager(ViewPager viewPager)
     {
-        overviewFragment = ServerOverviewFragment_
+        ServerOverviewFragment overviewFragment = ServerOverviewFragment_
                 .builder()
                 .gameServerId(gameServerId)
                 .build();
 
-        detailsFragment = ServerDetailsFragment_
+        ServerDetailsFragment detailsFragment = ServerDetailsFragment_
                 .builder()
                 .gameServerId(gameServerId)
                 .build();
 
-        rconFragment = ServerRconFragment_
+        ServerRconFragment rconFragment = ServerRconFragment_
                 .builder()
                 .gameServerId(gameServerId)
                 .build();
 
-        adapter = new ServerFragmentPagerAdapter(getActivity().getSupportFragmentManager());
+        adapter = new ServerFragmentPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(overviewFragment, "Overview");
         adapter.addFragment(detailsFragment, "Details");
         adapter.addFragment(rconFragment, "RCON");
         viewPager.setAdapter(adapter);
     }
 
-    public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
 
     @Click(R.id.fab)
     void refresh()
@@ -186,8 +166,7 @@ public class ServerFragment extends BaseToolbarFragment
     @OptionsItem(android.R.id.home)
     boolean homeSelected(MenuItem item)
     {
-        DrawerLayout drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        drawerLayout.openDrawer(GravityCompat.START);
+        onBackPressed();
         return true;
     }
 } // ServerFragment

@@ -38,37 +38,19 @@ import org.androidannotations.annotations.ViewById;
 
 import fr.ganfra.materialspinner.MaterialSpinner;
 
-
 @EActivity(R.layout.activity_add_server)
 @OptionsMenu(R.menu.menu_add_server)
 public class AddServerActivity extends AppCompatActivity
 {
-    @ViewById(R.id.fab)
-    protected FloatingActionButton doneButton;
-
-    @ViewById(R.id.server_add_game)
-    protected MaterialSpinner gameSpinner;
-
-    @ViewById(R.id.server_add_address)
-    protected MaterialEditText addressTextView;
-
-    @ViewById(R.id.server_add_port)
-    protected MaterialEditText portTextView;
-
-    @ViewById(R.id.server_add_query_port)
-    protected MaterialEditText queryPortTextView;
-
-    @Bean(JgsqGameFinder.class)
-    protected GameFinder gameFinder;
-
-    @Bean(GameSpinnerAdapter.class)
-    protected GameSpinnerAdapter gameSpinnerAdapter;
-
-    @Bean(JgsqServerManager.class)
-    protected ServerManager serverManager;
-
-    @Bean(ActiveDatabaseManager.class)
-    protected DatabaseManager databaseManager;
+    @ViewById(R.id.fab)                     protected FloatingActionButton doneButton;
+    @ViewById(R.id.server_add_game)         protected MaterialSpinner gameSpinner;
+    @ViewById(R.id.server_add_address)      protected MaterialEditText addressTextView;
+    @ViewById(R.id.server_add_port)         protected MaterialEditText portTextView;
+    @ViewById(R.id.server_add_query_port)   protected MaterialEditText queryPortTextView;
+    @Bean(JgsqGameFinder.class)             protected GameFinder gameFinder;
+    @Bean(GameSpinnerAdapter.class)         protected GameSpinnerAdapter gameSpinnerAdapter;
+    @Bean(JgsqServerManager.class)          protected ServerManager serverManager;
+    @Bean(ActiveDatabaseManager.class)      protected DatabaseManager databaseManager;
 
     @AfterViews
     protected void initialize()
@@ -107,7 +89,7 @@ public class AddServerActivity extends AppCompatActivity
                         gameServerEntity = databaseManager.save(gameServer);
 
                         Intent data = new Intent(MainActivity.RECEIVER_SERVER_ADDED);
-                        data.putExtra("id", gameServerEntity.getId().intValue());
+                        data.putExtra("game_server_id", gameServerEntity.getId().intValue());
                         sendBroadcast(data);
 
                         back();
