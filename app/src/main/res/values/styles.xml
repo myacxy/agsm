@@ -8,8 +8,6 @@
         <item name="colorPrimary">@color/primary_color3</item>
         <item name="colorPrimaryDark">@color/primary_color5</item>
         <item name="colorAccent">@color/complement_color5</item>
-        <item name="android:windowBackground">@color/ideal_foreground_color</item>
-        <item name="android:windowActionBarOverlay">false</item>
     </style>
 
     <style name="Widget.CardContent" parent="android:Widget">

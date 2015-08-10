@@ -24,7 +24,7 @@ import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.ViewById;
 
-@EFragment(R.layout.fragment_home)
+@EFragment(R.layout.include_home)
 @OptionsMenu(R.menu.menu_home)
 public class HomeFragment extends BaseToolbarFragment implements OnServerAddedListener
 {
