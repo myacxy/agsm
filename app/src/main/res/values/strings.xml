@@ -7,36 +7,40 @@
     <string name="save">save</string>
 
 
-    <!--START Drawer-->
+    <!-- START Drawer -->
     <string name="drawer_home_title">Home</string>
     <string name="drawer_settings_title">Settings</string>
     <string name="drawer_servers_title">Servers</string>
     <string name="drawer_notifications_title">Notifications</string>
-    <!--END Drawer-->
+    <!-- END Drawer -->
 
 
-    <!--START Server Add-->
+    <!-- START Server Add -->
     <string name="server_add_title">Add Server</string>
-    <!--Port-->
+    <!-- Port -->
     <string name="server_add_port_helper">e.g. 27960</string>
     <string name="server_add_port_hint">port</string>
     <string name="server_add_port_title">Port</string>
-    <!--Address-->
+    <!-- Address -->
     <string name="server_add_address_helper">e.g. 217.160.126.151 or myacxy.net</string>
     <string name="server_add_address_hint">ip address or hostname</string>
     <string name="server_add_address_title">IP Address or Hostname</string>
-    <!--Game-->
+    <!-- Game -->
     <string name="server_add_game_hint">select a game</string>
     <string name="server_add_game_title">Game</string>
-    <!--RCON-->
+    <!-- RCON -->
     <string name="server_add_rcon_hint">rcon (optional)</string>
     <string name="server_add_rcon_title">RCON</string>
-    <!--Query Port-->
+    <!-- Query Port -->
     <string name="server_add_query_port_helper">e.g. 27960</string>
     <string name="server_add_query_port_hint">query port (optional)</string>
     <string name="server_add_query_port_title">Query Port</string>
     <string name="action_server_edit">Edit</string>
     <string name="menu_add_server_tfj_title">TFJ</string>
     <string name="menu_add_server_myacxy_title">myacxy</string>
-    <!--END Server Add-->
+    <!-- Error -->
+    <string name="error_server_invalid_address">malformed address</string>
+    <string name="error_server_invalid_port">port out of range</string>
+    <string name="error_server_invalid_game">game selection required</string>
+    <!--END Server Add -->
 </resources>

@@ -42,7 +42,7 @@ import fr.ganfra.materialspinner.MaterialSpinner;
 @OptionsMenu(R.menu.menu_add_server)
 public class AddServerActivity extends AppCompatActivity
 {
-    @ViewById(R.id.fab)                     protected FloatingActionButton doneButton;
+    @ViewById(R.id.add_server_done_button)  protected FloatingActionButton doneButton;
     @ViewById(R.id.server_add_game)         protected MaterialSpinner gameSpinner;
     @ViewById(R.id.server_add_address)      protected MaterialEditText addressTextView;
     @ViewById(R.id.server_add_port)         protected MaterialEditText portTextView;
@@ -67,42 +67,62 @@ public class AddServerActivity extends AppCompatActivity
     {
         gameSpinner.setAdapter(gameSpinnerAdapter);
 
-        addressTextView.addValidator(new IpAddressAndDomainValidator("malformed address"));
-        portTextView.addValidator(new PortValidator("port out of range"));
-        queryPortTextView.addValidator(new PortValidator("port out of range"));
+        addressTextView.addValidator(
+                new IpAddressAndDomainValidator(getString(R.string.error_server_invalid_address)));
+        portTextView.addValidator(
+                new PortValidator(getString(R.string.error_server_invalid_port)));
+        queryPortTextView.addValidator(
+                new PortValidator(getString(R.string.error_server_invalid_port)));
     }
 
     protected void initializeServer(Game game, String address, int port)
     {
+        // show progress on the floating action button
         showProgress(doneButton);
-        serverManager.create(game, address, port, new OnServerCreatedListener() {
+
+        serverManager.create(game, address, port, new OnServerCreatedListener()
+        {
             @Override
-            public void onServerCreated(GameServer gameServer) {
-                if (gameServer.connect() == ServerResponseStatus.CONNECTED) {
+            public void onServerCreated(GameServer gameServer)
+            {
+                if (gameServer.connect() == ServerResponseStatus.CONNECTED)
+                {
+                    // server already exists?
                     GameServerEntity gameServerEntity = databaseManager.getGameServerEntity(gameServer);
-                    if (gameServerEntity != null) {
-                        showSnackbar(
-                                String.format("%s:%s is already known.",
+                    if (gameServerEntity != null)
+                    {
+                        showSnackbar(String.format("%s:%s is already known.",
                                         gameServerEntity.ipAddress,
-                                        gameServerEntity.port));
-                    } else if (gameServer.update() == ServerResponseStatus.OK) {
+                                        gameServerEntity.port)
+                        );
+                    }
+                    // update server status information
+                    else if (gameServer.update() == ServerResponseStatus.OK)
+                    {
                         gameServerEntity = databaseManager.save(gameServer);
 
+                        // notify receivers that server was successfully added
                         Intent data = new Intent(MainActivity.RECEIVER_SERVER_ADDED);
                         data.putExtra("game_server_id", gameServerEntity.getId().intValue());
                         sendBroadcast(data);
 
+                        // go back to main / home activity
                         back();
-                    } else {
+                    }
+                    // show error
+                    else
+                    {
                         showSnackbar(String.format("%s", gameServer.getProtocol().getResponseStatus()));
                     }
-                } else {
+                }
+                // show error
+                else
+                {
                     showSnackbar(String.format("%s", gameServer.getProtocol().getResponseStatus()));
                 }
                 hideProgress(doneButton);
             } // onServerCreated
         });
-
     } // initializeServer
 
 
@@ -148,7 +168,7 @@ public class AddServerActivity extends AppCompatActivity
         portTextView.setText("28070");
     }
 
-    @Click(R.id.fab)
+    @Click(R.id.add_server_done_button)
     protected void doneSelected()
     {
         if(validateInput())
@@ -158,15 +178,13 @@ public class AddServerActivity extends AppCompatActivity
             int port = Integer.parseInt(portTextView.getText().toString().trim());
 
             initializeServer(game, address, port);
-            doneButton.setIndeterminate(true);
-            doneButton.setClickable(false);
         }
     }
 
     @OptionsItem(android.R.id.home)
     boolean homePressed()
     {
-        onBackPressed();
+        back();
         return false;
     }
 
@@ -188,7 +206,7 @@ public class AddServerActivity extends AppCompatActivity
         String selection = spinner.getSelectedItem().toString();
         if(selection.equals("select a game"))
         {
-            gameSpinner.setError("game selection required");
+            gameSpinner.setError(getString(R.string.error_server_invalid_game));
             return false;
         }
         return true;
