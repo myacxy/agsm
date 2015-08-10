@@ -12,6 +12,7 @@ import net.myacxy.jgsq.models.GameServer;
 import net.myacxy.jgsq.models.Player;
 
 import org.androidannotations.annotations.EBean;
+import org.joda.time.DateTime;
 
 /**
  * DatabaseManager for ActiveAndroid ORM database
@@ -44,6 +45,7 @@ public class ActiveDatabaseManager implements DatabaseManager
         {
             // save server entity before saving players
             gameServerEntity = new GameServerEntity(gameServer);
+            gameServerEntity.lastUpdate = DateTime.now();
             gameServerEntity.game = save(gameServer.game);
             gameServerEntity.save();
 
@@ -99,6 +101,7 @@ public class ActiveDatabaseManager implements DatabaseManager
     {
         // update parameters
         GameServerEntity gameServerEntity = getGameServerEntity(gameServer);
+        gameServerEntity.lastUpdate = DateTime.now();
         gameServerEntity.coloredHostName = gameServer.coloredHostName;
         gameServerEntity.hostName = gameServer.hostName;
         gameServerEntity.ipAddress = gameServer.ipAddress;

@@ -15,6 +15,10 @@ import net.myacxy.agsm.views.ItemServerDetailsParameterView_;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -76,6 +80,17 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
         GameServerEntity gameServerEntity = serverFinder.findById(gameServerId);
         if(gameServerEntity != null)
         {
+            PeriodFormatter formatter = new PeriodFormatterBuilder()
+                    .appendHours().appendSuffix("h ")
+                    .appendMinutes().appendSuffix("m ")
+                    .printZeroAlways()
+                    .appendSeconds().appendSuffix("s")
+                    .appendLiteral(" ago")
+                    .toFormatter();
+
+            Period period = new Period(gameServerEntity.lastUpdate, DateTime.now());
+
+            map.put("Last update", formatter.print(period));
             map.put("IP address", gameServerEntity.ipAddress);
             map.put("Port", String.valueOf(gameServerEntity.port));
             map.put("Status", gameServerEntity.isOnline == true ? "online" : "offline");
