@@ -102,7 +102,7 @@ public class AddServerActivity extends AppCompatActivity
                         gameServerEntity = databaseManager.save(gameServer);
 
                         // notify receivers that server was successfully added
-                        Intent data = new Intent(MainActivity.RECEIVER_SERVER_ADDED);
+                        Intent data = new Intent(MainActivity.ACTION_SERVER_ADDED);
                         data.putExtra("game_server_id", gameServerEntity.getId().intValue());
                         sendBroadcast(data);
 

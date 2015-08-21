@@ -20,6 +20,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import net.myacxy.agsm.AgsmService_;
 import net.myacxy.agsm.R;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
@@ -38,7 +39,7 @@ import java.util.List;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity
 {
-    public static final String RECEIVER_SERVER_ADDED = "net.myacxy.agsm.SERVER_ADDED";
+    public static final String ACTION_SERVER_ADDED = "net.myacxy.agsm.action.SERVER_ADDED";
 
     protected static final int IDENTIFIER_HOME = -1;
     protected static final int IDENTIFIER_NOTIFICATIONS = -2;
@@ -183,7 +184,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Receiver(actions = MainActivity.RECEIVER_SERVER_ADDED)
+    @Receiver(actions = MainActivity.ACTION_SERVER_ADDED)
     public void onServerAdded(@Receiver.Extra("game_server_id") int id)
     {
         GameServerEntity serverEntity = serverFinder.findById(id);
