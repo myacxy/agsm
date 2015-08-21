@@ -14,10 +14,11 @@ public class ItemServerDetailsParameterView extends LinearLayout
 {
 
     @ViewById(R.id.server_details_parameter_item_title)
-    TextView parameterText;
+    public TextView parameterText;
 
     @ViewById(R.id.server_details_parameter_item_value)
-    TextView valueText;
+    public TextView valueText;
+
 
     public ItemServerDetailsParameterView(Context context) {
         super(context);

@@ -45,7 +45,6 @@ public class ServerOverviewFragment extends Fragment
         playersAdapter.setGameServerId(gameServerId);
         playerList.setAdapter(playersAdapter);
         adjustHeightToHeightOfAllChildren(playerList);
-
     }
 
     private int getTotalHeightOfChildren(ListView listView)
@@ -76,5 +75,11 @@ public class ServerOverviewFragment extends Fragment
     {
         generalAdapter.notifyDataSetChanged();
         playersAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        generalAdapter.cancelUpdateTimer();
     }
 } // ServerOverviewFragment

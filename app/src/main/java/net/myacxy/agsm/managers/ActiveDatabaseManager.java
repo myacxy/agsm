@@ -76,6 +76,7 @@ public class ActiveDatabaseManager implements DatabaseManager
 
     public PlayerEntity save(Player player, GameServerEntity gameServerEntity)
     {
+        // TODO
         throw  new UnsupportedOperationException();
     } // save player, gameServerEntity
 
@@ -94,6 +95,7 @@ public class ActiveDatabaseManager implements DatabaseManager
 
     public PlayerEntity update(Player player)
     {
+        // TODO
         throw  new UnsupportedOperationException();
     } // update player
 

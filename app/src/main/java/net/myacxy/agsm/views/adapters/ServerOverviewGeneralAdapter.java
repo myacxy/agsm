@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 
 import net.myacxy.agsm.interfaces.ServerFinder;
@@ -15,20 +16,29 @@ import net.myacxy.agsm.views.ItemServerDetailsParameterView_;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
+import org.androidannotations.annotations.UiThread;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
+import org.joda.time.PeriodType;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @EBean
 public class ServerOverviewGeneralAdapter extends BaseAdapter
 {
     private Map<String, String> map = new LinkedHashMap<>();
     private ArrayList<String> list = new ArrayList<>();
+    private GameServerEntity gameServerEntity;
+
+    private static int POSITION_LAST_UPDATE = -1;
+    private static int TIME_INTERVAL = 1000;
+    private final Timer timer = new Timer();
 
     @Bean(ActiveServerFinder.class)
     ServerFinder serverFinder;
@@ -60,7 +70,7 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        ItemServerDetailsParameterView item;
+        final ItemServerDetailsParameterView item;
 
         if(convertView == null)
         {
@@ -71,29 +81,25 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
             item = (ItemServerDetailsParameterView) convertView;
         }
         item.bind(list.get(position), getItem(position));
+
+        if(position == POSITION_LAST_UPDATE)
+        {
+            setLastUpdate(item);
+        }
         return item;
     } // getView
 
 
     void initAdapter()
     {
-        GameServerEntity gameServerEntity = serverFinder.findById(gameServerId);
+        gameServerEntity = serverFinder.findById(gameServerId);
         if(gameServerEntity != null)
         {
-            PeriodFormatter formatter = new PeriodFormatterBuilder()
-                    .appendHours().appendSuffix("h ")
-                    .appendMinutes().appendSuffix("m ")
-                    .printZeroAlways()
-                    .appendSeconds().appendSuffix("s")
-                    .appendLiteral(" ago")
-                    .toFormatter();
-
-            Period period = new Period(gameServerEntity.lastUpdate, DateTime.now());
-
-            map.put("Last update", formatter.print(period));
+            POSITION_LAST_UPDATE = 0;
+            map.put("Last update", "0s ago");
             map.put("IP address", gameServerEntity.ipAddress);
             map.put("Port", String.valueOf(gameServerEntity.port));
-            map.put("Status", gameServerEntity.isOnline == true ? "online" : "offline");
+            map.put("Status", gameServerEntity.isOnline ? "online" : "offline");
             map.put("Ping", String.format("%d ms", gameServerEntity.ping));
             map.put("Game", gameServerEntity.game.name);
             map.put("Host name", gameServerEntity.hostName.trim());
@@ -108,5 +114,41 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
     {
         this.gameServerId = gameServerId;
         initAdapter();
+    }
+
+    @UiThread
+    protected void setLastUpdate(final ItemServerDetailsParameterView item)
+    {
+        PeriodFormatter formatter = new PeriodFormatterBuilder()
+                .appendHours().appendSuffix("h ")
+                .appendMinutes().appendSuffix("m ")
+                .printZeroAlways()
+                .appendSeconds().appendSuffix("s")
+                .appendLiteral(" ago")
+                .toFormatter();
+
+        Period period = new Period(gameServerEntity.lastUpdate, DateTime.now());
+        period = period.normalizedStandard(PeriodType.time());
+
+        item.bind("Last update", formatter.print(period));
+
+        try
+        {
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    setLastUpdate(item);
+                }
+            }, TIME_INTERVAL);
+        }
+        catch (IllegalStateException e)
+        {
+            // do nothing
+        }
+    }
+
+    public void cancelUpdateTimer()
+    {
+        timer.cancel();
     }
 } // ServerOverviewGeneralAdapter
