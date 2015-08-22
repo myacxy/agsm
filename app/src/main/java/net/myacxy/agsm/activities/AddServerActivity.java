@@ -80,25 +80,20 @@ public class AddServerActivity extends AppCompatActivity
         // show progress on the floating action button
         showProgress(doneButton);
 
-        serverManager.create(game, address, port, new OnServerCreatedListener()
-        {
+        serverManager.create(game, address, port, new OnServerCreatedListener() {
             @Override
-            public void onServerCreated(GameServer gameServer)
-            {
-                if (gameServer.connect() == ServerResponseStatus.CONNECTED)
-                {
+            public void onServerCreated(GameServer gameServer) {
+                if (gameServer.connect() == ServerResponseStatus.CONNECTED) {
                     // server already exists?
                     GameServerEntity gameServerEntity = databaseManager.getGameServerEntity(gameServer);
-                    if (gameServerEntity != null)
-                    {
+                    if (gameServerEntity != null) {
                         showSnackbar(String.format("%s:%s is already known.",
                                         gameServerEntity.ipAddress,
                                         gameServerEntity.port)
                         );
                     }
                     // update server status information
-                    else if (gameServer.update() == ServerResponseStatus.OK)
-                    {
+                    else if (gameServer.update() == ServerResponseStatus.OK) {
                         gameServerEntity = databaseManager.save(gameServer);
 
                         // notify receivers that server was successfully added
@@ -110,14 +105,12 @@ public class AddServerActivity extends AppCompatActivity
                         back();
                     }
                     // show error
-                    else
-                    {
+                    else {
                         showSnackbar(String.format("%s", gameServer.getProtocol().getResponseStatus()));
                     }
                 }
                 // show error
-                else
-                {
+                else {
                     showSnackbar(String.format("%s", gameServer.getProtocol().getResponseStatus()));
                 }
                 hideProgress(doneButton);
@@ -191,9 +184,30 @@ public class AddServerActivity extends AppCompatActivity
     protected boolean validateInput()
     {
         boolean valid = true;
+        // valid game?
         if(!validateGame(gameSpinner)) valid = false;
-        if(!validateText(addressTextView)) valid = false;
-        if(!validateText(portTextView)) valid = false;
+
+        // valid address?
+        if(addressTextView.getText().toString().trim().length() > 0)
+        {
+            if(!validateText(addressTextView)) valid = false;
+        }
+        else
+        {
+            addressTextView.setError(getString(R.string.error_server_address_required));
+        }
+
+        // valid port?
+        if(portTextView.getText().toString().length() > 0)
+        {
+            if(!validateText(portTextView)) valid = false;
+        }
+        else
+        {
+            portTextView.setError(getString(R.string.error_server_port_required));
+        }
+
+        // valid query port?
         if(queryPortTextView.getText().length() > 0)
         {
             if(!validateText(queryPortTextView)) valid = false;
@@ -206,7 +220,7 @@ public class AddServerActivity extends AppCompatActivity
         String selection = spinner.getSelectedItem().toString();
         if(selection.equals("select a game"))
         {
-            gameSpinner.setError(getString(R.string.error_server_invalid_game));
+            gameSpinner.setError(getString(R.string.error_server_game_required));
             return false;
         }
         return true;

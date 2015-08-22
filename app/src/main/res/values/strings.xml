@@ -41,6 +41,8 @@
     <!-- Error -->
     <string name="error_server_invalid_address">malformed address</string>
     <string name="error_server_invalid_port">port out of range</string>
-    <string name="error_server_invalid_game">game selection required</string>
+    <string name="error_server_game_required">game selection required</string>
+    <string name="error_server_address_required">address required</string>
+    <string name="error_server_port_required">port required</string>
     <!--END Server Add -->
 </resources>
