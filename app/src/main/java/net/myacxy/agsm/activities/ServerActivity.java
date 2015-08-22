@@ -1,12 +1,16 @@
 package net.myacxy.agsm.activities;
 
+import android.app.ActionBar;
 import android.graphics.Color;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -59,14 +63,20 @@ public class ServerActivity extends AppCompatActivity
     @Bean(JgsqGameFinder.class)         GameFinder gameFinder;
     @Bean(ActiveServerFinder.class)     ServerFinder serverFinder;
     @Bean(ActiveDatabaseManager.class)  DatabaseManager databaseManager;
+    @ViewById(R.id.server_backdrop)     ImageView backdrop;
+    @ViewById(R.id.collapsing_toolbar)  CollapsingToolbarLayout collapsingToolbarLayout;
 
     private int gameServerId;
+    private Game game;
+    private GameServerEntity gameServerEntity;
     private ServerFragmentPagerAdapter adapter;
 
     @AfterViews
     void initialize()
     {
         gameServerId = getIntent().getExtras().getInt("game_server_id");
+        gameServerEntity = serverFinder.findById(gameServerId);
+        game = gameFinder.find(gameServerEntity.game.name);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -76,7 +86,8 @@ public class ServerActivity extends AppCompatActivity
                         this,
                         GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(18)
         );
-        getSupportActionBar().setTitle(serverFinder.findById(gameServerId).hostName.trim());
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        collapsingToolbarLayout.setTitle(gameServerEntity.hostName.trim());
 
         setupViewPager(viewPager);
 
@@ -87,7 +98,12 @@ public class ServerActivity extends AppCompatActivity
             }
         });
 
-
+        int drawableId = getResources().getIdentifier(
+                "header_" + game.abbreviatedName.toLowerCase(),
+                "drawable",
+                getPackageName()
+        );
+        backdrop.setImageResource(drawableId);
     } // initialize
 
     private void setupViewPager(ViewPager viewPager)
@@ -118,28 +134,19 @@ public class ServerActivity extends AppCompatActivity
     @Click(R.id.server_fab)
     void refresh()
     {
-        GameServerEntity gameServerEntity = serverFinder.findById(gameServerId);
-
-        Game game = gameFinder.find(gameServerEntity.game.name);
-
         showProgress(refreshButton);
 
         serverManager.update(
                 game,
                 gameServerEntity.ipAddress,
                 gameServerEntity.port,
-                new OnServerUpdatedListener()
-                {
+                new OnServerUpdatedListener() {
                     @Override
-                    public void onServerUpdated(GameServer gameServer)
-                    {
-                        if (gameServer.getProtocol().getResponseStatus() == ServerResponseStatus.OK)
-                        {
+                    public void onServerUpdated(GameServer gameServer) {
+                        if (gameServer.getProtocol().getResponseStatus() == ServerResponseStatus.OK) {
                             databaseManager.update(gameServer);
                             reinitialize();
-                        }
-                        else
-                        {
+                        } else {
                             Snackbar.make(
                                     refreshButton,
                                     gameServer.getProtocol().getResponseStatus().toString(),

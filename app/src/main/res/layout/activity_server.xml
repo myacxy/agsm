@@ -26,21 +26,19 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:expandedTitleMarginStart="@dimen/spacing_huge"
-            app:expandedTitleMarginEnd="@dimen/spacing_Huge"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:expandedTitleMarginStart="@dimen/spacing_Large"
             app:contentScrim="?attr/colorPrimary"
             >
 
             <ImageView
-                android:id="@+id/backdrop"
+                android:id="@+id/server_backdrop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
                 android:minHeight="@dimen/server_backdrop_height"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:layout_collapseMode="parallax"
-                android:src="@drawable/ic_header_jk2"
                 />
 
             <android.support.v7.widget.Toolbar
