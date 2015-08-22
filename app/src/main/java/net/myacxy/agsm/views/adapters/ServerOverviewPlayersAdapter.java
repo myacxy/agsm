@@ -17,6 +17,8 @@ import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @EBean
@@ -75,6 +77,16 @@ public class ServerOverviewPlayersAdapter extends BaseAdapter
         if(gameServerEntity != null)
         {
             players = gameServerEntity.getPlayers();
+            Collections.sort(players, new Comparator<PlayerEntity>()
+            {
+                @Override
+                public int compare(PlayerEntity lhs, PlayerEntity rhs)
+                {
+                    if(lhs.score > rhs.score) return -1;
+                    else if(lhs.score < rhs.score) return 1;
+                    return 0;
+                }
+            });
         }
     } // initAdapter
 
