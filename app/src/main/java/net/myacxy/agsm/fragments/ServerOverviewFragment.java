@@ -78,8 +78,16 @@ public class ServerOverviewFragment extends Fragment
     }
 
     @Override
-    public void onPause() {
+    public void onPause()
+    {
         super.onPause();
         generalAdapter.cancelUpdateTimer();
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        generalAdapter.restartUpdateTimer();
     }
 } // ServerOverviewFragment

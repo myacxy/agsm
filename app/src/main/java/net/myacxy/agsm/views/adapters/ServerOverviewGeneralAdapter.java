@@ -38,7 +38,8 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
 
     private static int POSITION_LAST_UPDATE = -1;
     private static int TIME_INTERVAL = 1000;
-    private final Timer timer = new Timer();
+    private Timer timer = new Timer();
+    private ItemServerDetailsParameterView lastUpdateView;
 
     @Bean(ActiveServerFinder.class)
     ServerFinder serverFinder;
@@ -84,7 +85,8 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
 
         if(position == POSITION_LAST_UPDATE)
         {
-            setLastUpdate(item);
+            lastUpdateView = item;
+            setLastUpdate(lastUpdateView);
         }
         return item;
     } // getView
@@ -150,5 +152,11 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
     public void cancelUpdateTimer()
     {
         timer.cancel();
+    }
+
+    public void restartUpdateTimer()
+    {
+        timer = new Timer();
+        getView(POSITION_LAST_UPDATE, lastUpdateView, null);
     }
 } // ServerOverviewGeneralAdapter
