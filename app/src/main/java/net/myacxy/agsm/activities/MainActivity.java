@@ -20,7 +20,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
-import net.myacxy.agsm.AgsmService_;
+import net.myacxy.agsm.AgsmService;
 import net.myacxy.agsm.R;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
@@ -45,11 +45,12 @@ public class MainActivity extends AppCompatActivity
     protected static final int IDENTIFIER_NOTIFICATIONS = -2;
     protected static final int IDENTIFIER_SETTINGS = -3;
     protected static final int IDENTIFIER_ADD_SERVER = -4;
+    private static final int DRAWER_SERVER_ITEM_OFFSET = 4;
 
     @ViewById(R.id.home_toolbar)        Toolbar toolbar;
     @ViewById(R.id.main_content_layout) FrameLayout mainLayout;
     @ViewById(R.id.home_recycler_view)  RecyclerView recyclerView;
-    @ViewById(R.id.server_fab)                 FloatingActionButton addServerButton;
+    @ViewById(R.id.server_fab)          FloatingActionButton addServerButton;
     @Bean(ActiveServerFinder.class)     ServerFinder serverFinder;
     @Bean                               ServerCardAdapter serverCardAdapter;
 
@@ -148,9 +149,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        drawer.setSelection(0);
+    protected void onResume()
+    {
         super.onResume();
+        onServersUpdated();
+        drawer.setSelection(0);
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        onServersUpdated();
+        drawer.setSelection(0);
     }
 
     @Override
@@ -173,7 +184,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    protected void addServersToDrawer(Drawer drawer, List<GameServerEntity> serverEntities) {
+    protected void addServersToDrawer(Drawer drawer, List<GameServerEntity> serverEntities)
+    {
         for (final GameServerEntity serverEntity : serverEntities) {
             drawer.addItem(new SecondaryDrawerItem()
                             .withIcon(FontAwesome.Icon.faw_server)
@@ -191,12 +203,32 @@ public class MainActivity extends AppCompatActivity
         serverCardAdapter.addItem(serverEntity);
         recyclerView.getAdapter().notifyDataSetChanged();
 
-        drawer.addItem(new SecondaryDrawerItem()
-                .withIcon(FontAwesome.Icon.faw_server)
-                .withName(serverEntity.hostName.trim())
-                .withBadge(String.valueOf(serverEntity.getPlayers().size()))
-                .withIdentifier(serverEntity.getId().intValue()),
+        // add 'add server' to last position
+        drawer.addItem(
+                new SecondaryDrawerItem()
+                        .withIcon(FontAwesome.Icon.faw_server)
+                        .withName(serverEntity.hostName.trim())
+                        .withBadge(String.valueOf(serverEntity.getPlayers().size()))
+                        .withIdentifier(serverEntity.getId().intValue()),
                 drawer.getDrawerItems().size() - 1);
+    }
+
+    @Receiver(actions = AgsmService.ACTION_SERVERS_UPDATED)
+    public void onServersUpdated()
+    {
+        List<GameServerEntity> gameServerEntities = serverFinder.findAll();
+        // update player count badge in navigation drawer
+        if(gameServerEntities != null)
+        {
+            for(int i = 0; i < gameServerEntities.size(); i++)
+            {
+                String playerCount = String.valueOf(gameServerEntities.get(i).getPlayers().size());
+                drawer.updateBadge(playerCount, i + DRAWER_SERVER_ITEM_OFFSET);
+            }
+        }
+
+        drawer.getAdapter().notifyDataSetChanged();
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
 } // MainActivity

@@ -12,6 +12,7 @@ import com.github.clans.fab.FloatingActionButton;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
+import net.myacxy.agsm.AgsmService;
 import net.myacxy.agsm.R;
 import net.myacxy.agsm.fragments.ServerDetailsFragment;
 import net.myacxy.agsm.fragments.ServerDetailsFragment_;
@@ -40,6 +41,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
@@ -50,9 +52,9 @@ public class ServerActivity extends AppCompatActivity
     public static final String ARG_GAME_SERVER_ID = "game_server_id";
 
     @ViewById(R.id.server_toolbar)      Toolbar toolbar;
-    @ViewById(R.id.server_tabs)                TabLayout tabLayout;
-    @ViewById(R.id.server_viewpager)           ViewPager viewPager;
-    @ViewById(R.id.server_fab)                 FloatingActionButton refreshButton;
+    @ViewById(R.id.server_tabs)         TabLayout tabLayout;
+    @ViewById(R.id.server_viewpager)    ViewPager viewPager;
+    @ViewById(R.id.server_fab)          FloatingActionButton refreshButton;
     @Bean(JgsqServerManager.class)      ServerManager serverManager;
     @Bean(JgsqGameFinder.class)         GameFinder gameFinder;
     @Bean(ActiveServerFinder.class)     ServerFinder serverFinder;
@@ -122,21 +124,32 @@ public class ServerActivity extends AppCompatActivity
 
         showProgress(refreshButton);
 
-        serverManager.update(game, gameServerEntity.ipAddress, gameServerEntity.port, new OnServerUpdatedListener() {
-            @Override
-            public void onServerUpdated(GameServer gameServer) {
-                if (gameServer.getProtocol().getResponseStatus() == ServerResponseStatus.OK) {
-                    databaseManager.update(gameServer);
-                    reinitialize();
-                } else {
-                    Snackbar.make(refreshButton,
-                            gameServer.getProtocol().getResponseStatus().toString(),
-                            Snackbar.LENGTH_SHORT)
-                            .show();
-                }
-                hideProgress(refreshButton);
-            }
-        });
+        serverManager.update(
+                game,
+                gameServerEntity.ipAddress,
+                gameServerEntity.port,
+                new OnServerUpdatedListener()
+                {
+                    @Override
+                    public void onServerUpdated(GameServer gameServer)
+                    {
+                        if (gameServer.getProtocol().getResponseStatus() == ServerResponseStatus.OK)
+                        {
+                            databaseManager.update(gameServer);
+                            reinitialize();
+                        }
+                        else
+                        {
+                            Snackbar.make(
+                                    refreshButton,
+                                    gameServer.getProtocol().getResponseStatus().toString(),
+                                    Snackbar.LENGTH_SHORT
+                            ).show();
+                        }
+                        hideProgress(refreshButton);
+                    }
+                } // OnServerUpdatedListener
+        );
     }
 
     @UiThread
@@ -168,5 +181,18 @@ public class ServerActivity extends AppCompatActivity
     {
         onBackPressed();
         return true;
+    }
+
+    @Receiver(actions = AgsmService.ACTION_ON_UPDATE_SERVERS)
+    void onUpdateServers()
+    {
+        showProgress(refreshButton);
+    }
+
+    @Receiver(actions = AgsmService.ACTION_SERVERS_UPDATED)
+    void onServersUpdated()
+    {
+        hideProgress(refreshButton);
+        reinitialize();
     }
 } // ServerFragment
