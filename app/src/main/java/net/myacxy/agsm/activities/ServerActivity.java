@@ -10,8 +10,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.ContextThemeWrapper;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
@@ -19,7 +17,6 @@ import com.github.clans.fab.FloatingActionButton;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
-import net.myacxy.agsm.AgsmService;
 import net.myacxy.agsm.R;
 import net.myacxy.agsm.fragments.ServerDetailsFragment;
 import net.myacxy.agsm.fragments.ServerDetailsFragment_;
@@ -56,8 +53,6 @@ import org.androidannotations.annotations.ViewById;
 @OptionsMenu(R.menu.menu_server)
 public class ServerActivity extends AppCompatActivity
 {
-    public static final String ARG_GAME_SERVER_ID = "game_server_id";
-
     @ViewById(R.id.server_toolbar)      Toolbar toolbar;
     @ViewById(R.id.server_tabs)         TabLayout tabLayout;
     @ViewById(R.id.server_viewpager)    ViewPager viewPager;
@@ -77,7 +72,7 @@ public class ServerActivity extends AppCompatActivity
     @AfterViews
     void initialize()
     {
-        gameServerId = getIntent().getExtras().getInt("game_server_id");
+        gameServerId = getIntent().getExtras().getInt(MainActivity.EXTRA_GAME_SERVER_ID);
         gameServerEntity = serverFinder.findById(gameServerId);
         game = gameFinder.find(gameServerEntity.game.name);
 
@@ -148,6 +143,10 @@ public class ServerActivity extends AppCompatActivity
                     public void onServerUpdated(GameServer gameServer) {
                         if (gameServer.getProtocol().getResponseStatus() == ServerResponseStatus.OK) {
                             databaseManager.update(gameServer);
+
+                            Intent intent = new Intent(MainActivity.ACTION_ON_SERVER_REFRESHED);
+                            sendBroadcast(intent);
+
                             reinitialize();
                         } else {
                             Snackbar.make(
@@ -175,7 +174,7 @@ public class ServerActivity extends AppCompatActivity
                                 // remove database entry
                                 databaseManager.remove(gameServerEntity);
                                 // notify receivers
-                                Intent intent = new Intent(MainActivity.ACTION_SERVER_REMOVED);
+                                Intent intent = new Intent(MainActivity.ACTION_ON_SERVER_REMOVED);
                                 intent.putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerId);
                                 sendBroadcast(intent);
                                 // close this activity
@@ -229,13 +228,13 @@ public class ServerActivity extends AppCompatActivity
         return true;
     }
 
-    @Receiver(actions = AgsmService.ACTION_ON_UPDATE_SERVERS)
+    @Receiver(actions = MainActivity.ACTION_ON_UPDATE_SERVERS)
     void onUpdateServers()
     {
         showProgress(refreshButton);
     }
 
-    @Receiver(actions = AgsmService.ACTION_SERVERS_UPDATED)
+    @Receiver(actions = MainActivity.ACTION_ON_SERVERS_UPDATED)
     void onServersUpdated()
     {
         hideProgress(refreshButton);

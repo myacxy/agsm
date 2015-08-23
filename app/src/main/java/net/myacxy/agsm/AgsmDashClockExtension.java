@@ -80,9 +80,10 @@ public class AgsmDashClockExtension extends DashClockExtension
     } // onUpdateData
 
     @Receiver(actions = {
-            AgsmService.ACTION_SERVERS_UPDATED,
-            MainActivity.ACTION_SERVER_ADDED,
-            MainActivity.ACTION_SERVER_REMOVED } )
+            MainActivity.ACTION_ON_SERVER_ADDED,
+            MainActivity.ACTION_ON_SERVER_REFRESHED,
+            MainActivity.ACTION_ON_SERVERS_UPDATED,
+            MainActivity.ACTION_ON_SERVER_REMOVED } )
     void onServersUpdated()
     {
         onUpdateData(DashClockExtension.UPDATE_REASON_MANUAL);

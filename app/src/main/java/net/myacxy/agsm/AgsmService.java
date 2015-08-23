@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.*;
 import android.support.annotation.Nullable;
 
+import net.myacxy.agsm.activities.MainActivity;
 import net.myacxy.agsm.interfaces.DatabaseManager;
 import net.myacxy.agsm.interfaces.GameFinder;
 import net.myacxy.agsm.interfaces.OnServerUpdatedListener;
@@ -29,13 +30,6 @@ import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 @EService
 public class AgsmService extends Service
 {
-    public static final String ACTION_UPDATE_SERVERS = "net.myacxy.agsm.action.ACTION_UPDATE_SERVERS";
-    public static final String ACTION_ON_UPDATE_SERVERS = "net.myacxy.agsm.action.ACTION_ON_UPDATE_SERVERS";
-    public static final String ACTION_SERVERS_UPDATED = "net.myacxy.agsm.action.ACTION_SERVERS_UPDATED";
-    public static final String EXTRA_UPDATE_REASON = "net.myacxy.agsm.action.EXTRA_UPDATE_REASON";
-    public static final int UPDATE_REASON_MANUAL = 0;
-    public static final int UPDATE_REASON_PERIODIC = 1;
-
     @Bean(JgsqServerManager.class)      ServerManager serverManager;
     @Bean(ActiveDatabaseManager.class)  DatabaseManager databaseManager;
     @Bean(ActiveServerFinder.class)     ServerFinder serverFinder;
@@ -87,7 +81,7 @@ public class AgsmService extends Service
             gameServerEntities = serverFinder.findAll();
             if(gameServerEntities != null)
             {
-                Intent intent = new Intent(ACTION_ON_UPDATE_SERVERS);
+                Intent intent = new Intent(MainActivity.ACTION_ON_UPDATE_SERVERS);
                 sendBroadcast(intent);
 
                 count = gameServerEntities.size();
@@ -122,7 +116,7 @@ public class AgsmService extends Service
 
         private void onAllServerUpdated()
         {
-            Intent intent = new Intent(ACTION_SERVERS_UPDATED);
+            Intent intent = new Intent(MainActivity.ACTION_ON_SERVERS_UPDATED);
             sendBroadcast(intent);
             stopSelf(startId);
         }

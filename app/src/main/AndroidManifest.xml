@@ -108,9 +108,10 @@
 
             <intent-filter>
                 <action android:name="com.google.android.apps.dashclock.Extension" />
-                <action android:name="AgsmService.ACTION_SERVERS_UPDATED" />
-                <action android:name=".activities.MainActivity.ACTION_SERVER_ADDED" />
-                <action android:name=".activities.MainActivity.ACTION_SERVER_REMOVED" />
+                <action android:name="net.myacxy.agsm.activities.MainActivity.ACTION_ON_SERVER_ADDED" />
+                <action android:name="net.myacxy.agsm.activities.MainActivity.ACTION_ON_SERVER_REMOVED" />
+                <action android:name="net.myacxy.agsm.activities.MainActivity.ACTION_ON_SERVER_REFRESHED" />
+                <action android:name="net.myacxy.agsm.activities.MainActivity.ACTION_ON_SERVERS_UPDATED" />
             </intent-filter>
 
             <meta-data

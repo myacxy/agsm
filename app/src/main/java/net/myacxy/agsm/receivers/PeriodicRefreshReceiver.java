@@ -9,6 +9,7 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 
 import net.myacxy.agsm.AgsmService;
 import net.myacxy.agsm.AgsmService_;
+import net.myacxy.agsm.activities.MainActivity;
 
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.ReceiverAction;
@@ -32,14 +33,14 @@ public class PeriodicRefreshReceiver extends WakefulBroadcastReceiver
     @ReceiverAction(ACTION_PERIODIC_REFRESH)
     void periodicRefresh(Context context)
     {
-        startWakefulService(context, getIntent(context, AgsmService.UPDATE_REASON_PERIODIC));
+        startWakefulService(context, getIntent(context, MainActivity.UPDATE_REASON_PERIODIC));
     }
 
     private Intent getIntent(Context context, int reason)
     {
         return AgsmService_.intent(context)
-                .action(AgsmService.ACTION_UPDATE_SERVERS)
-                .extra(AgsmService.EXTRA_UPDATE_REASON, reason)
+                .action(MainActivity.ACTION_UPDATE_SERVERS)
+                .extra(MainActivity.EXTRA_UPDATE_REASON, reason)
                 .get();
     }
 

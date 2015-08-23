@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import net.myacxy.agsm.R;
-import net.myacxy.agsm.activities.ServerActivity;
+import net.myacxy.agsm.activities.MainActivity;
 import net.myacxy.agsm.views.adapters.ServerOverviewGeneralAdapter;
 import net.myacxy.agsm.views.adapters.ServerOverviewPlayersAdapter;
 
@@ -26,7 +26,7 @@ public class ServerOverviewFragment extends Fragment
     @Bean(ServerOverviewPlayersAdapter.class)
     ServerOverviewPlayersAdapter playersAdapter;
 
-    @FragmentArg(ServerActivity.ARG_GAME_SERVER_ID)
+    @FragmentArg
     int gameServerId;
 
     @ViewById(R.id.server_overview_general_list)
