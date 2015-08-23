@@ -40,6 +40,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
 {
     public static final String ACTION_SERVER_ADDED = "net.myacxy.agsm.action.SERVER_ADDED";
+    public static final String ACTION_SERVER_REMOVED = "net.myacxy.agsm.action.SERVER_REMOVED";
+    public static final String EXTRA_GAME_SERVER_ID = "game_server_id";
 
     protected static final int IDENTIFIER_HOME = -1;
     protected static final int IDENTIFIER_NOTIFICATIONS = -2;
@@ -197,13 +199,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Receiver(actions = MainActivity.ACTION_SERVER_ADDED)
-    public void onServerAdded(@Receiver.Extra("game_server_id") int id)
+    public void onServerAdded(@Receiver.Extra(EXTRA_GAME_SERVER_ID) int id)
     {
         GameServerEntity serverEntity = serverFinder.findById(id);
         serverCardAdapter.addItem(serverEntity);
         recyclerView.getAdapter().notifyDataSetChanged();
 
-        // add 'add server' to last position
+        // add new server item in front of 'add server' item
         drawer.addItem(
                 new SecondaryDrawerItem()
                         .withIcon(FontAwesome.Icon.faw_server)
@@ -214,7 +216,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Receiver(actions = AgsmService.ACTION_SERVERS_UPDATED)
-    public void onServersUpdated()
+    void onServersUpdated()
     {
         List<GameServerEntity> gameServerEntities = serverFinder.findAll();
         // update player count badge in navigation drawer
@@ -228,7 +230,26 @@ public class MainActivity extends AppCompatActivity
         }
 
         drawer.getAdapter().notifyDataSetChanged();
-        recyclerView.getAdapter().notifyDataSetChanged();
+        serverCardAdapter.notifyDataSetChanged();
+    }
+
+    @Receiver(actions = ACTION_SERVER_REMOVED)
+    void onServerRemoved(@Receiver.Extra(EXTRA_GAME_SERVER_ID) int id)
+    {
+        // remove item from drawer
+        for (IDrawerItem drawerItem : drawer.getDrawerItems())
+        {
+            if (drawerItem.getIdentifier() == id)
+            {
+                int index = drawer.getDrawerItems().indexOf(drawerItem);
+                drawer.removeItem(index);
+                // remove server card
+                serverCardAdapter.removeItem(index - DRAWER_SERVER_ITEM_OFFSET);
+                break;
+            }
+        }
+
+        drawer.getAdapter().notifyDataSetChanged();
     }
 
 } // MainActivity

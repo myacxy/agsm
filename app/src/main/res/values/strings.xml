@@ -6,6 +6,8 @@
     <string name="action_settings">Settings</string>
     <string name="save">save</string>
 
+    <string name="action_server_remove">Remove</string>
+    <string name="action_server_edit">Edit</string>
 
     <!-- START Drawer -->
     <string name="drawer_home_title">Home</string>
@@ -13,7 +15,6 @@
     <string name="drawer_servers_title">Servers</string>
     <string name="drawer_notifications_title">Notifications</string>
     <!-- END Drawer -->
-
 
     <!-- START Server Add -->
     <string name="server_add_title">Add Server</string>
@@ -35,14 +36,14 @@
     <string name="server_add_query_port_helper">e.g. 27960</string>
     <string name="server_add_query_port_hint">query port (optional)</string>
     <string name="server_add_query_port_title">Query Port</string>
-    <string name="action_server_edit">Edit</string>
-    <string name="menu_add_server_tfj_title">TFJ</string>
-    <string name="menu_add_server_myacxy_title">myacxy</string>
     <!-- Error -->
     <string name="error_server_invalid_address">malformed address</string>
     <string name="error_server_invalid_port">port out of range</string>
     <string name="error_server_game_required">game selection required</string>
     <string name="error_server_address_required">address required</string>
     <string name="error_server_port_required">port required</string>
-    <!--END Server Add -->
+    <!-- Menu -->
+    <string name="menu_add_server_tfj_title">TFJ</string>
+    <string name="menu_add_server_myacxy_title">myacxy</string>
+    <!-- END Server Add -->
 </resources>

@@ -10,4 +10,11 @@
       android:orderInCategory="100"
       app:showAsAction="never"
       />
+
+    <item
+        android:id="@+id/action_server_remove"
+        android:title="@string/action_server_remove"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        />
 </menu>

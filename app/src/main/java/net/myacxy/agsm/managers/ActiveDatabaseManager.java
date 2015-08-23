@@ -1,6 +1,7 @@
 package net.myacxy.agsm.managers;
 
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 
 import net.myacxy.agsm.interfaces.DatabaseManager;
@@ -143,6 +144,36 @@ public class ActiveDatabaseManager implements DatabaseManager
 
         return gameServerEntity;
     } // update gameServer
+
+    @Override
+    public void remove(GameServerEntity gameServerEntity)
+    {
+        ActiveAndroid.beginTransaction();
+        try
+        {
+            for (PlayerEntity playerEntity : gameServerEntity.getPlayers())
+            {
+                remove(playerEntity);
+            }
+            ActiveAndroid.setTransactionSuccessful();
+        }
+        finally
+        {
+            ActiveAndroid.endTransaction();
+        }
+
+        new Delete().from(GameServerEntity.class)
+                .where("id = ?", gameServerEntity.getId())
+                .execute();
+    }
+
+    @Override
+    public void remove(PlayerEntity playerEntity)
+    {
+        new Delete().from(PlayerEntity.class)
+                .where("id = ?", playerEntity.getId())
+                .execute();
+    }
 
     public GameEntity getGameEntity(Game game)
     {

@@ -98,7 +98,10 @@ public class AddServerActivity extends AppCompatActivity
 
                         // notify receivers that server was successfully added
                         Intent data = new Intent(MainActivity.ACTION_SERVER_ADDED);
-                        data.putExtra("game_server_id", gameServerEntity.getId().intValue());
+                        data.putExtra(
+                                MainActivity.EXTRA_GAME_SERVER_ID,
+                                gameServerEntity.getId().intValue()
+                        );
                         sendBroadcast(data);
 
                         // go back to main / home activity
@@ -159,6 +162,17 @@ public class AddServerActivity extends AppCompatActivity
 
         addressTextView.setText("myacxy.net");
         portTextView.setText("28070");
+    }
+
+    @OptionsItem(R.id.menu_add_server_q3)
+    void addQ3(MenuItem item)
+    {
+        Game game = gameSpinnerAdapter.getItem("Quake III Arena");
+        int position = gameSpinnerAdapter.getPosition(game);
+        gameSpinner.setSelection(position, true);
+
+        addressTextView.setText("108.61.179.59");
+        portTextView.setText("28356");
     }
 
     @Click(R.id.add_server_done_button)

@@ -21,6 +21,10 @@ public interface DatabaseManager
 
     GameServerEntity update(GameServer gameServer);
 
+    void remove(GameServerEntity gameServerEntity);
+
+    void remove(PlayerEntity playerEntity);
+
     GameEntity getGameEntity(Game game);
 
     GameServerEntity getGameServerEntity(GameServer gameServer);

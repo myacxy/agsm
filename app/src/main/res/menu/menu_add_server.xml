@@ -12,4 +12,9 @@
         app:showAsAction="never"
         android:title="@string/menu_add_server_myacxy_title"
         />
+    <item
+        android:id="@+id/menu_add_server_q3"
+        app:showAsAction="never"
+        android:title="Q3"
+        />
 </menu>

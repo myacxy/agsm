@@ -1,14 +1,17 @@
 package net.myacxy.agsm.activities;
 
-import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextThemeWrapper;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
@@ -157,6 +160,42 @@ public class ServerActivity extends AppCompatActivity
                     }
                 } // OnServerUpdatedListener
         );
+    }
+
+    @OptionsItem(R.id.action_server_remove)
+    void remove(MenuItem menuItem)
+    {
+        // TODO themed button color?
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setPositiveButton(
+                        android.R.string.yes,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // remove database entry
+                                databaseManager.remove(gameServerEntity);
+                                // notify receivers
+                                Intent intent = new Intent(MainActivity.ACTION_SERVER_REMOVED);
+                                intent.putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerId);
+                                sendBroadcast(intent);
+                                // close this activity
+                                finish();
+                            }
+                        })
+                .setNegativeButton(
+                        android.R.string.cancel,
+                        new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                dialog.dismiss();
+                            }
+                        })
+                .setTitle("Remove Server")
+                .setMessage("Are you sure?")
+                .create();
+        dialog.show();
     }
 
     @UiThread

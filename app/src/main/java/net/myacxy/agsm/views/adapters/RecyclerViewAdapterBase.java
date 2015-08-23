@@ -34,4 +34,9 @@ public abstract class RecyclerViewAdapterBase<T, V extends View> extends Recycle
     {
         if(items.contains(item)) items.remove(item);
     }
+
+    public void removeItem(int location)
+    {
+        if(location >= 0 && location < items.size()) items.remove(location);
+    }
 }
