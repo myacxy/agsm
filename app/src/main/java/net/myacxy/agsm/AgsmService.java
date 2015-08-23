@@ -47,6 +47,7 @@ public class AgsmService extends Service
     @Override
     public void onCreate()
     {
+        stopService(new Intent(getApplicationContext(), AgsmService.class));
         HandlerThread thread = new HandlerThread("AgsmService", THREAD_PRIORITY_BACKGROUND);
         thread.start();
         looper = thread.getLooper();
@@ -72,6 +73,7 @@ public class AgsmService extends Service
     {
         private List<GameServerEntity> gameServerEntities;
         private int count = 0;
+        private int startId = -1;
 
         public AgsmServiceUpdateServersHandler(Looper looper)
         {
@@ -81,6 +83,7 @@ public class AgsmService extends Service
         @Override
         public void handleMessage(Message msg)
         {
+            startId = msg.arg1;
             gameServerEntities = serverFinder.findAll();
             if(gameServerEntities != null)
             {
@@ -96,7 +99,7 @@ public class AgsmService extends Service
             else
             {
                 count = 0;
-                stopSelf();
+                stopSelf(startId);
             }
         } // handleMessage
 
@@ -121,7 +124,7 @@ public class AgsmService extends Service
         {
             Intent intent = new Intent(ACTION_SERVERS_UPDATED);
             sendBroadcast(intent);
-            stopSelf();
+            stopSelf(startId);
         }
 
         private void refreshServer(GameServerEntity gameServerEntity)

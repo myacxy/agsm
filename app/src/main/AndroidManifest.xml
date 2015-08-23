@@ -15,7 +15,7 @@
         android:name="com.activeandroid.app.Application"
         >
 
-        <!--Active Android configuration-->
+        <!-- START Active Android -->
         <meta-data
             android:name="AA_DB_NAME"
             android:value="agsm.db"
@@ -35,7 +35,11 @@
             android:value=  "net.myacxy.agsm.utils.TreeMapStringStringToJsonSerializer,
                              net.myacxy.agsm.utils.JodaDateTimeSerializer"
             />
+        <!-- END Active Android -->
 
+
+
+        <!-- START Activities -->
         <!--Main / Home Activity-->
         <activity
             android:name=".activities.MainActivity_"
@@ -47,31 +51,36 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <!--Add Server Activity-->
         <activity
             android:name=".activities.AddServerActivity_"
             android:theme="@style/AddServerTheme"
             />
-
         <!--Server Activity-->
         <activity
             android:name=".activities.ServerActivity_"
             android:theme="@style/ServerTheme"
             />
-
         <!--Settings Activity-->
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
             >
         </activity>
+        <!-- END Activities -->
 
+
+
+        <!-- START Services -->
         <service
             android:name=".AgsmService_"
             android:exported="false"
             />
+        <!-- END Services -->
 
+
+
+        <!--START Receivers-->
         <receiver
             android:name=".receivers.PeriodicRefreshReceiver_"
             android:exported="false"
@@ -85,6 +94,41 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <!-- END Receivers -->
+
+
+
+        <!-- START DashClock -->
+        <service
+            android:name="net.myacxy.agsm.AgsmDashClockExtension_"
+            android:icon="@android:drawable/sym_def_app_icon"
+            android:label="@string/app_name"
+            android:permission="com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA"
+            >
+
+            <intent-filter>
+                <action android:name="com.google.android.apps.dashclock.Extension" />
+                <action android:name="AgsmService.ACTION_SERVERS_UPDATED" />
+                <action android:name=".activities.MainActivity.ACTION_SERVER_ADDED" />
+                <action android:name=".activities.MainActivity.ACTION_SERVER_REMOVED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="protocolVersion"
+                android:value="2"
+                />
+
+            <meta-data
+                android:name="worldReadable"
+                android:value="true"
+                />
+
+            <meta-data
+                android:name="description"
+                android:value="Description"
+                />
+        </service>
+        <!-- END DashClock -->
 
     </application>
 
