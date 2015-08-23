@@ -20,7 +20,6 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
-import net.myacxy.agsm.AgsmService;
 import net.myacxy.agsm.R;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
@@ -39,14 +38,25 @@ import java.util.List;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity
 {
-    public static final String ACTION_SERVER_ADDED = "net.myacxy.agsm.action.SERVER_ADDED";
-    public static final String ACTION_SERVER_REMOVED = "net.myacxy.agsm.action.SERVER_REMOVED";
-    public static final String EXTRA_GAME_SERVER_ID = "game_server_id";
+    public static final String ACTION_UPDATE_SERVERS = "net.myacxy.agsm.action.UPDATE_SERVERS";
+    public static final String ACTION_ON_SERVER_ADDED = "net.myacxy.agsm.action.ON_SERVER_ADDED";
+    public static final String ACTION_ON_SERVER_REMOVED = "net.myacxy.agsm.action.ON_SERVER_REMOVED";
+    public static final String ACTION_ON_SERVER_REFRESHED = "net.myacxy.agsm.action.ON_SERVER_REFRESHED";
+    public static final String ACTION_ON_UPDATE_SERVERS = "net.myacxy.agsm.action.ON_UPDATE_SERVERS";
+    public static final String ACTION_ON_SERVERS_UPDATED = "net.myacxy.agsm.action.ON_SERVERS_UPDATED";
 
-    protected static final int IDENTIFIER_HOME = -1;
-    protected static final int IDENTIFIER_NOTIFICATIONS = -2;
-    protected static final int IDENTIFIER_SETTINGS = -3;
-    protected static final int IDENTIFIER_ADD_SERVER = -4;
+    public static final int UPDATE_REASON_MANUAL = 0;
+    public static final int UPDATE_REASON_PERIODIC = 1;
+
+    public static final String EXTRA_UPDATE_REASON = "net.myacxy.agsm.extra.UPDATE_REASON";
+    public static final String EXTRA_GAME_SERVER_ID = "net.myacxy.agsm.extra.GAME_SERVER_ID";
+
+    private static final int IDENTIFIER_HOME = -1;
+    private static final int IDENTIFIER_NOTIFICATIONS = -2;
+    private static final int IDENTIFIER_SETTINGS = -3;
+    private static final int IDENTIFIER_ADD_SERVER = -4;
+    // 'Add Server' item is always last but drawer positions start a 1
+    // Home + Notifications + Settings + Server Section Header = 4 items
     private static final int DRAWER_SERVER_ITEM_OFFSET = 4;
 
     @ViewById(R.id.home_toolbar)        Toolbar toolbar;
@@ -119,7 +129,7 @@ public class MainActivity extends AppCompatActivity
                             default:
                                 Intent intent = ServerActivity_
                                         .intent(MainActivity.this)
-                                        .extra("game_server_id", identifier)
+                                        .extra(EXTRA_GAME_SERVER_ID, identifier)
                                         .get();
                                 startActivity(intent);
                                 break;
@@ -198,7 +208,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Receiver(actions = MainActivity.ACTION_SERVER_ADDED)
+    @Receiver(actions = MainActivity.ACTION_ON_SERVER_ADDED)
     public void onServerAdded(@Receiver.Extra(EXTRA_GAME_SERVER_ID) int id)
     {
         GameServerEntity serverEntity = serverFinder.findById(id);
@@ -215,7 +225,7 @@ public class MainActivity extends AppCompatActivity
                 drawer.getDrawerItems().size() - 1);
     }
 
-    @Receiver(actions = AgsmService.ACTION_SERVERS_UPDATED)
+    @Receiver(actions = ACTION_ON_SERVERS_UPDATED)
     void onServersUpdated()
     {
         List<GameServerEntity> gameServerEntities = serverFinder.findAll();
@@ -233,7 +243,7 @@ public class MainActivity extends AppCompatActivity
         serverCardAdapter.notifyDataSetChanged();
     }
 
-    @Receiver(actions = ACTION_SERVER_REMOVED)
+    @Receiver(actions = ACTION_ON_SERVER_REMOVED)
     void onServerRemoved(@Receiver.Extra(EXTRA_GAME_SERVER_ID) int id)
     {
         // remove item from drawer

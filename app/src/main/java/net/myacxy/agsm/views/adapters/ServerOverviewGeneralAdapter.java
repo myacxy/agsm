@@ -38,7 +38,7 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
 
     private static int POSITION_LAST_UPDATE = -1;
     private static int TIME_INTERVAL = 1000;
-    private Timer timer = new Timer();
+    private Timer timer;
     private ItemServerDetailsParameterView lastUpdateView;
 
     @Bean(ActiveServerFinder.class)
@@ -136,12 +136,17 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
 
         try
         {
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    setLastUpdate(item);
-                }
-            }, TIME_INTERVAL);
+            if(timer != null)
+            {
+                timer.schedule(new TimerTask()
+                {
+                    @Override
+                    public void run()
+                    {
+                        setLastUpdate(item);
+                    }
+                }, TIME_INTERVAL);
+            }
         }
         catch (IllegalStateException e)
         {

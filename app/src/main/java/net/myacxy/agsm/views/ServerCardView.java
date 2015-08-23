@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import net.myacxy.agsm.R;
+import net.myacxy.agsm.activities.MainActivity;
 import net.myacxy.agsm.activities.ServerActivity_;
 import net.myacxy.agsm.models.GameServerEntity;
 
@@ -47,9 +48,8 @@ public class ServerCardView extends CardView
     @Click(R.id.server_card)
     void startServerActivity()
     {
-        Intent intent = ServerActivity_
-                .intent(context)
-                .extra("game_server_id", mGameServer.getId().intValue())
+        Intent intent = ServerActivity_.intent(context)
+                .extra(MainActivity.EXTRA_GAME_SERVER_ID, mGameServer.getId().intValue())
                 .get();
 
         context.startActivity(intent);
@@ -61,10 +61,12 @@ public class ServerCardView extends CardView
         game.setText(gameServerEntity.game.alternativeName);
         title.setText(gameServerEntity.hostName.trim());
         map.setText(gameServerEntity.mapName);
-        playerCount.setText(String.format(
-                "%d / %d",
-                gameServerEntity.getPlayers().size(),
-                gameServerEntity.maxClients));
+        playerCount.setText(
+                String.format(
+                        "%d / %d",
+                        gameServerEntity.getPlayers().size(),
+                        gameServerEntity.maxClients)
+        );
     }
 
     public GameServerEntity getGameServer()

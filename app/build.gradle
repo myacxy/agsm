@@ -76,6 +76,8 @@ dependencies {
     // Lorem ipsum placeholders
     compile 'com.thedeanda:lorem:1.2'
 
+    compile 'com.google.android.apps.dashclock:dashclock-api:2.0.0'
+
     // Testing
     testCompile "org.mockito:mockito-core:1.6"
     testCompile 'org.robolectric:robolectric:3.0'
