@@ -38,6 +38,8 @@ import java.util.List;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity
 {
+    public static final String ACTION_ENSURE_PERIODIC_REFRESH = "net.myacxy.agsm.action.ENSURE_PERIODIC_REFRESH";
+    public static final String ACTION_PERIODIC_REFRESH = "net.myacxy.agsm.action.PERIODIC_REFRESH";
     public static final String ACTION_UPDATE_SERVERS = "net.myacxy.agsm.action.UPDATE_SERVERS";
     public static final String ACTION_ON_SERVER_ADDED = "net.myacxy.agsm.action.ON_SERVER_ADDED";
     public static final String ACTION_ON_SERVER_REMOVED = "net.myacxy.agsm.action.ON_SERVER_REMOVED";
@@ -70,14 +72,20 @@ public class MainActivity extends AppCompatActivity
     protected Bundle savedInstanceState;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         this.savedInstanceState = savedInstanceState;
+
+        // TODO ensure periodic refresh
+        Intent intent = new Intent(ACTION_ENSURE_PERIODIC_REFRESH);
+        sendBroadcast(intent);
     }
 
     @AfterViews
     void initialize()
     {
+
         setSupportActionBar(toolbar);
 
         setupDrawer();

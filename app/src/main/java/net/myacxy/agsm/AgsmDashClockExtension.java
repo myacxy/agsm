@@ -1,9 +1,12 @@
 package net.myacxy.agsm;
 
+import android.content.Intent;
+
 import com.google.android.apps.dashclock.api.DashClockExtension;
 import com.google.android.apps.dashclock.api.ExtensionData;
 
 import net.myacxy.agsm.activities.MainActivity;
+import net.myacxy.agsm.activities.MainActivity_;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.models.PlayerEntity;
@@ -28,6 +31,8 @@ public class AgsmDashClockExtension extends DashClockExtension
         String status;
         String expandedTitle;
         StringBuilder expandedBody = new StringBuilder();
+        Intent clickIntent = new Intent(this, MainActivity_.class);
+
         int totalPlayerCount = 0;
         int totalBotCount = 0;
 
@@ -49,7 +54,7 @@ public class AgsmDashClockExtension extends DashClockExtension
             expandedBody.append(
                     String.format(
                             "%s | %d(%d)/%d",
-                            gameServerEntity.hostName,
+                            gameServerEntity.hostName.trim(),
                             playerCount,
                             botCount,
                             gameServerEntity.maxClients)
@@ -76,6 +81,7 @@ public class AgsmDashClockExtension extends DashClockExtension
                 .status(status)
                 .expandedTitle(expandedTitle)
                 .expandedBody(expandedBody.toString())
+                .clickIntent(clickIntent)
         );
     } // onUpdateData
 

@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import net.myacxy.agsm.activities.MainActivity;
+
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.ReceiverAction;
 
@@ -13,12 +15,11 @@ public class BootReceiver extends BroadcastReceiver
     @ReceiverAction(Intent.ACTION_BOOT_COMPLETED)
     void bootCompleted(Context context)
     {
-        System.out.println("AGSM BOOT RECEIVER");
         context.sendBroadcast(
                 new Intent(
                         context,
                         PeriodicRefreshReceiver_.class
-                ).setAction(PeriodicRefreshReceiver.ACTION_ENSURE_PERIODIC_REFRESH)
+                ).setAction(MainActivity.ACTION_ENSURE_PERIODIC_REFRESH)
         );
     }
 

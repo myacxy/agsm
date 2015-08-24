@@ -84,15 +84,23 @@
         <receiver
             android:name=".receivers.PeriodicRefreshReceiver_"
             android:exported="false"
-            />
+            >
+
+            <intent-filter>
+                <action android:name="net.myacxy.agsm.activities.MainActivity.ACTION_ENSURE_PERIODIC_REFRESH" />
+            </intent-filter>
+
+        </receiver>
 
         <receiver
             android:name=".receivers.BootReceiver_"
             android:exported="false"
             >
+
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
+
         </receiver>
         <!-- END Receivers -->
 
