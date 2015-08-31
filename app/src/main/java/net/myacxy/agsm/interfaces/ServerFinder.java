@@ -14,7 +14,7 @@ public interface ServerFinder
 
     GameServerEntity findByAddress(String ipAddress, int port);
 
-    GameServerEntity findById(int id);
+    GameServerEntity findById(long id);
 
     boolean isRegistered(String ipAddress, int port);
 

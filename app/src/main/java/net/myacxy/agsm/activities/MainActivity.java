@@ -20,8 +20,11 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import net.myacxy.agsm.AgsmService_;
 import net.myacxy.agsm.R;
+import net.myacxy.agsm.interfaces.OnServerAddedListener;
 import net.myacxy.agsm.interfaces.ServerFinder;
+import net.myacxy.agsm.interfaces.ServerUpdateListener;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
 import net.myacxy.agsm.views.adapters.ServerCardAdapter;
@@ -30,20 +33,27 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
 
 @EActivity(R.layout.activity_main)
-public class MainActivity extends AppCompatActivity
+@OptionsMenu(R.menu.menu_home)
+public class MainActivity extends AppCompatActivity implements ServerUpdateListener
 {
     public static final String ACTION_ENSURE_PERIODIC_REFRESH = "net.myacxy.agsm.action.ENSURE_PERIODIC_REFRESH";
     public static final String ACTION_PERIODIC_REFRESH = "net.myacxy.agsm.action.PERIODIC_REFRESH";
-    public static final String ACTION_UPDATE_SERVERS = "net.myacxy.agsm.action.UPDATE_SERVERS";
+
     public static final String ACTION_ON_SERVER_ADDED = "net.myacxy.agsm.action.ON_SERVER_ADDED";
     public static final String ACTION_ON_SERVER_REMOVED = "net.myacxy.agsm.action.ON_SERVER_REMOVED";
-    public static final String ACTION_ON_SERVER_REFRESHED = "net.myacxy.agsm.action.ON_SERVER_REFRESHED";
+
+    public static final String ACTION_ON_UPDATE_SERVER = "net.myacxy.agsm.action.ON_UPDATE_SERVER";
+    public static final String ACTION_ON_SERVER_UPDATED = "net.myacxy.agsm.action.ON_SERVER_UPDATED";
+
+    public static final String ACTION_UPDATE_SERVERS = "net.myacxy.agsm.action.UPDATE_SERVERS";
     public static final String ACTION_ON_UPDATE_SERVERS = "net.myacxy.agsm.action.ON_UPDATE_SERVERS";
     public static final String ACTION_ON_SERVERS_UPDATED = "net.myacxy.agsm.action.ON_SERVERS_UPDATED";
 
@@ -64,7 +74,7 @@ public class MainActivity extends AppCompatActivity
     @ViewById(R.id.home_toolbar)        Toolbar toolbar;
     @ViewById(R.id.main_content_layout) FrameLayout mainLayout;
     @ViewById(R.id.home_recycler_view)  RecyclerView recyclerView;
-    @ViewById(R.id.server_fab)          FloatingActionButton addServerButton;
+    @ViewById(R.id.home_fab)            FloatingActionButton addServerButton;
     @Bean(ActiveServerFinder.class)     ServerFinder serverFinder;
     @Bean                               ServerCardAdapter serverCardAdapter;
 
@@ -85,7 +95,6 @@ public class MainActivity extends AppCompatActivity
     @AfterViews
     void initialize()
     {
-
         setSupportActionBar(toolbar);
 
         setupDrawer();
@@ -137,7 +146,7 @@ public class MainActivity extends AppCompatActivity
                             default:
                                 Intent intent = ServerActivity_
                                         .intent(MainActivity.this)
-                                        .extra(EXTRA_GAME_SERVER_ID, identifier)
+                                        .gameServerId(identifier)
                                         .get();
                                 startActivity(intent);
                                 break;
@@ -177,14 +186,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStart()
-    {
-        super.onStart();
-        onServersUpdated();
-        drawer.setSelection(0);
-    }
-
-    @Override
     public void onBackPressed()
     {
         if (drawer != null && drawer.isDrawerOpen())
@@ -197,12 +198,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Click(R.id.server_fab)
+    @Click(R.id.home_fab)
     void showAddServerDialog()
     {
         AddServerActivity_.intent(MainActivity.this).start();
     }
-
 
     protected void addServersToDrawer(Drawer drawer, List<GameServerEntity> serverEntities)
     {
@@ -216,6 +216,41 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //<editor-fold desc="ServerUpdateListener">
+    @Receiver(actions = ACTION_ON_UPDATE_SERVER)
+    @Override
+    public void onUpdateServer(@Receiver.Extra(EXTRA_GAME_SERVER_ID) long gameServerId)
+    {
+        serverCardAdapter.showProgress(gameServerId);
+    }
+
+    @Receiver(actions = ACTION_ON_SERVER_UPDATED)
+    @Override
+    public void onServerUpdated(@Receiver.Extra(EXTRA_GAME_SERVER_ID) long gameServerId) {
+        serverCardAdapter.hideProgress(gameServerId);
+    }
+
+    @Receiver(actions = ACTION_ON_SERVERS_UPDATED)
+    @Override
+    public void onServersUpdated()
+    {
+        List<GameServerEntity> gameServerEntities = serverFinder.findAll();
+        // update player count badge in navigation drawer
+        if(gameServerEntities != null)
+        {
+            for(int i = 0; i < gameServerEntities.size(); i++)
+            {
+                String playerCount = String.valueOf(gameServerEntities.get(i).getPlayers().size());
+                drawer.updateBadge(playerCount, i + DRAWER_SERVER_ITEM_OFFSET);
+            }
+        }
+
+        drawer.getAdapter().notifyDataSetChanged();
+        serverCardAdapter.notifyDataSetChanged();
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="OnServerAdded / OnServerRemoved">
     @Receiver(actions = MainActivity.ACTION_ON_SERVER_ADDED)
     public void onServerAdded(@Receiver.Extra(EXTRA_GAME_SERVER_ID) int id)
     {
@@ -233,26 +268,8 @@ public class MainActivity extends AppCompatActivity
                 drawer.getDrawerItems().size() - 1);
     }
 
-    @Receiver(actions = ACTION_ON_SERVERS_UPDATED)
-    void onServersUpdated()
-    {
-        List<GameServerEntity> gameServerEntities = serverFinder.findAll();
-        // update player count badge in navigation drawer
-        if(gameServerEntities != null)
-        {
-            for(int i = 0; i < gameServerEntities.size(); i++)
-            {
-                String playerCount = String.valueOf(gameServerEntities.get(i).getPlayers().size());
-                drawer.updateBadge(playerCount, i + DRAWER_SERVER_ITEM_OFFSET);
-            }
-        }
-
-        drawer.getAdapter().notifyDataSetChanged();
-        serverCardAdapter.notifyDataSetChanged();
-    }
-
     @Receiver(actions = ACTION_ON_SERVER_REMOVED)
-    void onServerRemoved(@Receiver.Extra(EXTRA_GAME_SERVER_ID) int id)
+    void onServerRemoved(@Receiver.Extra(EXTRA_GAME_SERVER_ID) long id)
     {
         // remove item from drawer
         for (IDrawerItem drawerItem : drawer.getDrawerItems())
@@ -268,6 +285,17 @@ public class MainActivity extends AppCompatActivity
         }
 
         drawer.getAdapter().notifyDataSetChanged();
+    }
+    //</editor-fold>
+
+    @OptionsItem(R.id.action_home_refresh)
+    void onRefreshClicked()
+    {
+        Intent intent = AgsmService_.intent(this)
+                .action(MainActivity.ACTION_UPDATE_SERVERS)
+                .extra(MainActivity.EXTRA_UPDATE_REASON, UPDATE_REASON_MANUAL)
+                .get();
+        startService(intent);
     }
 
 } // MainActivity

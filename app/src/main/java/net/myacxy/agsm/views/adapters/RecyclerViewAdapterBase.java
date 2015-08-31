@@ -21,7 +21,7 @@ public abstract class RecyclerViewAdapterBase<T, V extends View> extends Recycle
         return new ViewWrapper<V>(onCreateItemView(parent, viewType));
     }
 
-    protected abstract V onCreateItemView(ViewGroup parent, int viewType);
+    protected abstract V onCreateItemView(ViewGroup parent, int position);
 
     // additional methods to manipulate the items
 
@@ -39,4 +39,5 @@ public abstract class RecyclerViewAdapterBase<T, V extends View> extends Recycle
     {
         if(location >= 0 && location < items.size()) items.remove(location);
     }
+
 }

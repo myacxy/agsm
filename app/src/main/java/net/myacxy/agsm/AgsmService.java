@@ -36,7 +36,7 @@ public class AgsmService extends Service
     @Bean(JgsqGameFinder.class)         GameFinder gameFinder;
 
     private Looper looper;
-    private AgsmServiceUpdateServersHandler serviceHandler;
+    private UpdateServersHandler serviceHandler;
 
     @Override
     public void onCreate()
@@ -45,7 +45,7 @@ public class AgsmService extends Service
         HandlerThread thread = new HandlerThread("AgsmService", THREAD_PRIORITY_BACKGROUND);
         thread.start();
         looper = thread.getLooper();
-        serviceHandler = new AgsmServiceUpdateServersHandler(looper);
+        serviceHandler = new UpdateServersHandler(looper);
     }
 
     @Override
@@ -59,17 +59,18 @@ public class AgsmService extends Service
 
     @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(Intent intent)
+    {
         return null;
     }
 
-    private class AgsmServiceUpdateServersHandler extends Handler implements OnServerUpdatedListener
+    private class UpdateServersHandler extends Handler implements OnServerUpdatedListener
     {
         private List<GameServerEntity> gameServerEntities;
         private int count = 0;
         private int startId = -1;
 
-        public AgsmServiceUpdateServersHandler(Looper looper)
+        public UpdateServersHandler(Looper looper)
         {
             super(looper);
         }
@@ -87,7 +88,7 @@ public class AgsmService extends Service
                 count = gameServerEntities.size();
                 for (GameServerEntity gameServerEntity : gameServerEntities)
                 {
-                    refreshServer(gameServerEntity);
+                    updateServer(gameServerEntity);
                 }
             }
             else
@@ -96,6 +97,22 @@ public class AgsmService extends Service
                 stopSelf(startId);
             }
         } // handleMessage
+
+        private void updateServer(GameServerEntity gameServerEntity)
+        {
+            Intent intent = new Intent(MainActivity.ACTION_ON_UPDATE_SERVER)
+                    .putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerEntity.getId());
+            sendBroadcast(intent);
+
+            Game game = gameFinder.find(gameServerEntity.game.name);
+
+            serverManager.update(
+                    game,
+                    gameServerEntity.ipAddress,
+                    gameServerEntity.port,
+                    this
+            );
+        } // updateServer
 
         @Override
         public void onServerUpdated(GameServer gameServer)
@@ -112,6 +129,11 @@ public class AgsmService extends Service
             {
                 onAllServerUpdated();
             }
+
+            long gameServerId = databaseManager.getGameServerEntity(gameServer).getId();
+            Intent intent = new Intent(MainActivity.ACTION_ON_SERVER_UPDATED)
+                    .putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerId);
+            sendBroadcast(intent);
         } // onServerUpdated
 
         private void onAllServerUpdated()
@@ -120,17 +142,5 @@ public class AgsmService extends Service
             sendBroadcast(intent);
             stopSelf(startId);
         }
-
-        private void refreshServer(GameServerEntity gameServerEntity)
-        {
-            Game game = gameFinder.find(gameServerEntity.game.name);
-
-            serverManager.update(
-                    game,
-                    gameServerEntity.ipAddress,
-                    gameServerEntity.port,
-                    this
-            );
-        } // refreshServer
-    } // AgsmServiceUpdateServersHandler
+    } // UpdateServersHandler
 } // AgsmService

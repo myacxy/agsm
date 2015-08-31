@@ -24,7 +24,7 @@ public class ServerDetailsFragment extends Fragment
     ServerDetailsParameterAdapter serverDetailsParameterAdapter;
 
     @FragmentArg
-    int gameServerId;
+    long gameServerId;
 
     @AfterViews
     void initialize()

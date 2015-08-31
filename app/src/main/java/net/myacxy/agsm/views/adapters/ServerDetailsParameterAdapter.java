@@ -23,7 +23,7 @@ public class ServerDetailsParameterAdapter
     @Bean(ActiveServerFinder.class)
     ServerFinder serverFinder;
 
-    private int gameServerId;
+    private long gameServerId;
 
     @RootContext
     Context context;
@@ -56,7 +56,7 @@ public class ServerDetailsParameterAdapter
         view.bind(pair.first, pair.second);
     }
 
-    public void setGameServerId(int gameServerId)
+    public void setGameServerId(long gameServerId)
     {
         this.gameServerId = gameServerId;
         initAdapter();

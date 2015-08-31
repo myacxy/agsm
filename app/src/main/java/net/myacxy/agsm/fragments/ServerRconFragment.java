@@ -20,7 +20,7 @@ public class ServerRconFragment extends Fragment
     TextView rconText;
 
     @FragmentArg
-    int gameServerId;
+    long gameServerId;
 
     @AfterViews
     void initialize()

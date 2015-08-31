@@ -27,7 +27,7 @@ public class ServerOverviewFragment extends Fragment
     ServerOverviewPlayersAdapter playersAdapter;
 
     @FragmentArg
-    int gameServerId;
+    long gameServerId;
 
     @ViewById(R.id.server_overview_general_list)
     ListView generalList;

@@ -47,7 +47,7 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
     @RootContext
     Context context;
 
-    private int gameServerId;
+    private long gameServerId;
 
     @Override
     public int getCount() {
@@ -112,7 +112,7 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
         }
     } // initAdapter
 
-    public void setGameServerId(int gameServerId)
+    public void setGameServerId(long gameServerId)
     {
         this.gameServerId = gameServerId;
         initAdapter();

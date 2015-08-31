@@ -52,7 +52,7 @@ public class ActiveServerFinder implements ServerFinder
     }
 
     @Override
-    public GameServerEntity findById(int id)
+    public GameServerEntity findById(long id)
     {
         return new Select()
                 .from(GameServerEntity.class)

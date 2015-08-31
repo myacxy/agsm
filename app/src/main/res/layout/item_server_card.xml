@@ -1,80 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/server_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="@dimen/spacing_small"
     app:cardCornerRadius="@dimen/spacing_tiny"
     app:cardElevation="@dimen/spacing_tiny"
-    android:focusable="true"
-    android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground"
     >
-
-    <LinearLayout
-        style="@style/Widget.CardContent"
+    <com.balysv.materialripple.MaterialRippleLayout
+        android:id="@+id/server_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:mrl_rippleDelayClick="true"
+        app:mrl_rippleAlpha="0.1"
+        app:mrl_rippleDimension="0dp"
         >
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/spacing_normal"
-            >
-            <!--server title-->
-            <TextView
-                android:id="@+id/server_card_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/font_normal"
-                android:textAppearance="?titleTextAppearance"
-                android:layout_marginBottom="@dimen/spacing_tiny"
-                />
-
-            <!--game name-->
-            <TextView
-                android:id="@+id/server_card_game"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/server_card_title"
-                android:textSize="14sp"
-                />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_tiny"
+            android:orientation="vertical"
             >
 
-            <!-- map -->
-            <TextView
-                android:id="@+id/server_card_map"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/server_card_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:textAppearance="?android:textAppearanceSmall"
+                android:clickable="true"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+                    <!--server title-->
+                    <TextView
+                        android:id="@+id/server_card_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:ellipsize="end"
+                        android:textAppearance="@android:style/TextAppearance.Medium"
+                        />
+                    <!-- status -->
+
+                    <!-- online / offline -->
+                    <TextView
+                        android:id="@+id/server_card_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@android:style/TextAppearance.Small"
+                        />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.Toolbar>
+
+            <View
+                android:id="@+id/server_card_divider"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
                 />
 
-            <!--player count-->
-            <TextView
-                android:id="@+id/server_card_player_count"
-                android:layout_width="wrap_content"
+            <!-- TODO align divider / progress, style -->
+            <ProgressBar
+                android:id="@+id/server_card_progress"
+                android:layout_width="fill_parent"
+                android:layout_height="8dp"
+                android:indeterminate="true"
+                android:visibility="gone"
+                style="@android:style/Widget.Material.ProgressBar.Horizontal"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:textAppearance="?android:textAppearanceSmall"
-                />
+                android:paddingTop="8dp"
+                android:orientation="vertical"
+                style="@style/ServerCardContent"
+                >
 
-        </RelativeLayout>
+                <!-- game + map -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:paddingBottom="2dp"
+                    android:baselineAligned="false"
+                    >
 
-    </LinearLayout>
+                    <!-- game -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        >
+
+                        <!-- game icon -->
+                        <com.mikepenz.iconics.view.IconicsImageView
+                            android:id="@+id/server_card_game_icon"
+                            android:layout_width="14sp"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="@dimen/spacing_small"
+                            app:iiv_color="?android:attr/textColorSecondary"
+                            app:iiv_icon="faw-gamepad"
+                            />
+                        <!-- game name -->
+                        <TextView
+                            android:id="@+id/server_card_game"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:textAppearance="?android:textAppearanceSmall"
+                            />
+
+                    </LinearLayout> <!-- end game -->
+
+                    <!-- map -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        >
+                        <!-- map icon -->
+                        <com.mikepenz.iconics.view.IconicsImageView
+                            android:id="@+id/server_card_map_icon"
+                            android:layout_width="14sp"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="@dimen/spacing_small"
+                            android:layout_marginEnd="@dimen/spacing_small"
+                            app:iiv_color="?android:attr/textColorSecondary"
+                            app:iiv_icon="faw-map"
+                            />
+
+                        <!-- map name -->
+                        <TextView
+                            android:id="@+id/server_card_map"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:textAppearance="?android:textAppearanceSmall"
+                            />
+
+                    </LinearLayout> <!-- end map -->
+
+                </LinearLayout> <!-- end game + map -->
+
+                <!-- player count + ping -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:baselineAligned="false"
+                    >
+
+                    <!-- player count -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        >
+
+                        <com.mikepenz.iconics.view.IconicsImageView
+                            android:id="@+id/server_card_player_count_icon"
+                            android:layout_width="14sp"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="@dimen/spacing_small"
+                            app:iiv_color="?android:attr/textColorSecondary"
+                            app:iiv_icon="faw-users"
+                            />
+
+                        <!-- player count -->
+                        <TextView
+                            android:id="@+id/server_card_player_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:textAppearance="?android:textAppearanceSmall"
+                            />
+
+                    </LinearLayout> <!-- end player count -->
+
+                    <!-- ping -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_weight="1"
+                        >
+                        <com.mikepenz.iconics.view.IconicsImageView
+                            android:id="@+id/server_card_ping_icon"
+                            android:layout_width="14sp"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="@dimen/spacing_small"
+                            app:iiv_color="?android:attr/textColorSecondary"
+                            app:iiv_icon="gmd-timer"
+                            />
+                        <!-- ping -->
+                        <TextView
+                            android:id="@+id/server_card_ping"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:textAppearance="?android:textAppearanceSmall"
+                            />
+
+                    </LinearLayout> <!-- end ping -->
+
+                </LinearLayout> <!-- end player count + ping -->
+
+            </LinearLayout> <!-- end bottom content-->
+
+       </LinearLayout>  <!-- end all content-->
+
+    </com.balysv.materialripple.MaterialRippleLayout>
 
 </android.support.v7.widget.CardView>
 

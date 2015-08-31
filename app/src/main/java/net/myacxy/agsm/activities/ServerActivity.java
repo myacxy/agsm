@@ -43,6 +43,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.Receiver;
@@ -64,7 +65,7 @@ public class ServerActivity extends AppCompatActivity
     @ViewById(R.id.server_backdrop)     ImageView backdrop;
     @ViewById(R.id.collapsing_toolbar)  CollapsingToolbarLayout collapsingToolbarLayout;
 
-    private int gameServerId;
+    @Extra long gameServerId;
     private Game game;
     private GameServerEntity gameServerEntity;
     private ServerFragmentPagerAdapter adapter;
@@ -72,7 +73,6 @@ public class ServerActivity extends AppCompatActivity
     @AfterViews
     void initialize()
     {
-        gameServerId = getIntent().getExtras().getInt(MainActivity.EXTRA_GAME_SERVER_ID);
         gameServerEntity = serverFinder.findById(gameServerId);
         game = gameFinder.find(gameServerEntity.game.name);
 
@@ -144,7 +144,8 @@ public class ServerActivity extends AppCompatActivity
                         if (gameServer.getProtocol().getResponseStatus() == ServerResponseStatus.OK) {
                             databaseManager.update(gameServer);
 
-                            Intent intent = new Intent(MainActivity.ACTION_ON_SERVER_REFRESHED);
+                            Intent intent = new Intent(MainActivity.ACTION_ON_SERVER_UPDATED)
+                                    .putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerId);
                             sendBroadcast(intent);
 
                             reinitialize();

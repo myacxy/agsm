@@ -51,14 +51,28 @@ public class AgsmDashClockExtension extends DashClockExtension
             totalBotCount += botCount;
 
             // v1.03 | 0(0)/16
-            expandedBody.append(
-                    String.format(
-                            "%s | %d(%d)/%d",
-                            gameServerEntity.hostName.trim(),
-                            playerCount,
-                            botCount,
-                            gameServerEntity.maxClients)
-            );
+            if(botCount > 0)
+            {
+                expandedBody.append(
+                        String.format(
+                                "%s | %d (%d) / %d",
+                                gameServerEntity.hostName.trim(),
+                                playerCount,
+                                botCount,
+                                gameServerEntity.maxClients)
+                );
+            }
+            else
+            {
+                expandedBody.append(
+                        String.format(
+                                "%s | %d / %d",
+                                gameServerEntity.hostName.trim(),
+                                playerCount,
+                                gameServerEntity.maxClients)
+                );
+            }
+
 
             if(gameServerEntities.indexOf(gameServerEntity) != gameServerEntities.size() - 1)
             {
@@ -87,7 +101,7 @@ public class AgsmDashClockExtension extends DashClockExtension
 
     @Receiver(actions = {
             MainActivity.ACTION_ON_SERVER_ADDED,
-            MainActivity.ACTION_ON_SERVER_REFRESHED,
+            MainActivity.ACTION_ON_SERVER_UPDATED,
             MainActivity.ACTION_ON_SERVERS_UPDATED,
             MainActivity.ACTION_ON_SERVER_REMOVED } )
     void onServersUpdated()

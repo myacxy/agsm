@@ -45,5 +45,6 @@
     <!-- Menu -->
     <string name="menu_add_server_tfj_title">TFJ</string>
     <string name="menu_add_server_myacxy_title">myacxy</string>
+    <string name="action_home_refresh">refresh</string>
     <!-- END Server Add -->
 </resources>
