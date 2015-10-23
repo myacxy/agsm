@@ -135,13 +135,11 @@ public class ServerCardView extends LinearLayout
     {
         progressBar.setIndeterminate(true);
         progressBar.setVisibility(View.VISIBLE);
-        divider.setVisibility(View.GONE);
     }
 
     public void hideProgress()
     {
-        progressBar.setVisibility(View.GONE);
-        divider.setVisibility(VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
