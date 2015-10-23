@@ -10,7 +10,7 @@
     app:cardElevation="@dimen/spacing_tiny"
     >
     <com.balysv.materialripple.MaterialRippleLayout
-        android:id="@+id/server_card"
+        android:id="@+id/mrl_server_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:mrl_rippleDelayClick="true"
@@ -18,58 +18,62 @@
         app:mrl_rippleDimension="0dp"
         >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             >
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/server_card_toolbar"
+                android:id="@+id/tb_server_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 >
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     >
                     <!--server title-->
                     <TextView
-                        android:id="@+id/server_card_title"
-                        android:layout_width="match_parent"
+                        android:id="@+id/tv_sc_title"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:lines="1"
                         android:ellipsize="end"
+                        android:text="Server Title"
                         android:textAppearance="@android:style/TextAppearance.Medium"
                         />
                     <!-- status -->
 
                     <!-- online / offline -->
                     <TextView
-                        android:id="@+id/server_card_status"
+                        android:id="@+id/tv_sc_status"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_sc_title"
+                        android:text="online"
                         android:textAppearance="@android:style/TextAppearance.Small"
                         />
 
-                </LinearLayout>
+                </RelativeLayout>
 
             </android.support.v7.widget.Toolbar>
 
             <View
-                android:id="@+id/server_card_divider"
+                android:id="@+id/divider"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
+                android:layout_below="@id/tb_server_card"
                 android:background="@android:color/darker_gray"
                 />
 
             <!-- TODO align divider / progress, style -->
             <ProgressBar
-                android:id="@+id/server_card_progress"
+                android:id="@+id/pb_sc_progress"
                 android:layout_width="fill_parent"
                 android:layout_height="8dp"
+                android:layout_below="@id/divider"
                 android:indeterminate="true"
                 android:visibility="gone"
                 style="@android:style/Widget.Material.ProgressBar.Horizontal"
@@ -78,6 +82,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/pb_sc_progress"
                 android:paddingTop="8dp"
                 android:orientation="vertical"
                 style="@style/ServerCardContent"
@@ -87,52 +92,55 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:weightSum="2"
                     android:paddingBottom="2dp"
                     android:baselineAligned="false"
+                    android:layout_marginBottom="4dp"
                     >
 
                     <!-- game -->
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/rl_sc_game"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal"
                         >
 
                         <!-- game icon -->
                         <com.mikepenz.iconics.view.IconicsImageView
-                            android:id="@+id/server_card_game_icon"
-                            android:layout_width="14sp"
-                            android:layout_height="match_parent"
+                            android:id="@+id/iv_sc_game"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
                             android:layout_marginRight="@dimen/spacing_small"
                             app:iiv_color="?android:attr/textColorSecondary"
                             app:iiv_icon="faw-gamepad"
                             />
                         <!-- game name -->
                         <TextView
-                            android:id="@+id/server_card_game"
+                            android:id="@+id/tv_sc_game"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/iv_sc_game"
                             android:fontFamily="sans-serif-light"
+                            android:text="Game"
                             android:textAppearance="?android:textAppearanceSmall"
                             />
 
-                    </LinearLayout> <!-- end game -->
+                    </RelativeLayout> <!-- end game -->
 
                     <!-- map -->
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal"
+                        android:layout_toRightOf="@id/rl_sc_game"
                         >
                         <!-- map icon -->
                         <com.mikepenz.iconics.view.IconicsImageView
-                            android:id="@+id/server_card_map_icon"
-                            android:layout_width="14sp"
-                            android:layout_height="match_parent"
+                            android:id="@+id/iv_sc_map"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
                             android:layout_marginRight="@dimen/spacing_small"
                             android:layout_marginEnd="@dimen/spacing_small"
                             app:iiv_color="?android:attr/textColorSecondary"
@@ -141,14 +149,17 @@
 
                         <!-- map name -->
                         <TextView
-                            android:id="@+id/server_card_map"
+                            android:id="@+id/tv_sc_map"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-light"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/iv_sc_map"
+                            android:text="map_name"
                             android:textAppearance="?android:textAppearanceSmall"
+                            android:fontFamily="sans-serif-light"
                             />
 
-                    </LinearLayout> <!-- end map -->
+                    </RelativeLayout> <!-- end map -->
 
                 </LinearLayout> <!-- end game + map -->
 
@@ -162,17 +173,16 @@
                     >
 
                     <!-- player count -->
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal"
                         >
 
                         <com.mikepenz.iconics.view.IconicsImageView
-                            android:id="@+id/server_card_player_count_icon"
-                            android:layout_width="14sp"
-                            android:layout_height="match_parent"
+                            android:id="@+id/iv_sc_player_count"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
                             android:layout_marginRight="@dimen/spacing_small"
                             app:iiv_color="?android:attr/textColorSecondary"
                             app:iiv_icon="faw-users"
@@ -180,46 +190,51 @@
 
                         <!-- player count -->
                         <TextView
-                            android:id="@+id/server_card_player_count"
+                            android:id="@+id/tv_sc_player_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-light"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/iv_sc_player_count"
+                            android:text="0 (1) / 12"
                             android:textAppearance="?android:textAppearanceSmall"
+                            android:fontFamily="sans-serif-light"
                             />
 
-                    </LinearLayout> <!-- end player count -->
+                    </RelativeLayout> <!-- end player count -->
 
                     <!-- ping -->
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
                         android:layout_weight="1"
                         >
                         <com.mikepenz.iconics.view.IconicsImageView
-                            android:id="@+id/server_card_ping_icon"
-                            android:layout_width="14sp"
-                            android:layout_height="match_parent"
+                            android:id="@+id/iv_sc_ping"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
                             android:layout_marginRight="@dimen/spacing_small"
                             app:iiv_color="?android:attr/textColorSecondary"
                             app:iiv_icon="gmd-timer"
                             />
                         <!-- ping -->
                         <TextView
-                            android:id="@+id/server_card_ping"
+                            android:id="@+id/tv_sc_ping"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-light"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/iv_sc_ping"
+                            android:text="123 ms"
                             android:textAppearance="?android:textAppearanceSmall"
+                            android:fontFamily="sans-serif-light"
                             />
 
-                    </LinearLayout> <!-- end ping -->
+                    </RelativeLayout> <!-- end ping -->
 
                 </LinearLayout> <!-- end player count + ping -->
 
             </LinearLayout> <!-- end bottom content-->
 
-       </LinearLayout>  <!-- end all content-->
+       </RelativeLayout>  <!-- end all content-->
 
     </com.balysv.materialripple.MaterialRippleLayout>
 

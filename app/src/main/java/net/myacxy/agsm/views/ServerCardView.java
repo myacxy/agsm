@@ -27,15 +27,15 @@ public class ServerCardView extends LinearLayout
 {
     private GameServerEntity mGameServerEntity;
 
-    @ViewById(R.id.server_card_title)           TextView title;
-    @ViewById(R.id.server_card_status)          TextView status;
-    @ViewById(R.id.server_card_ping)            TextView ping;
-    @ViewById(R.id.server_card_game)            TextView game;
-    @ViewById(R.id.server_card_map)             TextView map;
-    @ViewById(R.id.server_card_player_count)    TextView playerCount;
-    @ViewById(R.id.server_card_toolbar)         Toolbar toolbar;
-    @ViewById(R.id.server_card_progress)        ProgressBar progressBar;
-    @ViewById(R.id.server_card_divider)         View divider;
+    @ViewById(R.id.tv_sc_title)           TextView title;
+    @ViewById(R.id.tv_sc_status)          TextView status;
+    @ViewById(R.id.tv_sc_ping)            TextView ping;
+    @ViewById(R.id.tv_sc_game)            TextView game;
+    @ViewById(R.id.tv_sc_map)             TextView map;
+    @ViewById(R.id.tv_sc_player_count)    TextView playerCount;
+    @ViewById(R.id.tb_server_card)        Toolbar toolbar;
+    @ViewById(R.id.pb_sc_progress)        ProgressBar progressBar;
+    @ViewById(R.id.divider)               View divider;
 
     private Context context;
 
@@ -63,7 +63,7 @@ public class ServerCardView extends LinearLayout
         });
     }
 
-    @Click(R.id.server_card)
+    @Click(R.id.mrl_server_card)
     void onClickServerCard()
     {
         Intent intent = ServerActivity_
