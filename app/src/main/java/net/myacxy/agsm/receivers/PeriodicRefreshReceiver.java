@@ -26,7 +26,7 @@ public class PeriodicRefreshReceiver extends WakefulBroadcastReceiver
         // empty, will be overridden in generated subclass
     }
 
-    @ReceiverAction(MainActivity.ACTION_PERIODIC_REFRESH)
+    @ReceiverAction(actions = MainActivity.ACTION_PERIODIC_REFRESH)
     void periodicRefresh(Context context)
     {
         startWakefulService(context, getIntent(context, MainActivity.UPDATE_REASON_PERIODIC));
@@ -40,7 +40,7 @@ public class PeriodicRefreshReceiver extends WakefulBroadcastReceiver
                 .get();
     }
 
-    @ReceiverAction(MainActivity.ACTION_ENSURE_PERIODIC_REFRESH)
+    @ReceiverAction(actions = MainActivity.ACTION_ENSURE_PERIODIC_REFRESH)
     void ensurePeriodicRefresh(Context context)
     {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(

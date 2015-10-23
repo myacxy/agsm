@@ -12,7 +12,7 @@ import org.androidannotations.annotations.ReceiverAction;
 @EReceiver
 public class BootReceiver extends BroadcastReceiver
 {
-    @ReceiverAction(Intent.ACTION_BOOT_COMPLETED)
+    @ReceiverAction(actions = Intent.ACTION_BOOT_COMPLETED)
     void bootCompleted(Context context)
     {
         context.sendBroadcast(
