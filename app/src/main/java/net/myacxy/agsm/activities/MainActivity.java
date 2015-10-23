@@ -22,7 +22,6 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import net.myacxy.agsm.AgsmService_;
 import net.myacxy.agsm.R;
-import net.myacxy.agsm.interfaces.OnServerAddedListener;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.interfaces.ServerUpdateListener;
 import net.myacxy.agsm.models.GameServerEntity;
@@ -206,13 +205,29 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
 
     protected void addServersToDrawer(Drawer drawer, List<GameServerEntity> serverEntities)
     {
-        for (final GameServerEntity serverEntity : serverEntities) {
-            drawer.addItem(new SecondaryDrawerItem()
-                            .withIcon(FontAwesome.Icon.faw_server)
-                            .withName(serverEntity.hostName.trim())
-                    .withBadge(String.valueOf(serverEntity.getPlayers().size()))
-                    .withIdentifier(serverEntity.getId().intValue()),
-                    drawer.getDrawerItems().size() - 1);
+        for (final GameServerEntity serverEntity : serverEntities)
+        {
+            String name;
+            String badge;
+
+            if(serverEntity.isOnline)
+            {
+                name = serverEntity.hostName.trim();
+                badge = String.valueOf(serverEntity.getPlayers().size());
+            }
+            else
+            {
+                name = serverEntity.ipAddress + ":" + serverEntity.port;
+                badge = "\u2014";
+            }
+
+            IDrawerItem item = new SecondaryDrawerItem()
+                    .withIcon(FontAwesome.Icon.faw_server)
+                    .withName(name)
+                    .withBadge(badge)
+                    .withIdentifier(serverEntity.getId().intValue());
+            int position = drawer.getDrawerItems().size() - 1;
+            drawer.addItem(item, position);
         }
     }
 
@@ -228,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
     @Override
     public void onServerUpdated(@Receiver.Extra(EXTRA_GAME_SERVER_ID) long gameServerId) {
         serverCardAdapter.hideProgress(gameServerId);
+        serverCardAdapter.notifyDataSetChanged();
     }
 
     @Receiver(actions = ACTION_ON_SERVERS_UPDATED)
@@ -240,8 +256,16 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
         {
             for(int i = 0; i < gameServerEntities.size(); i++)
             {
-                String playerCount = String.valueOf(gameServerEntities.get(i).getPlayers().size());
-                drawer.updateBadge(playerCount, i + DRAWER_SERVER_ITEM_OFFSET);
+                GameServerEntity gse = gameServerEntities.get(i);
+                if(gse.isOnline)
+                {
+                    String playerCount = String.valueOf(gse.getPlayers().size());
+                    drawer.updateBadge(playerCount, i + DRAWER_SERVER_ITEM_OFFSET);
+                }
+                else
+                {
+                    drawer.updateBadge("\u2014", i + DRAWER_SERVER_ITEM_OFFSET);
+                }
             }
         }
 

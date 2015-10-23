@@ -47,8 +47,10 @@ dependencies {
 
     apt 'org.androidannotations:androidannotations:4.0-SNAPSHOT'
     compile 'org.androidannotations:androidannotations-api:4.0-SNAPSHOT'
+    compile 'de.greenrobot:eventbus:3.0.0-beta1'
 
     // Google Support libraries
+    compile 'com.android.support:support-annotations:23.1.0'
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.android.support:cardview-v7:23.1.0'
     compile 'com.android.support:design:23.1.0'

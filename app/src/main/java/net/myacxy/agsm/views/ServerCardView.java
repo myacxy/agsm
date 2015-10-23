@@ -52,8 +52,7 @@ public class ServerCardView extends LinearLayout
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId())
-                {
+                switch (item.getItemId()) {
                     case R.id.action_server_card_remove:
                         Toast.makeText(context, "remove", Toast.LENGTH_SHORT).show();
                         break;
@@ -78,16 +77,27 @@ public class ServerCardView extends LinearLayout
     {
         mGameServerEntity = gameServerEntity;
 
-        title.setText(mGameServerEntity.hostName.trim());
-        status.setText(mGameServerEntity.isOnline ? "online" : "offline");
-        ping.setText(String.format("%d ms", mGameServerEntity.ping));
+        if(mGameServerEntity.isOnline)
+        {
+            title.setText(mGameServerEntity.hostName.trim());
+            status.setText("online");
+            ping.setText(String.format("%d ms", mGameServerEntity.ping));
+            map.setText(mGameServerEntity.mapName);
+            playerCount.setText(
+                    getPlayerCountText(
+                            mGameServerEntity.getPlayers(),
+                            mGameServerEntity.maxClients)
+            );
+        }
+        else
+        {
+            title.setText(mGameServerEntity.ipAddress + ":" + mGameServerEntity.port);
+            status.setText("offline");
+            ping.setText("\u2014");
+            map.setText("\u2014");
+            playerCount.setText("\u2014");
+        }
         game.setText(mGameServerEntity.game.alternativeName);
-        map.setText(mGameServerEntity.mapName);
-        playerCount.setText(
-                getPlayerCountText(
-                        mGameServerEntity.getPlayers(),
-                        mGameServerEntity.maxClients)
-        );
     }
 
     protected String getPlayerCountText(List<PlayerEntity> playerEntities, int maxClients)

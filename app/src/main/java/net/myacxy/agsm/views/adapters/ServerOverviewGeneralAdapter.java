@@ -4,8 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
-
 
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
@@ -36,7 +34,7 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
     private ArrayList<String> list = new ArrayList<>();
     private GameServerEntity gameServerEntity;
 
-    private static int POSITION_LAST_UPDATE = -1;
+    private static int POSITION_ENTRY_LAST_UPDATE = -1;
     private static int TIME_INTERVAL = 1000;
     private Timer timer;
     private ItemServerDetailsParameterView lastUpdateView;
@@ -83,7 +81,7 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
         }
         item.bind(list.get(position), getItem(position));
 
-        if(position == POSITION_LAST_UPDATE)
+        if(position == POSITION_ENTRY_LAST_UPDATE)
         {
             lastUpdateView = item;
             setLastUpdate(lastUpdateView);
@@ -97,16 +95,29 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
         gameServerEntity = serverFinder.findById(gameServerId);
         if(gameServerEntity != null)
         {
-            POSITION_LAST_UPDATE = 0;
+            POSITION_ENTRY_LAST_UPDATE = 0;
             map.put("Last update", "0s ago");
             map.put("IP address", gameServerEntity.ipAddress);
             map.put("Port", String.valueOf(gameServerEntity.port));
-            map.put("Status", gameServerEntity.isOnline ? "online" : "offline");
-            map.put("Ping", String.format("%d ms", gameServerEntity.ping));
-            map.put("Game", gameServerEntity.game.name);
-            map.put("Host name", gameServerEntity.hostName.trim());
-            map.put("Map name", gameServerEntity.mapName);
-            map.put("Maximum clients", String.valueOf(gameServerEntity.maxClients));
+
+            if(gameServerEntity.isOnline)
+            {
+                map.put("Status", "online");
+                map.put("Ping", String.format("%d ms", gameServerEntity.ping));
+                map.put("Game", gameServerEntity.game.name);
+                map.put("Host name", gameServerEntity.hostName.trim());
+                map.put("Map name", gameServerEntity.mapName);
+                map.put("Maximum clients", String.valueOf(gameServerEntity.maxClients));
+            }
+            else
+            {
+                map.put("Status", "offline");
+                map.put("Ping", "\u2014");
+                map.put("Game", gameServerEntity.game.name);
+                map.put("Host name", "\u2014");
+                map.put("Map name", "\u2014");
+                map.put("Maximum clients", "\u2014");
+            }
 
             list = new ArrayList<>(map.keySet());
         }
@@ -162,6 +173,6 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
     public void restartUpdateTimer()
     {
         timer = new Timer();
-        getView(POSITION_LAST_UPDATE, lastUpdateView, null);
+        getView(POSITION_ENTRY_LAST_UPDATE, lastUpdateView, null);
     }
 } // ServerOverviewGeneralAdapter

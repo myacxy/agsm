@@ -38,6 +38,14 @@ public class AgsmDashClockExtension extends DashClockExtension
 
         for (GameServerEntity gameServerEntity : gameServerEntities)
         {
+            if(!gameServerEntity.isOnline) {
+                String item = String.format("%s:%s | %s",
+                        gameServerEntity.ipAddress,
+                        gameServerEntity.port,
+                        "offline");
+                expandedBody.append(item);
+                continue;
+            }
             int playerCount = 0;
             int botCount = 0;
             List<PlayerEntity> playerEntities = gameServerEntity.getPlayers();
@@ -53,24 +61,22 @@ public class AgsmDashClockExtension extends DashClockExtension
             // v1.03 | 0(0)/16
             if(botCount > 0)
             {
-                expandedBody.append(
-                        String.format(
-                                "%s | %d (%d) / %d",
-                                gameServerEntity.hostName.trim(),
-                                playerCount,
-                                botCount,
-                                gameServerEntity.maxClients)
-                );
+                String item = String.format("%s | %d (%d) / %d",
+                        gameServerEntity.hostName.trim(),
+                        playerCount,
+                        botCount,
+                        gameServerEntity.maxClients);
+
+                expandedBody.append(item);
             }
             else
             {
-                expandedBody.append(
-                        String.format(
-                                "%s | %d / %d",
-                                gameServerEntity.hostName.trim(),
-                                playerCount,
-                                gameServerEntity.maxClients)
-                );
+                String item = String.format("%s | %d / %d",
+                        gameServerEntity.hostName.trim(),
+                        playerCount,
+                        gameServerEntity.maxClients);
+
+                expandedBody.append(item);
             }
 
 

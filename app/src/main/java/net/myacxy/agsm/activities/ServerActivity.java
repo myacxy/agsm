@@ -85,7 +85,15 @@ public class ServerActivity extends AppCompatActivity
                         GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(18)
         );
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        collapsingToolbarLayout.setTitle(gameServerEntity.hostName.trim());
+        if(gameServerEntity.isOnline)
+        {
+            collapsingToolbarLayout.setTitle(gameServerEntity.hostName.trim());
+        }
+        else
+        {
+            String title = gameServerEntity.ipAddress + ":" + gameServerEntity.port;
+            collapsingToolbarLayout.setTitle(title);
+        }
 
         setupViewPager(viewPager);
 
@@ -141,21 +149,22 @@ public class ServerActivity extends AppCompatActivity
                 new OnServerUpdatedListener() {
                     @Override
                     public void onServerUpdated(GameServer gameServer) {
-                        if (gameServer.getProtocol().getResponseStatus() == ServerResponseStatus.OK) {
-                            databaseManager.update(gameServer);
 
-                            Intent intent = new Intent(MainActivity.ACTION_ON_SERVER_UPDATED)
-                                    .putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerId);
-                            sendBroadcast(intent);
+                        databaseManager.update(gameServer);
 
-                            reinitialize();
-                        } else {
+                        if(gameServer.getProtocol().getResponseStatus() != ServerResponseStatus.OK) {
                             Snackbar.make(
                                     refreshButton,
                                     gameServer.getProtocol().getResponseStatus().toString(),
                                     Snackbar.LENGTH_SHORT
                             ).show();
                         }
+
+                        Intent intent = new Intent(MainActivity.ACTION_ON_SERVER_UPDATED)
+                                .putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerId);
+                        sendBroadcast(intent);
+
+                        reinitialize();
                         hideProgress(refreshButton);
                     }
                 } // OnServerUpdatedListener

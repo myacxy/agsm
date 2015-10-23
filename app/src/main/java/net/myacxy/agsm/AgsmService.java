@@ -2,7 +2,11 @@ package net.myacxy.agsm;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.*;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 
 import net.myacxy.agsm.activities.MainActivity;
@@ -16,7 +20,6 @@ import net.myacxy.agsm.managers.JgsqServerManager;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
 import net.myacxy.agsm.utils.JgsqGameFinder;
-import net.myacxy.jgsq.helpers.ServerResponseStatus;
 import net.myacxy.jgsq.models.Game;
 import net.myacxy.jgsq.models.GameServer;
 
@@ -117,14 +120,9 @@ public class AgsmService extends Service
         @Override
         public void onServerUpdated(GameServer gameServer)
         {
-            if (gameServer.getProtocol().getResponseStatus() == ServerResponseStatus.OK)
-            {
-                databaseManager.update(gameServer);
-            }
-            else
-            {
-                System.out.println(gameServer.getProtocol().getResponseStatus().toString());
-            }
+
+            databaseManager.update(gameServer);
+
             if(--count == 0)
             {
                 onAllServerUpdated();

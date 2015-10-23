@@ -47,10 +47,7 @@ public class JgsqServerManager implements ServerManager
         gameServer.connect(ipAddress, port);
         gameServer.update();
 
-        if(listener != null)
-        {
-            listener.onServerUpdated(gameServer);
-        }
+        listener.onServerUpdated(gameServer);
     }
 
     @Override
