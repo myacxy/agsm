@@ -9,8 +9,8 @@ import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.models.PlayerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
-import net.myacxy.agsm.views.ItemServerOverviewPlayerView;
-import net.myacxy.agsm.views.ItemServerOverviewPlayerView_;
+import net.myacxy.agsm.views.items.ItemServerOverviewPlayerView;
+import net.myacxy.agsm.views.items.ItemServerOverviewPlayerView_;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;

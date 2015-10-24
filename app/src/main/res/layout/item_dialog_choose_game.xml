@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:paddingLeft="16dp"
+    android:orientation="vertical"
+    android:background="?selectableItemBackground"
+    >
+
+    <ImageView
+        android:id="@+id/iv_gdc_item"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_jk2_24"
+        tools:ignore="ContentDescription"
+        />
+
+    <TextView
+        android:id="@+id/tv_gdc_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="56dp"
+        android:layout_marginRight="16dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:text="Game Title"
+        android:fontFamily="sans-serif"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        />
+
+</RelativeLayout>

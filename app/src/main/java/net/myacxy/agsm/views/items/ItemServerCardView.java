@@ -1,4 +1,4 @@
-package net.myacxy.agsm.views;
+package net.myacxy.agsm.views.items;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +23,7 @@ import org.androidannotations.annotations.ViewById;
 import java.util.List;
 
 @EViewGroup(R.layout.item_server_card)
-public class ServerCardView extends LinearLayout
+public class ItemServerCardView extends LinearLayout
 {
     private GameServerEntity mGameServerEntity;
 
@@ -39,7 +39,7 @@ public class ServerCardView extends LinearLayout
 
     private Context context;
 
-    public ServerCardView(Context context)
+    public ItemServerCardView(Context context)
     {
         super(context);
         this.context = context;

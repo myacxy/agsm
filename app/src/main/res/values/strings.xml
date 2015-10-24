@@ -27,7 +27,8 @@
     <string name="server_add_address_hint">ip address or hostname</string>
     <string name="server_add_address_title">IP Address or Hostname</string>
     <!-- Game -->
-    <string name="server_add_game_hint">select a game</string>
+    <string name="server_add_choose_game_title">Select a game</string>
+    <string name="server_add_choose_game_none">None</string>
     <string name="server_add_game_title">Game</string>
     <!-- RCON -->
     <string name="server_add_rcon_hint">rcon (optional)</string>

@@ -8,8 +8,8 @@ import android.widget.BaseAdapter;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
-import net.myacxy.agsm.views.ItemServerDetailsParameterView;
-import net.myacxy.agsm.views.ItemServerDetailsParameterView_;
+import net.myacxy.agsm.views.items.ItemServerDetailsParameterView;
+import net.myacxy.agsm.views.items.ItemServerDetailsParameterView_;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
@@ -56,8 +56,7 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
     public String getItem(int position)
     {
         String key = list.get(position);
-        String value = map.get(key);
-        return value;
+        return map.get(key);
     }
 
     @Override

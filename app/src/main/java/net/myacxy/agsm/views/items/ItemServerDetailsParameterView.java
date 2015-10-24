@@ -1,4 +1,4 @@
-package net.myacxy.agsm.views;
+package net.myacxy.agsm.views.items;
 
 import android.content.Context;
 import android.widget.LinearLayout;

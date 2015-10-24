@@ -6,8 +6,8 @@ import android.view.ViewGroup;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
-import net.myacxy.agsm.views.ServerCardView;
-import net.myacxy.agsm.views.ServerCardView_;
+import net.myacxy.agsm.views.items.ItemServerCardView;
+import net.myacxy.agsm.views.items.ItemServerCardView_;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @EBean
-public class ServerCardAdapter extends RecyclerViewAdapterBase<GameServerEntity, ServerCardView>
+public class ServerCardAdapter extends RecyclerViewAdapterBase<GameServerEntity, ItemServerCardView>
 {
-    private List<ServerCardView> views = new ArrayList<>();
+    private List<ItemServerCardView> views = new ArrayList<>();
 
     @Bean(ActiveServerFinder.class) ServerFinder serverFinder;
     @RootContext                    Context context;
@@ -32,15 +32,15 @@ public class ServerCardAdapter extends RecyclerViewAdapterBase<GameServerEntity,
     }
 
     @Override
-    protected ServerCardView onCreateItemView(ViewGroup parent, int viewType)
+    protected ItemServerCardView onCreateItemView(ViewGroup parent, int viewType)
     {
-        return ServerCardView_.build(context);
+        return ItemServerCardView_.build(context);
     }
 
     @Override
-    public void onBindViewHolder(ViewWrapper<ServerCardView> holder, int position)
+    public void onBindViewHolder(ViewWrapper<ItemServerCardView> holder, int position)
     {
-        ServerCardView view = holder.getView();
+        ItemServerCardView view = holder.getView();
         GameServerEntity server = items.get(position);
         view.bind(server);
 
@@ -50,7 +50,7 @@ public class ServerCardAdapter extends RecyclerViewAdapterBase<GameServerEntity,
 
     public void showProgress(long gameServerId)
     {
-        ServerCardView view = getView(gameServerId);
+        ItemServerCardView view = getView(gameServerId);
         if (view != null)
         {
             view.showProgress();
@@ -59,16 +59,16 @@ public class ServerCardAdapter extends RecyclerViewAdapterBase<GameServerEntity,
 
     public void hideProgress(long gameServerId)
     {
-        ServerCardView view = getView(gameServerId);
+        ItemServerCardView view = getView(gameServerId);
         if (view != null)
         {
             view.hideProgress();
         }
     }
 
-    private ServerCardView getView(long gameServerId)
+    private ItemServerCardView getView(long gameServerId)
     {
-        for (ServerCardView view : views)
+        for (ItemServerCardView view : views)
         {
             if(view.getGameServer().getId() == gameServerId)
             {
@@ -78,13 +78,13 @@ public class ServerCardAdapter extends RecyclerViewAdapterBase<GameServerEntity,
         return null;
     }
 
-    private void ensureNoDuplicates(ServerCardView newView)
+    private void ensureNoDuplicates(ItemServerCardView newView)
     {
-        List<ServerCardView> duplicateViews = new ArrayList<>();
+        List<ItemServerCardView> duplicateViews = new ArrayList<>();
 
-        for (ServerCardView oldView : views)
+        for (ItemServerCardView oldView : views)
         {
-            if(newView.getGameServer().getId() == oldView.getGameServer().getId())
+            if(newView.getGameServer().getId().equals(oldView.getGameServer().getId()))
             {
                 duplicateViews.add(oldView);
             }

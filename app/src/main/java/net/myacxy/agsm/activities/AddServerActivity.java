@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -12,6 +13,9 @@ import com.mikepenz.iconics.IconicsDrawable;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import net.myacxy.agsm.R;
+import net.myacxy.agsm.events.GameSelectedEvent;
+import net.myacxy.agsm.fragments.ChooseGameDialogFragment;
+import net.myacxy.agsm.fragments.ChooseGameDialogFragment_;
 import net.myacxy.agsm.interfaces.DatabaseManager;
 import net.myacxy.agsm.interfaces.GameFinder;
 import net.myacxy.agsm.interfaces.OnServerCreatedListener;
@@ -22,7 +26,6 @@ import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.IpAddressAndDomainValidator;
 import net.myacxy.agsm.utils.JgsqGameFinder;
 import net.myacxy.agsm.utils.PortValidator;
-import net.myacxy.agsm.views.adapters.GameSpinnerAdapter;
 import net.myacxy.jgsq.helpers.ServerResponseStatus;
 import net.myacxy.jgsq.models.Game;
 import net.myacxy.jgsq.models.GameServer;
@@ -31,26 +34,40 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
-import fr.ganfra.materialspinner.MaterialSpinner;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 
 @EActivity(R.layout.activity_add_server)
 @OptionsMenu(R.menu.menu_add_server)
 public class AddServerActivity extends AppCompatActivity
 {
     @ViewById(R.id.add_server_done_button)  protected FloatingActionButton doneButton;
-    @ViewById(R.id.server_add_game)         protected MaterialSpinner gameSpinner;
+    @ViewById(R.id.tv_as_cg_subtitle)       protected TextView selectedGameTextView;
     @ViewById(R.id.server_add_address)      protected MaterialEditText addressTextView;
     @ViewById(R.id.server_add_port)         protected MaterialEditText portTextView;
     @ViewById(R.id.server_add_query_port)   protected MaterialEditText queryPortTextView;
     @Bean(JgsqGameFinder.class)             protected GameFinder gameFinder;
-    @Bean(GameSpinnerAdapter.class)         protected GameSpinnerAdapter gameSpinnerAdapter;
     @Bean(JgsqServerManager.class)          protected ServerManager serverManager;
     @Bean(ActiveDatabaseManager.class)      protected DatabaseManager databaseManager;
+    @InstanceState                          protected String selectedGame;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 
     @AfterViews
     protected void initialize()
@@ -60,13 +77,13 @@ public class AddServerActivity extends AppCompatActivity
         getSupportActionBar().setHomeAsUpIndicator(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(18));
         getSupportActionBar().setTitle(getString(R.string.server_add_title));
 
+        if(selectedGame != null) {
+            selectedGameTextView.setText(selectedGame);
+        }
     }
 
     @AfterViews
-    protected void bindAdapter()
-    {
-        gameSpinner.setAdapter(gameSpinnerAdapter);
-
+    protected void bindAdapter() {
         addressTextView.addValidator(
                 new IpAddressAndDomainValidator(getString(R.string.error_server_invalid_address)));
         portTextView.addValidator(
@@ -145,10 +162,9 @@ public class AddServerActivity extends AppCompatActivity
     @OptionsItem(R.id.menu_add_server_tfj)
     void addTfj(MenuItem item)
     {
-        Game game = gameSpinnerAdapter.getItem("Star Wars Jedi Knight 2: Jedi Outcast");
-        int position = gameSpinnerAdapter.getPosition(game);
-        gameSpinner.setSelection(position, true);
-
+        Game game = gameFinder.find("Star Wars Jedi Knight 2: Jedi Outcast");
+        selectedGame = game.name;
+        selectedGameTextView.setText(selectedGame);
         addressTextView.setText("85.25.149.26");
         portTextView.setText("28070");
     }
@@ -156,10 +172,9 @@ public class AddServerActivity extends AppCompatActivity
     @OptionsItem(R.id.menu_add_server_myacxy)
     void addMyacxy(MenuItem item)
     {
-        Game game = gameSpinnerAdapter.getItem("Star Wars Jedi Knight 2: Jedi Outcast");
-        int position = gameSpinnerAdapter.getPosition(game);
-        gameSpinner.setSelection(position, true);
-
+        Game game = gameFinder.find("Star Wars Jedi Knight 2: Jedi Outcast");
+        selectedGame = game.name;
+        selectedGameTextView.setText(selectedGame);
         addressTextView.setText("myacxy.net");
         portTextView.setText("28070");
     }
@@ -167,25 +182,34 @@ public class AddServerActivity extends AppCompatActivity
     @OptionsItem(R.id.menu_add_server_q3)
     void addQ3(MenuItem item)
     {
-        Game game = gameSpinnerAdapter.getItem("Quake III Arena");
-        int position = gameSpinnerAdapter.getPosition(game);
-        gameSpinner.setSelection(position, true);
-
+        Game game = gameFinder.find("Quake III Arena");
+        selectedGame = game.name;
+        selectedGameTextView.setText(selectedGame);
         addressTextView.setText("108.61.179.59");
         portTextView.setText("28356");
     }
 
     @Click(R.id.add_server_done_button)
-    protected void doneSelected()
+    protected void onDoneClicked()
     {
         if(validateInput())
         {
-            Game game = (Game) gameSpinner.getSelectedItem();
+            Game game = gameFinder.find(selectedGame);
             String address = addressTextView.getText().toString().trim();
             int port = Integer.parseInt(portTextView.getText().toString().trim());
 
             initializeServer(game, address, port);
         }
+    }
+
+    @Click(R.id.rl_as_choose_game)
+    protected void onChooseGameClicked()
+    {
+        ChooseGameDialogFragment dialogFragment = ChooseGameDialogFragment_.builder().build();
+
+        getSupportFragmentManager().beginTransaction()
+                .add(dialogFragment, null)
+                .commit();
     }
 
     @OptionsItem(android.R.id.home)
@@ -197,9 +221,8 @@ public class AddServerActivity extends AppCompatActivity
 
     protected boolean validateInput()
     {
-        boolean valid = true;
         // valid game?
-        if(!validateGame(gameSpinner)) valid = false;
+        boolean valid = validateGame();
 
         // valid address?
         if(addressTextView.getText().toString().trim().length() > 0)
@@ -209,6 +232,7 @@ public class AddServerActivity extends AppCompatActivity
         else
         {
             addressTextView.setError(getString(R.string.error_server_address_required));
+            valid = false;
         }
 
         // valid port?
@@ -219,6 +243,7 @@ public class AddServerActivity extends AppCompatActivity
         else
         {
             portTextView.setError(getString(R.string.error_server_port_required));
+            valid = false;
         }
 
         // valid query port?
@@ -229,15 +254,16 @@ public class AddServerActivity extends AppCompatActivity
         return valid;
     }
 
-    protected boolean validateGame(MaterialSpinner spinner)
+    protected boolean validateGame()
     {
-        String selection = spinner.getSelectedItem().toString();
-        if(selection.equals("select a game"))
+        if(selectedGame != null)
         {
-            gameSpinner.setError(getString(R.string.error_server_game_required));
+            return true;
+        }
+        else {
+            showSnackbar(getString(R.string.error_server_game_required));
             return false;
         }
-        return true;
     }
 
     protected boolean validateText(MaterialEditText text)
@@ -249,6 +275,13 @@ public class AddServerActivity extends AppCompatActivity
     {
         Snackbar.make(doneButton, message, Snackbar.LENGTH_LONG)
                 .show();
+    }
+
+    @Subscribe
+    public void onGameSelected(GameSelectedEvent event)
+    {
+        selectedGame = event.game.name;
+        selectedGameTextView.setText(selectedGame);
     }
 
 } // AddServerFragment
