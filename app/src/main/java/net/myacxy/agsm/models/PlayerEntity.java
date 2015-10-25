@@ -39,4 +39,9 @@ public class PlayerEntity extends Model
         score = player.score;
         time = player.time;
     }
+
+    @Override
+    public String toString() {
+        return coloredName;
+    }
 } // PlayerEntity

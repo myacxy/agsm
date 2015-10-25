@@ -8,6 +8,7 @@ import net.myacxy.jgsq.models.GameServer;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -63,9 +64,35 @@ public class GameServerEntity extends Model
         queryPort = server.queryPort;
     }
 
-    public List<PlayerEntity> getPlayers()
+    public List<PlayerEntity> getClients()
     {
         return getMany(PlayerEntity.class, "game_server");
     }
 
+    public List<PlayerEntity> getPlayers()
+    {
+        List<PlayerEntity> clients = getClients();
+        List<PlayerEntity> players = new ArrayList<>();
+        for (PlayerEntity client : clients)
+        {
+            if(client.ping > 0) players.add(client);
+        }
+        return players;
+    }
+
+    public List<PlayerEntity> getBots()
+    {
+        List<PlayerEntity> clients = getClients();
+        List<PlayerEntity> bots = new ArrayList<>();
+        for (PlayerEntity client : clients)
+        {
+            if(client.ping == 0) bots.add(client);
+        }
+        return bots;
+    }
+
+    public String getHostName()
+    {
+        return hostName == null ? ipAddress + ":" + port : hostName.trim();
+    }
 } // GameServerEntity

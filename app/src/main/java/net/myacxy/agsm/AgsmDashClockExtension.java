@@ -9,7 +9,6 @@ import net.myacxy.agsm.activities.MainActivity;
 import net.myacxy.agsm.activities.MainActivity_;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
-import net.myacxy.agsm.models.PlayerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
 
 import org.androidannotations.annotations.Bean;
@@ -36,51 +35,43 @@ public class AgsmDashClockExtension extends DashClockExtension
         int totalPlayerCount = 0;
         int totalBotCount = 0;
 
-        for (GameServerEntity gameServerEntity : gameServerEntities)
+        for (GameServerEntity server : gameServerEntities)
         {
-            if(!gameServerEntity.isOnline) {
-                String item = String.format("%s:%s | %s",
-                        gameServerEntity.ipAddress,
-                        gameServerEntity.port,
+            if(!server.isOnline) {
+                String item = String.format("%s | %s",
+                        server.getHostName(),
                         "offline");
                 expandedBody.append(item);
                 continue;
             }
-            int playerCount = 0;
-            int botCount = 0;
-            List<PlayerEntity> playerEntities = gameServerEntity.getPlayers();
-            for (PlayerEntity playerEntity : playerEntities)
-            {
-                if(playerEntity.ping > 0) playerCount++;
-                else botCount++;
-            }
+            int playerCount = server.getPlayers().size();
+            int botCount = server.getBots().size();
 
             totalPlayerCount += playerCount;
             totalBotCount += botCount;
 
-            // v1.03 | 0(0)/16
+            // v1.03 | 0 (0) /16
             if(botCount > 0)
             {
                 String item = String.format("%s | %d (%d) / %d",
-                        gameServerEntity.hostName.trim(),
+                        server.getHostName(),
                         playerCount,
                         botCount,
-                        gameServerEntity.maxClients);
+                        server.maxClients);
 
                 expandedBody.append(item);
             }
             else
             {
                 String item = String.format("%s | %d / %d",
-                        gameServerEntity.hostName.trim(),
+                        server.hostName.trim(),
                         playerCount,
-                        gameServerEntity.maxClients);
+                        server.maxClients);
 
                 expandedBody.append(item);
             }
 
-
-            if(gameServerEntities.indexOf(gameServerEntity) != gameServerEntities.size() - 1)
+            if(gameServerEntities.indexOf(server) != gameServerEntities.size() - 1)
             {
                 expandedBody.append("\n");
             }

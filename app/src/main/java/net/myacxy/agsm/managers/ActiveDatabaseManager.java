@@ -118,9 +118,9 @@ public class ActiveDatabaseManager implements DatabaseManager
         gameServerEntity.rcon = gameServer.rcon;
 
         // delete old player entries
-        for (PlayerEntity playerEntity : gameServerEntity.getPlayers())
+        for (PlayerEntity client : gameServerEntity.getClients())
         {
-            playerEntity.delete();
+            client.delete();
         }
 
         gameServerEntity.save();
@@ -151,9 +151,9 @@ public class ActiveDatabaseManager implements DatabaseManager
         ActiveAndroid.beginTransaction();
         try
         {
-            for (PlayerEntity playerEntity : gameServerEntity.getPlayers())
+            for (PlayerEntity client : gameServerEntity.getClients())
             {
-                remove(playerEntity);
+                remove(client);
             }
             ActiveAndroid.setTransactionSuccessful();
         }

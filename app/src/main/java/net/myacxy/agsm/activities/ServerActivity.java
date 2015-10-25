@@ -85,15 +85,8 @@ public class ServerActivity extends AppCompatActivity
                         GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(18)
         );
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        if(gameServerEntity.isOnline)
-        {
-            collapsingToolbarLayout.setTitle(gameServerEntity.hostName.trim());
-        }
-        else
-        {
-            String title = gameServerEntity.ipAddress + ":" + gameServerEntity.port;
-            collapsingToolbarLayout.setTitle(title);
-        }
+
+        collapsingToolbarLayout.setTitle(gameServerEntity.getHostName());
 
         setupViewPager(viewPager);
 
