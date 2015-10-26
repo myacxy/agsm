@@ -9,6 +9,7 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 
 import net.myacxy.agsm.AgsmService_;
 import net.myacxy.agsm.activities.MainActivity;
+import net.myacxy.agsm.utils.AgsmKeys;
 
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.ReceiverAction;
@@ -17,8 +18,7 @@ import org.androidannotations.annotations.SystemService;
 @EReceiver
 public class PeriodicRefreshReceiver extends WakefulBroadcastReceiver
 {
-    @SystemService
-    AlarmManager alarmManager;
+    @SystemService AlarmManager alarmManager;
 
     @Override
     public void onReceive(Context context, Intent intent)
@@ -26,7 +26,7 @@ public class PeriodicRefreshReceiver extends WakefulBroadcastReceiver
         // empty, will be overridden in generated subclass
     }
 
-    @ReceiverAction(actions = MainActivity.ACTION_PERIODIC_REFRESH)
+    @ReceiverAction(actions = AgsmKeys.Action.Service.PERIODIC_REFRESH)
     void periodicRefresh(Context context)
     {
         startWakefulService(context, getIntent(context, MainActivity.UPDATE_REASON_PERIODIC));
@@ -35,12 +35,12 @@ public class PeriodicRefreshReceiver extends WakefulBroadcastReceiver
     private Intent getIntent(Context context, int reason)
     {
         return AgsmService_.intent(context)
-                .action(MainActivity.ACTION_UPDATE_SERVERS)
+                .action(AgsmKeys.Action.Server.UPDATE_SERVERS)
                 .extra(MainActivity.EXTRA_UPDATE_REASON, reason)
                 .get();
     }
 
-    @ReceiverAction(actions = MainActivity.ACTION_ENSURE_PERIODIC_REFRESH)
+    @ReceiverAction(actions = AgsmKeys.Action.Service.ENSURE_PERIODIC_REFRESH)
     void ensurePeriodicRefresh(Context context)
     {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
@@ -49,7 +49,7 @@ public class PeriodicRefreshReceiver extends WakefulBroadcastReceiver
                 new Intent(
                         context,
                         PeriodicRefreshReceiver_.class
-                ).setAction(MainActivity.ACTION_PERIODIC_REFRESH),
+                ).setAction(AgsmKeys.Action.Service.PERIODIC_REFRESH),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         alarmManager.cancel(pendingIntent);

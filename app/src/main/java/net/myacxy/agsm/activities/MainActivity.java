@@ -27,6 +27,7 @@ import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.interfaces.ServerUpdateListener;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
+import net.myacxy.agsm.utils.AgsmKeys;
 import net.myacxy.agsm.utils.GameIconHelper;
 import net.myacxy.agsm.views.adapters.ServerCardAdapter;
 
@@ -44,19 +45,6 @@ import java.util.List;
 @OptionsMenu(R.menu.menu_home)
 public class MainActivity extends AppCompatActivity implements ServerUpdateListener
 {
-    public static final String ACTION_ENSURE_PERIODIC_REFRESH = "net.myacxy.agsm.action.ENSURE_PERIODIC_REFRESH";
-    public static final String ACTION_PERIODIC_REFRESH = "net.myacxy.agsm.action.PERIODIC_REFRESH";
-
-    public static final String ACTION_ON_SERVER_ADDED = "net.myacxy.agsm.action.ON_SERVER_ADDED";
-    public static final String ACTION_ON_SERVER_REMOVED = "net.myacxy.agsm.action.ON_SERVER_REMOVED";
-
-    public static final String ACTION_ON_UPDATE_SERVER = "net.myacxy.agsm.action.ON_UPDATE_SERVER";
-    public static final String ACTION_ON_SERVER_UPDATED = "net.myacxy.agsm.action.ON_SERVER_UPDATED";
-
-    public static final String ACTION_UPDATE_SERVERS = "net.myacxy.agsm.action.UPDATE_SERVERS";
-    public static final String ACTION_ON_UPDATE_SERVERS = "net.myacxy.agsm.action.ON_UPDATE_SERVERS";
-    public static final String ACTION_ON_SERVERS_UPDATED = "net.myacxy.agsm.action.ON_SERVERS_UPDATED";
-
     public static final int UPDATE_REASON_MANUAL = 0;
     public static final int UPDATE_REASON_PERIODIC = 1;
 
@@ -89,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
         this.savedInstanceState = savedInstanceState;
 
         // TODO ensure periodic refresh
-        Intent intent = new Intent(ACTION_ENSURE_PERIODIC_REFRESH);
+        Intent intent = new Intent(AgsmKeys.Action.Service.ENSURE_PERIODIC_REFRESH);
         sendBroadcast(intent);
     }
 
@@ -165,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
             @Override
             public void onRefresh() {
                 Intent intent = AgsmService_.intent(MainActivity.this)
-                        .action(MainActivity.ACTION_UPDATE_SERVERS)
+                        .action(AgsmKeys.Action.Server.UPDATE_SERVERS)
                         .extra(MainActivity.EXTRA_UPDATE_REASON, UPDATE_REASON_MANUAL)
                         .get();
                 startService(intent);
@@ -253,21 +241,21 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
     }
 
     //<editor-fold desc="ServerUpdateListener">
-    @Receiver(actions = ACTION_ON_UPDATE_SERVER)
+    @Receiver(actions = AgsmKeys.Action.Server.ON_UPDATE_SERVER)
     @Override
     public void onUpdateServer(@Receiver.Extra(EXTRA_GAME_SERVER_ID) long gameServerId)
     {
         serverCardAdapter.showProgress(gameServerId);
     }
 
-    @Receiver(actions = ACTION_ON_SERVER_UPDATED)
+    @Receiver(actions = AgsmKeys.Action.Server.ON_SERVER_UPDATED)
     @Override
     public void onServerUpdated(@Receiver.Extra(EXTRA_GAME_SERVER_ID) long gameServerId) {
         serverCardAdapter.hideProgress(gameServerId);
         serverCardAdapter.notifyDataSetChanged();
     }
 
-    @Receiver(actions = ACTION_ON_SERVERS_UPDATED)
+    @Receiver(actions = AgsmKeys.Action.Server.ON_SERVERS_UPDATED)
     @Override
     public void onServersUpdated()
     {
@@ -312,8 +300,8 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
     }
     //</editor-fold>
 
-    //<editor-fold desc="OnServerAdded / OnServerRemoved">
-    @Receiver(actions = MainActivity.ACTION_ON_SERVER_ADDED)
+    //<editor-fold desc="Events">
+    @Receiver(actions = AgsmKeys.Action.Server.ON_SERVER_ADDED)
     public void onServerAdded(@Receiver.Extra(EXTRA_GAME_SERVER_ID) int id)
     {
         GameServerEntity server = serverFinder.findById(id);
@@ -337,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
                 drawer.getDrawerItems().size() - 1);
     }
 
-    @Receiver(actions = ACTION_ON_SERVER_REMOVED)
+    @Receiver(actions = AgsmKeys.Action.Server.ON_SERVER_REMOVED)
     void onServerRemoved(@Receiver.Extra(EXTRA_GAME_SERVER_ID) long id)
     {
         // remove item from drawer

@@ -23,6 +23,7 @@ import net.myacxy.agsm.interfaces.ServerManager;
 import net.myacxy.agsm.managers.ActiveDatabaseManager;
 import net.myacxy.agsm.managers.JgsqServerManager;
 import net.myacxy.agsm.models.GameServerEntity;
+import net.myacxy.agsm.utils.AgsmKeys;
 import net.myacxy.agsm.utils.IpAddressAndDomainValidator;
 import net.myacxy.agsm.utils.JgsqGameFinder;
 import net.myacxy.agsm.utils.PortValidator;
@@ -114,7 +115,7 @@ public class AddServerActivity extends AppCompatActivity
                         gameServerEntity = databaseManager.save(gameServer);
 
                         // notify receivers that server was successfully added
-                        Intent data = new Intent(MainActivity.ACTION_ON_SERVER_ADDED);
+                        Intent data = new Intent(AgsmKeys.Action.Server.ON_SERVER_ADDED);
                         data.putExtra(
                                 MainActivity.EXTRA_GAME_SERVER_ID,
                                 gameServerEntity.getId().intValue()

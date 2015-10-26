@@ -19,6 +19,7 @@ import net.myacxy.agsm.managers.ActiveDatabaseManager;
 import net.myacxy.agsm.managers.JgsqServerManager;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
+import net.myacxy.agsm.utils.AgsmKeys;
 import net.myacxy.agsm.utils.JgsqGameFinder;
 import net.myacxy.jgsq.models.Game;
 import net.myacxy.jgsq.models.GameServer;
@@ -85,7 +86,7 @@ public class AgsmService extends Service
             gameServerEntities = serverFinder.findAll();
             if(gameServerEntities != null)
             {
-                Intent intent = new Intent(MainActivity.ACTION_ON_UPDATE_SERVERS);
+                Intent intent = new Intent(AgsmKeys.Action.Server.ON_UPDATE_SERVERS);
                 sendBroadcast(intent);
 
                 count = gameServerEntities.size();
@@ -103,7 +104,7 @@ public class AgsmService extends Service
 
         private void updateServer(GameServerEntity gameServerEntity)
         {
-            Intent intent = new Intent(MainActivity.ACTION_ON_UPDATE_SERVER)
+            Intent intent = new Intent(AgsmKeys.Action.Server.ON_UPDATE_SERVER)
                     .putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerEntity.getId());
             sendBroadcast(intent);
 
@@ -129,14 +130,14 @@ public class AgsmService extends Service
             }
 
             long gameServerId = databaseManager.getGameServerEntity(gameServer).getId();
-            Intent intent = new Intent(MainActivity.ACTION_ON_SERVER_UPDATED)
+            Intent intent = new Intent(AgsmKeys.Action.Server.ON_SERVER_UPDATED)
                     .putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerId);
             sendBroadcast(intent);
         } // onServerUpdated
 
         private void onAllServerUpdated()
         {
-            Intent intent = new Intent(MainActivity.ACTION_ON_SERVERS_UPDATED);
+            Intent intent = new Intent(AgsmKeys.Action.Server.ON_SERVERS_UPDATED);
             sendBroadcast(intent);
             stopSelf(startId);
         }

@@ -25,14 +25,17 @@ import net.myacxy.agsm.fragments.ServerOverviewFragment_;
 import net.myacxy.agsm.fragments.ServerRconFragment;
 import net.myacxy.agsm.fragments.ServerRconFragment_;
 import net.myacxy.agsm.interfaces.DatabaseManager;
+import net.myacxy.agsm.interfaces.EventManager;
 import net.myacxy.agsm.interfaces.GameFinder;
 import net.myacxy.agsm.interfaces.OnServerUpdatedListener;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.interfaces.ServerManager;
 import net.myacxy.agsm.managers.ActiveDatabaseManager;
+import net.myacxy.agsm.managers.GreenEventManager;
 import net.myacxy.agsm.managers.JgsqServerManager;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
+import net.myacxy.agsm.utils.AgsmKeys;
 import net.myacxy.agsm.utils.JgsqGameFinder;
 import net.myacxy.agsm.views.adapters.ServerFragmentPagerAdapter;
 import net.myacxy.jgsq.helpers.ServerResponseStatus;
@@ -61,6 +64,7 @@ public class ServerActivity extends AppCompatActivity
     @Bean(JgsqGameFinder.class)         GameFinder gameFinder;
     @Bean(ActiveServerFinder.class)     ServerFinder serverFinder;
     @Bean(ActiveDatabaseManager.class)  DatabaseManager databaseManager;
+    @Bean(GreenEventManager.class)      EventManager eventManager;
     @ViewById(R.id.iv_server_backdrop)  ImageView backdrop;
     @ViewById(R.id.ctl_server)          CollapsingToolbarLayout collapsingToolbarLayout;
     @Extra                              long gameServerId;
@@ -129,7 +133,7 @@ public class ServerActivity extends AppCompatActivity
                                     ).show();
                                 }
 
-                                Intent intent = new Intent(MainActivity.ACTION_ON_SERVER_UPDATED)
+                                Intent intent = new Intent(AgsmKeys.Action.Server.ON_SERVER_UPDATED)
                                         .putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerId);
                                 sendBroadcast(intent);
 
@@ -178,7 +182,7 @@ public class ServerActivity extends AppCompatActivity
                                 // remove database entry
                                 databaseManager.remove(gameServerEntity);
                                 // notify receivers
-                                Intent intent = new Intent(MainActivity.ACTION_ON_SERVER_REMOVED);
+                                Intent intent = new Intent(AgsmKeys.Action.Server.ON_SERVER_REMOVED);
                                 intent.putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerId);
                                 sendBroadcast(intent);
                                 // close this activity
@@ -220,13 +224,13 @@ public class ServerActivity extends AppCompatActivity
         return true;
     }
 
-    @Receiver(actions = MainActivity.ACTION_ON_UPDATE_SERVERS)
+    @Receiver(actions = AgsmKeys.Action.Server.ON_UPDATE_SERVERS)
     void onUpdateServers()
     {
         swipeContainer.setRefreshing(true);
     }
 
-    @Receiver(actions = MainActivity.ACTION_ON_SERVERS_UPDATED)
+    @Receiver(actions = AgsmKeys.Action.Server.ON_SERVERS_UPDATED)
     void onServersUpdated()
     {
         reinitialize();

@@ -5,11 +5,11 @@ import android.content.Intent;
 import com.google.android.apps.dashclock.api.DashClockExtension;
 import com.google.android.apps.dashclock.api.ExtensionData;
 
-import net.myacxy.agsm.activities.MainActivity;
 import net.myacxy.agsm.activities.MainActivity_;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
+import net.myacxy.agsm.utils.AgsmKeys;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EService;
@@ -97,10 +97,10 @@ public class AgsmDashClockExtension extends DashClockExtension
     } // onUpdateData
 
     @Receiver(actions = {
-            MainActivity.ACTION_ON_SERVER_ADDED,
-            MainActivity.ACTION_ON_SERVER_UPDATED,
-            MainActivity.ACTION_ON_SERVERS_UPDATED,
-            MainActivity.ACTION_ON_SERVER_REMOVED } )
+            AgsmKeys.Action.Server.ON_SERVER_ADDED,
+            AgsmKeys.Action.Server.ON_SERVER_UPDATED,
+            AgsmKeys.Action.Server.ON_SERVERS_UPDATED,
+            AgsmKeys.Action.Server.ON_SERVER_REMOVED } )
     void onServersUpdated()
     {
         onUpdateData(DashClockExtension.UPDATE_REASON_MANUAL);
