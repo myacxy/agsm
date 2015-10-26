@@ -30,22 +30,20 @@ import java.util.TimerTask;
 @EBean
 public class ServerOverviewGeneralAdapter extends BaseAdapter
 {
+    //<editor-fold desc="Members">
     private Map<String, String> map = new LinkedHashMap<>();
     private ArrayList<String> list = new ArrayList<>();
     private GameServerEntity gameServerEntity;
+    private long gameServerId;
 
     private static int POSITION_ENTRY_LAST_UPDATE = -1;
     private static int TIME_INTERVAL = 1000;
     private Timer timer;
     private ItemServerDetailsParameterView lastUpdateView;
 
-    @Bean(ActiveServerFinder.class)
-    ServerFinder serverFinder;
-
-    @RootContext
-    Context context;
-
-    private long gameServerId;
+    @Bean(ActiveServerFinder.class) ServerFinder serverFinder;
+    @RootContext                    Context context;
+    //</editor-fold>
 
     @Override
     public int getCount() {
@@ -104,7 +102,7 @@ public class ServerOverviewGeneralAdapter extends BaseAdapter
                 map.put("Status", "online");
                 map.put("Ping", String.format("%d ms", gameServerEntity.ping));
                 map.put("Game", gameServerEntity.game.name);
-                map.put("Host name", gameServerEntity.hostName.trim());
+                map.put("Host name", gameServerEntity.hostName);
                 map.put("Map name", gameServerEntity.mapName);
                 map.put("Maximum clients", String.valueOf(gameServerEntity.maxClients));
             }

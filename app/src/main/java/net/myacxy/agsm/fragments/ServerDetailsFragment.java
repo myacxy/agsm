@@ -5,6 +5,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import net.myacxy.agsm.R;
+import net.myacxy.agsm.interfaces.ServerManager;
+import net.myacxy.agsm.managers.JgsqServerManager;
 import net.myacxy.agsm.views.adapters.ServerDetailsParameterAdapter;
 
 import org.androidannotations.annotations.AfterViews;
@@ -17,14 +19,10 @@ import org.androidannotations.annotations.ViewById;
 @EFragment(R.layout.fragment_server_details)
 public class ServerDetailsFragment extends Fragment
 {
-    @ViewById(R.id.server_details_list)
-    RecyclerView detailsList;
-
-    @Bean(ServerDetailsParameterAdapter.class)
-    ServerDetailsParameterAdapter serverDetailsParameterAdapter;
-
-    @FragmentArg
-    long gameServerId;
+    @ViewById(R.id.rv_server_details)           RecyclerView detailsList;
+    @Bean(ServerDetailsParameterAdapter.class)  ServerDetailsParameterAdapter serverDetailsParameterAdapter;
+    @Bean(JgsqServerManager.class)              ServerManager serverManager;
+    @FragmentArg                                long gameServerId;
 
     @AfterViews
     void initialize()
@@ -35,6 +33,7 @@ public class ServerDetailsFragment extends Fragment
 
         serverDetailsParameterAdapter.setGameServerId(gameServerId);
         detailsList.setAdapter(serverDetailsParameterAdapter);
+
     }
 
     @UiThread

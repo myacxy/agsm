@@ -24,25 +24,23 @@ import java.util.List;
 @EBean
 public class ServerOverviewPlayersAdapter extends BaseAdapter
 {
-    private List<PlayerEntity> players = new ArrayList<>();
-
-    @Bean(ActiveServerFinder.class)
-    ServerFinder serverFinder;
-
-    @RootContext
-    Context context;
-
+    //<editor-fold desc="Members">
+    private List<PlayerEntity> clients = new ArrayList<>();
     private long gameServerId;
+
+    @Bean(ActiveServerFinder.class) ServerFinder serverFinder;
+    @RootContext                    Context context;
+    //</editor-fold>
 
     @Override
     public int getCount() {
-        return players.size();
+        return clients.size();
     }
 
     @Override
     public PlayerEntity getItem(int position)
     {
-        return players.get(position);
+        return clients.get(position);
     }
 
     @Override
@@ -65,7 +63,7 @@ public class ServerOverviewPlayersAdapter extends BaseAdapter
             item = (ItemServerOverviewPlayerView) convertView;
         }
 
-        item.bind(players.get(position));
+        item.bind(clients.get(position));
 
         return item;
     } // getView
@@ -76,8 +74,8 @@ public class ServerOverviewPlayersAdapter extends BaseAdapter
         GameServerEntity gameServerEntity = serverFinder.findById(gameServerId);
         if(gameServerEntity != null)
         {
-            players = gameServerEntity.getPlayers();
-            Collections.sort(players, new Comparator<PlayerEntity>()
+            clients = gameServerEntity.getClients();
+            Collections.sort(clients, new Comparator<PlayerEntity>()
             {
                 @Override
                 public int compare(PlayerEntity lhs, PlayerEntity rhs)

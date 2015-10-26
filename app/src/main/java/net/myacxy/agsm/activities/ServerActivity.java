@@ -8,12 +8,12 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
-import com.github.clans.fab.FloatingActionButton;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
@@ -41,7 +41,6 @@ import net.myacxy.jgsq.models.GameServer;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OptionsItem;
@@ -54,18 +53,18 @@ import org.androidannotations.annotations.ViewById;
 @OptionsMenu(R.menu.menu_server)
 public class ServerActivity extends AppCompatActivity
 {
-    @ViewById(R.id.server_toolbar)      Toolbar toolbar;
-    @ViewById(R.id.server_tabs)         TabLayout tabLayout;
-    @ViewById(R.id.server_viewpager)    ViewPager viewPager;
-    @ViewById(R.id.server_fab)          FloatingActionButton refreshButton;
+    @ViewById(R.id.tb_server)           Toolbar toolbar;
+    @ViewById(R.id.tl_server)           TabLayout tabLayout;
+    @ViewById(R.id.wp_server)           ViewPager viewPager;
+    @ViewById(R.id.srl_server)          SwipeRefreshLayout swipeContainer;
     @Bean(JgsqServerManager.class)      ServerManager serverManager;
     @Bean(JgsqGameFinder.class)         GameFinder gameFinder;
     @Bean(ActiveServerFinder.class)     ServerFinder serverFinder;
     @Bean(ActiveDatabaseManager.class)  DatabaseManager databaseManager;
-    @ViewById(R.id.server_backdrop)     ImageView backdrop;
-    @ViewById(R.id.collapsing_toolbar)  CollapsingToolbarLayout collapsingToolbarLayout;
+    @ViewById(R.id.iv_server_backdrop)  ImageView backdrop;
+    @ViewById(R.id.ctl_server)          CollapsingToolbarLayout collapsingToolbarLayout;
+    @Extra                              long gameServerId;
 
-    @Extra long gameServerId;
     private Game game;
     private GameServerEntity gameServerEntity;
     private ServerFragmentPagerAdapter adapter;
@@ -85,15 +84,8 @@ public class ServerActivity extends AppCompatActivity
                         GoogleMaterial.Icon.gmd_arrow_back).color(Color.WHITE).sizeDp(18)
         );
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        if(gameServerEntity.isOnline)
-        {
-            collapsingToolbarLayout.setTitle(gameServerEntity.hostName.trim());
-        }
-        else
-        {
-            String title = gameServerEntity.ipAddress + ":" + gameServerEntity.port;
-            collapsingToolbarLayout.setTitle(title);
-        }
+
+        collapsingToolbarLayout.setTitle(gameServerEntity.getHostName());
 
         setupViewPager(viewPager);
 
@@ -110,7 +102,44 @@ public class ServerActivity extends AppCompatActivity
                 getPackageName()
         );
         backdrop.setImageResource(drawableId);
+
+        setupSwipeContainer();
     } // initialize
+
+    private void setupSwipeContainer()
+    {
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                serverManager.update(
+                        game,
+                        gameServerEntity.ipAddress,
+                        gameServerEntity.port,
+                        new OnServerUpdatedListener() {
+                            @Override
+                            public void onServerUpdated(GameServer gameServer) {
+
+                                databaseManager.update(gameServer);
+
+                                if (gameServer.getProtocol().getResponseStatus() != ServerResponseStatus.OK) {
+                                    Snackbar.make(
+                                            swipeContainer,
+                                            gameServer.getProtocol().getResponseStatus().toString(),
+                                            Snackbar.LENGTH_SHORT
+                                    ).show();
+                                }
+
+                                Intent intent = new Intent(MainActivity.ACTION_ON_SERVER_UPDATED)
+                                        .putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerId);
+                                sendBroadcast(intent);
+
+                                reinitialize();
+                            }
+                        } // OnServerUpdatedListener
+                );
+            }
+        });
+    }
 
     private void setupViewPager(ViewPager viewPager)
     {
@@ -134,41 +163,6 @@ public class ServerActivity extends AppCompatActivity
         adapter.addFragment(detailsFragment, "Details");
         adapter.addFragment(rconFragment, "RCON");
         viewPager.setAdapter(adapter);
-    }
-
-
-    @Click(R.id.server_fab)
-    void refresh()
-    {
-        showProgress(refreshButton);
-
-        serverManager.update(
-                game,
-                gameServerEntity.ipAddress,
-                gameServerEntity.port,
-                new OnServerUpdatedListener() {
-                    @Override
-                    public void onServerUpdated(GameServer gameServer) {
-
-                        databaseManager.update(gameServer);
-
-                        if(gameServer.getProtocol().getResponseStatus() != ServerResponseStatus.OK) {
-                            Snackbar.make(
-                                    refreshButton,
-                                    gameServer.getProtocol().getResponseStatus().toString(),
-                                    Snackbar.LENGTH_SHORT
-                            ).show();
-                        }
-
-                        Intent intent = new Intent(MainActivity.ACTION_ON_SERVER_UPDATED)
-                                .putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerId);
-                        sendBroadcast(intent);
-
-                        reinitialize();
-                        hideProgress(refreshButton);
-                    }
-                } // OnServerUpdatedListener
-        );
     }
 
     @OptionsItem(R.id.action_server_remove)
@@ -207,19 +201,6 @@ public class ServerActivity extends AppCompatActivity
         dialog.show();
     }
 
-    @UiThread
-    protected void showProgress(FloatingActionButton fab)
-    {
-        fab.setIndeterminate(true);
-        fab.setClickable(false);
-    }
-
-    @UiThread
-    protected void hideProgress(FloatingActionButton fab)
-    {
-        fab.setIndeterminate(false);
-        fab.setClickable(true);
-    }
 
     @UiThread
     void reinitialize()
@@ -228,6 +209,7 @@ public class ServerActivity extends AppCompatActivity
 //        detailsFragment.update();
 //        rconFragment.update();
 
+        swipeContainer.setRefreshing(false);
         adapter.notifyDataSetChanged();
     }
 
@@ -241,13 +223,12 @@ public class ServerActivity extends AppCompatActivity
     @Receiver(actions = MainActivity.ACTION_ON_UPDATE_SERVERS)
     void onUpdateServers()
     {
-        showProgress(refreshButton);
+        swipeContainer.setRefreshing(true);
     }
 
     @Receiver(actions = MainActivity.ACTION_ON_SERVERS_UPDATED)
     void onServersUpdated()
     {
-        hideProgress(refreshButton);
         reinitialize();
     }
 } // ServerFragment

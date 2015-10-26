@@ -7,12 +7,19 @@
     android:background="@android:color/white"
     >
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/server_viewpager"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/srl_server"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/wp_server"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -23,7 +30,7 @@
         >
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
+            android:id="@+id/ctl_server"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
@@ -32,7 +39,7 @@
             >
 
             <ImageView
-                android:id="@+id/server_backdrop"
+                android:id="@+id/iv_server_backdrop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
@@ -42,7 +49,7 @@
                 />
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/server_toolbar"
+                android:id="@+id/tb_server"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@android:color/transparent"
@@ -53,7 +60,7 @@
         </android.support.design.widget.CollapsingToolbarLayout>
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/server_tabs"
+            android:id="@+id/tl_server"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabGravity="fill"
@@ -61,23 +68,5 @@
             />
 
     </android.support.design.widget.AppBarLayout>
-
-    <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/server_fab"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="11dp"
-        android:layout_marginEnd="13dp"
-        android:layout_marginRight="13dp"
-        app:fab_shadowXOffset="1dp"
-        app:fab_shadowYOffset="3dp"
-        app:fab_colorNormal="?attr/colorAccent"
-        app:fab_colorPressed="@color/complement_color3"
-        app:fab_progress_color="?attr/colorPrimary"
-        app:fab_progress_showBackground="false"
-        app:layout_behavior="net.myacxy.agsm.utils.FloatingActionButtonBehavior"
-        android:src="@drawable/ic_refresh_white_24dp"
-        />
 
 </android.support.design.widget.CoordinatorLayout>
