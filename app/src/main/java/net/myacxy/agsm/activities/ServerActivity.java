@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -54,24 +55,37 @@ import org.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.activity_server)
 @OptionsMenu(R.menu.menu_server)
-public class ServerActivity extends AppCompatActivity
+public class ServerActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener
 {
     @ViewById(R.id.tb_server)           Toolbar toolbar;
     @ViewById(R.id.tl_server)           TabLayout tabLayout;
-    @ViewById(R.id.wp_server)           ViewPager viewPager;
+    @ViewById(R.id.vp_server)           ViewPager viewPager;
     @ViewById(R.id.srl_server)          SwipeRefreshLayout swipeContainer;
+    @ViewById(R.id.iv_server_backdrop)  ImageView backdrop;
+    @ViewById(R.id.ctl_server)          CollapsingToolbarLayout collapsingToolbarLayout;
+    @ViewById(R.id.abl_server)          AppBarLayout appBarLayout;
     @Bean(JgsqServerManager.class)      ServerManager serverManager;
     @Bean(JgsqGameFinder.class)         GameFinder gameFinder;
     @Bean(ActiveServerFinder.class)     ServerFinder serverFinder;
     @Bean(ActiveDatabaseManager.class)  DatabaseManager databaseManager;
     @Bean(GreenEventManager.class)      EventManager eventManager;
-    @ViewById(R.id.iv_server_backdrop)  ImageView backdrop;
-    @ViewById(R.id.ctl_server)          CollapsingToolbarLayout collapsingToolbarLayout;
     @Extra                              long gameServerId;
 
     private Game game;
     private GameServerEntity gameServerEntity;
     private ServerFragmentPagerAdapter adapter;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        appBarLayout.addOnOffsetChangedListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        appBarLayout.removeOnOffsetChangedListener(this);
+        super.onPause();
+    }
 
     @AfterViews
     void initialize()
@@ -90,7 +104,6 @@ public class ServerActivity extends AppCompatActivity
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         collapsingToolbarLayout.setTitle(gameServerEntity.getHostName());
-
         setupViewPager(viewPager);
 
         tabLayout.post(new Runnable() {
@@ -234,5 +247,10 @@ public class ServerActivity extends AppCompatActivity
     void onServersUpdated()
     {
         reinitialize();
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        swipeContainer.setEnabled(verticalOffset == 0);
     }
 } // ServerFragment
