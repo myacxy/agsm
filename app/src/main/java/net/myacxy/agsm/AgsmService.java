@@ -34,18 +34,18 @@ import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 @EService
 public class AgsmService extends Service
 {
+    private Looper looper;
+    private UpdateServersHandler serviceHandler;
+
     @Bean(JgsqServerManager.class)      ServerManager serverManager;
     @Bean(ActiveDatabaseManager.class)  DatabaseManager databaseManager;
     @Bean(ActiveServerFinder.class)     ServerFinder serverFinder;
     @Bean(JgsqGameFinder.class)         GameFinder gameFinder;
 
-    private Looper looper;
-    private UpdateServersHandler serviceHandler;
-
     @Override
     public void onCreate()
     {
-        stopService(new Intent(getApplicationContext(), AgsmService.class));
+        stopService(AgsmService_.intent(getApplication()).get());
         HandlerThread thread = new HandlerThread("AgsmService", THREAD_PRIORITY_BACKGROUND);
         thread.start();
         looper = thread.getLooper();
@@ -84,7 +84,7 @@ public class AgsmService extends Service
         {
             startId = msg.arg1;
             gameServerEntities = serverFinder.findAll();
-            if(gameServerEntities != null)
+            if(gameServerEntities != null && gameServerEntities.size() != 0)
             {
                 Intent intent = new Intent(AgsmKeys.Action.Server.ON_UPDATE_SERVERS);
                 sendBroadcast(intent);
@@ -99,6 +99,7 @@ public class AgsmService extends Service
             {
                 count = 0;
                 stopSelf(startId);
+                getLooper().quit();
             }
         } // handleMessage
 
@@ -121,25 +122,26 @@ public class AgsmService extends Service
         @Override
         public void onServerUpdated(GameServer gameServer)
         {
-
             databaseManager.update(gameServer);
-
-            if(--count == 0)
-            {
-                onAllServerUpdated();
-            }
 
             long gameServerId = databaseManager.getGameServerEntity(gameServer).getId();
             Intent intent = new Intent(AgsmKeys.Action.Server.ON_SERVER_UPDATED)
                     .putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerId);
             sendBroadcast(intent);
+
+            if(--count == 0)
+            {
+                onAllServerUpdated();
+            }
         } // onServerUpdated
 
         private void onAllServerUpdated()
         {
             Intent intent = new Intent(AgsmKeys.Action.Server.ON_SERVERS_UPDATED);
             sendBroadcast(intent);
+
             stopSelf(startId);
+            getLooper().quit();
         }
     } // UpdateServersHandler
 } // AgsmService
