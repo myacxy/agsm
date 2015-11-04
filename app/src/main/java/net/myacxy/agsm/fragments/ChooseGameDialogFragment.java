@@ -15,6 +15,7 @@ import net.myacxy.jgsq.models.Game;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.solovyev.android.views.llm.LinearLayoutManager;
@@ -49,7 +50,16 @@ public class ChooseGameDialogFragment extends DialogFragment
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
         dialog.requestWindowFeature(STYLE_NO_TITLE);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         return dialog;
+    }
+
+    @Click(R.id.bu_dcg_none)
+    protected void onNoneClicked() {
+        EventBus.getDefault().post(new GameSelectedEvent(null));
+        dismiss();
     }
 }

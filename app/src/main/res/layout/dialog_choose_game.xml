@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minWidth="@dimen/dialog_width"
     android:orientation="vertical"
     android:background="@android:color/white"
     >
@@ -10,10 +11,11 @@
     <!--Header-->
     <RelativeLayout
         android:id="@+id/rl_dialog_choose_game"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
+        android:layout_marginRight="24dp"
         android:layout_marginBottom="20dp"
         >
 
@@ -37,7 +39,7 @@
         android:layout_below="@id/rl_dialog_choose_game"
         />
 
-    <!--Games-->
+    <!--Content-->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_dcg_games"
         android:layout_width="match_parent"
@@ -46,5 +48,33 @@
         android:scrollbars="vertical"
         android:orientation="vertical"
         />
+
+    <!--Divider-->
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/rv_dcg_games"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_margin="8dp"
+        android:layout_below="@id/divider2"
+        >
+
+        <!--None-->
+        <Button
+            android:id="@+id/bu_dcg_none"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="None"
+            style="@style/AppCompat.Button.Flat.Dialog"
+            />
+
+    </RelativeLayout>
 
 </RelativeLayout>

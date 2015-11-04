@@ -29,4 +29,8 @@
     <color name="ideal_foreground_color">#FFFFFFFF</color>
     <color name="spinner_base_color">#44000000</color>
 
+    <color name="flat_pressed">#66999999</color>
+    <color name="flat_disabled_text">#40000000</color>
+    <color name="flat_normal_text">#000000</color>
+
 </resources>

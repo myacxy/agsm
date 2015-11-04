@@ -281,6 +281,12 @@ public class AddServerActivity extends AppCompatActivity
     @Subscribe
     public void onGameSelected(GameSelectedEvent event)
     {
+        if(event.game == null) {
+            selectedGame = null;
+            selectedGameTextView.setText("None");
+            return;
+        }
+
         selectedGame = event.game.name;
         selectedGameTextView.setText(selectedGame);
     }

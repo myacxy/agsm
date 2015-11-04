@@ -34,16 +34,12 @@
     <dimen name="font_script">18sp</dimen>
     <dimen name="font_tiny">13sp</dimen>
 
-    <!-- font sizes 12 pt-->
-    <!--<dimen name="font_Huge">55sp</dimen>-->
-    <!--<dimen name="font_huge">55sp</dimen>-->
-    <!--<dimen name="font_LARGE">46sp</dimen>-->
-    <!--<dimen name="font_Large">38sp</dimen>-->
-    <!--<dimen name="font_large">32sp</dimen>-->
-    <!--<dimen name="font_normal">27sp</dimen>-->
-    <!--<dimen name="font_small">24sp</dimen>-->
-    <!--<dimen name="font_footnote">22sp</dimen>-->
-    <!--<dimen name="font_script">20sp</dimen>-->
-    <!--<dimen name="font_tiny">18sp</dimen>-->
+    <dimen name="btn_flat_corner_radius">1dp</dimen>
+    <dimen name="btn_flat_min_width">88dp</dimen>
+    <dimen name="btn_flat_min_height">36dp</dimen>
+    <dimen name="btn_flat_padding">8dp</dimen>
+    <dimen name="btn_flat_margin">4dp</dimen>
+
+    <dimen name="dialog_width">320dp</dimen>
 
 </resources>
