@@ -10,7 +10,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -51,10 +50,10 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
     public static final String EXTRA_UPDATE_REASON = "net.myacxy.agsm.extra.UPDATE_REASON";
     public static final String EXTRA_GAME_SERVER_ID = "net.myacxy.agsm.extra.GAME_SERVER_ID";
 
-    private static final int IDENTIFIER_HOME = -1;
-    private static final int IDENTIFIER_NOTIFICATIONS = -2;
-    private static final int IDENTIFIER_SETTINGS = -3;
-    private static final int IDENTIFIER_ADD_SERVER = -4;
+    private static final int IDENTIFIER_HOME = -10;
+    private static final int IDENTIFIER_NOTIFICATIONS = -11;
+    private static final int IDENTIFIER_SETTINGS = -12;
+    private static final int IDENTIFIER_ADD_SERVER = -13;
     // 'Add Server' item is always last but drawer positions start a 1
     // Home + Notifications + Settings + Server Section Header = 4 items
     private static final int DRAWER_SERVER_ITEM_OFFSET = 4;
@@ -103,24 +102,27 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
                 .addDrawerItems(
                         new PrimaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_home)
-                                .withName(R.string.drawer_home_title),
+                                .withName(R.string.drawer_home_title)
+                                .withIdentifier(IDENTIFIER_HOME),
                         new PrimaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_notifications)
-                                .withName(R.string.drawer_notifications_title),
+                                .withName(R.string.drawer_notifications_title)
+                                .withIdentifier(IDENTIFIER_NOTIFICATIONS),
                         new PrimaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_settings)
-                                .withName(R.string.drawer_settings_title),
+                                .withName(R.string.drawer_settings_title)
+                                .withIdentifier(IDENTIFIER_SETTINGS),
                         new SectionDrawerItem()
                                 .withName(R.string.drawer_servers_title),
                         new SecondaryDrawerItem()
-                                .withIcon(GoogleMaterial.Icon.gmd_add)
+                                .withIcon(GoogleMaterial.Icon.gmd_plus)
                                 .withName("Add Server")
                                 .withIdentifier(IDENTIFIER_ADD_SERVER)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
-                    public boolean onItemClick(AdapterView<?> adapterView, View view, int position, long id, IDrawerItem iDrawerItem) {
-                        int identifier = iDrawerItem.getIdentifier();
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        int identifier = drawerItem.getIdentifier();
 
                         switch (identifier) {
                             case IDENTIFIER_HOME:
@@ -187,7 +189,6 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
     {
         super.onResume();
         onServersUpdated();
-        drawer.setSelection(0);
     }
 
     @Override
@@ -236,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
                     .withBadge(badge)
                     .withIdentifier(server.getId().intValue());
             int position = drawer.getDrawerItems().size() - 1;
-            drawer.addItem(item, position);
+            drawer.addItemAtPosition(item, position);
         }
     }
 
@@ -290,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
                         .withBadge(badge)
                         .withIdentifier(server.getId().intValue());
                 int position = i + DRAWER_SERVER_ITEM_OFFSET;
-                drawer.updateItem(item, position);
+                drawer.updateItemAtPosition(item, position);
             }
         }
 
@@ -316,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
         else badge = String.valueOf(players);
 
         // add new server item in front of 'add server' item
-        drawer.addItem(
+        drawer.addItemAtPosition(
                 new SecondaryDrawerItem()
                         .withIcon(icon)
                         .withName(server.getHostName())

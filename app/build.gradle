@@ -63,15 +63,18 @@ dependencies {
     // Material Design helpers
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.github.clans:fab:1.6.1'
-    compile('com.mikepenz:materialdrawer:3.1.2@aar') {
+    compile('com.mikepenz:materialdrawer:4.4.6@aar') {
         transitive = true
+        exclude module: "iconics-core"
     }
     compile 'com.balysv:material-ripple:1.0.2'
     compile 'me.zhanghai.android.materialprogressbar:library:1.1.4'
     compile 'org.solovyev.android.views:linear-layout-manager:0.5@aar'
 
     // FontAwesome + Material Design Icons
-    compile 'com.mikepenz:iconics:1.6.2@aar'
+    compile 'com.mikepenz:iconics-core:2.1.0@aar'
+    compile 'com.mikepenz:google-material-typeface:2.1.2.1@aar'
+    compile 'com.mikepenz:fontawesome-typeface:4.4.0.1@aar'
 
     compile 'joda-time:joda-time:2.8.2'
 
