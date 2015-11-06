@@ -117,11 +117,14 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
                         new SecondaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_plus)
                                 .withName("Add Server")
+                                .withSelectable(false)
                                 .withIdentifier(IDENTIFIER_ADD_SERVER)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        if (drawerItem == null) return false;
+
                         int identifier = drawerItem.getIdentifier();
 
                         switch (identifier) {
@@ -189,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
     {
         super.onResume();
         onServersUpdated();
+        drawer.setSelectionAtPosition(0);
     }
 
     @Override
@@ -235,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
                     .withIcon(icon)
                     .withName(name)
                     .withBadge(badge)
+                    .withSelectable(false)
                     .withIdentifier(server.getId().intValue());
             int position = drawer.getDrawerItems().size() - 1;
             drawer.addItemAtPosition(item, position);
@@ -289,6 +294,7 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
                         .withIcon(icon)
                         .withName(name)
                         .withBadge(badge)
+                        .withSelectable(false)
                         .withIdentifier(server.getId().intValue());
                 int position = i + DRAWER_SERVER_ITEM_OFFSET;
                 drawer.updateItemAtPosition(item, position);
@@ -322,6 +328,7 @@ public class MainActivity extends AppCompatActivity implements ServerUpdateListe
                         .withIcon(icon)
                         .withName(server.getHostName())
                         .withBadge(badge)
+                        .withSelectable(false)
                         .withIdentifier(server.getId().intValue()),
                 drawer.getDrawerItems().size() - 1);
     }

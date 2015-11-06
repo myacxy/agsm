@@ -8,12 +8,14 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -182,13 +184,19 @@ public class ServerActivity extends AppCompatActivity implements AppBarLayout.On
         viewPager.setAdapter(adapter);
     }
 
+
+    @OptionsItem(R.id.action_server_edit)
+    void edit(MenuItem menuItem)
+    {
+        Toast.makeText(ServerActivity.this, "edit", Toast.LENGTH_SHORT).show();
+    }
+
     @OptionsItem(R.id.action_server_remove)
     void remove(MenuItem menuItem)
     {
-        // TODO themed button color?
-        AlertDialog dialog = new AlertDialog.Builder(this)
+        final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setPositiveButton(
-                        android.R.string.yes,
+                        "Remove",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -204,17 +212,23 @@ public class ServerActivity extends AppCompatActivity implements AppBarLayout.On
                         })
                 .setNegativeButton(
                         android.R.string.cancel,
-                        new DialogInterface.OnClickListener()
-                        {
+                        new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which)
-                            {
+                            public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
                         })
-                .setTitle("Remove Server")
-                .setMessage("Are you sure?")
+                .setMessage("Are you sure you want to remove this server?")
                 .create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+                        .setTextColor(ContextCompat.getColor(ServerActivity.this, R.color.primary));
+                dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+                        .setTextColor(ContextCompat.getColor(ServerActivity.this, R.color.primary));
+            }
+        });
         dialog.show();
     }
 
