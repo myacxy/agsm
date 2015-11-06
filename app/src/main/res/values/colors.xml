@@ -12,13 +12,11 @@
     <color name="secondary_color4">#FFB800</color>
     <color name="secondary_color5">#EFAD00</color>
 
-
     <color name="tertiary_color1">#FF8E70</color>
     <color name="tertiary_color2">#FF6841</color>
     <color name="tertiary_color3">#FF4413</color>
     <color name="tertiary_color4">#FF3500</color>
     <color name="tertiary_color5">#EF3200</color>
-
 
     <color name="complement_color1">#FFBD70</color>
     <color name="complement_color2">#FFA741</color>
@@ -33,4 +31,37 @@
     <color name="flat_disabled_text">#40000000</color>
     <color name="flat_normal_text">#000000</color>
 
+    <!--light theme-->
+    <color name="light_base">@color/md_black_1000</color>
+    <color name="light_text">@color/md_grey_900</color>
+    <color name="light_secondary_text">@color/md_grey_600</color>
+    <color name="light_icon">@color/md_grey_600</color>
+    <color name="light_disabled">@color/md_grey_500</color>
+    <color name="light_hint">@color/md_grey_500</color>
+    <color name="light_divider">@color/md_grey_300</color>
+
+    <color name="light_status_bar">@color/md_grey_300</color>
+    <color name="light_app_bar">@color/md_grey_100</color>
+    <color name="light_background">@color/md_grey_50</color>
+    <color name="light_card">@color/md_white_1000</color>
+    <color name="light_dialog">@color/md_white_1000</color>
+
+    <color name="black30">#b3b3b3</color>
+    <color name="black70">#4d4d4d</color>
+    <color name="black88">#1f1f1f</color>
+
+    <!--dark theme-->
+    <color name="dark_base">@color/md_white_1000</color>
+    <color name="dark_text">@color/md_white_1000</color>
+    <color name="dark_secondary_text">@color/black30</color>
+    <color name="dark_icon">@color/black30</color>
+    <color name="dark_disabled">@color/black70</color>
+    <color name="dark_hint">@color/black70</color>
+    <color name="dark_divider">@color/black88</color>
+
+    <color name="dark_status_bar">@color/md_black_1000</color>
+    <color name="dark_app_bar">@color/md_grey_900</color>
+    <color name="dark_background">#303030</color>
+    <color name="dark_card">@color/md_grey_800</color>
+    <color name="dark_dialog">@color/md_grey_800</color>
 </resources>
