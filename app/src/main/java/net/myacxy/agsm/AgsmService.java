@@ -9,7 +9,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 
-import net.myacxy.agsm.activities.MainActivity;
 import net.myacxy.agsm.interfaces.DatabaseManager;
 import net.myacxy.agsm.interfaces.GameFinder;
 import net.myacxy.agsm.interfaces.OnServerUpdatedListener;
@@ -19,8 +18,8 @@ import net.myacxy.agsm.managers.ActiveDatabaseManager;
 import net.myacxy.agsm.managers.JgsqServerManager;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
-import net.myacxy.agsm.utils.AgsmKeys;
 import net.myacxy.agsm.utils.JgsqGameFinder;
+import net.myacxy.agsm.utils.SharedItems;
 import net.myacxy.jgsq.models.Game;
 import net.myacxy.jgsq.models.GameServer;
 
@@ -86,7 +85,7 @@ public class AgsmService extends Service
             gameServerEntities = serverFinder.findAll();
             if(gameServerEntities != null && gameServerEntities.size() != 0)
             {
-                Intent intent = new Intent(AgsmKeys.Action.Server.ON_UPDATE_SERVERS);
+                Intent intent = new Intent(SharedItems.Action.Server.ON_UPDATE_SERVERS);
                 sendBroadcast(intent);
 
                 count = gameServerEntities.size();
@@ -105,8 +104,8 @@ public class AgsmService extends Service
 
         private void updateServer(GameServerEntity gameServerEntity)
         {
-            Intent intent = new Intent(AgsmKeys.Action.Server.ON_UPDATE_SERVER)
-                    .putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerEntity.getId());
+            Intent intent = new Intent(SharedItems.Action.Server.ON_UPDATE_SERVER)
+                    .putExtra(SharedItems.Extra.GAME_SERVER_ID, gameServerEntity.getId());
             sendBroadcast(intent);
 
             Game game = gameFinder.find(gameServerEntity.game.name);
@@ -125,8 +124,8 @@ public class AgsmService extends Service
             databaseManager.update(gameServer);
 
             long gameServerId = databaseManager.getGameServerEntity(gameServer).getId();
-            Intent intent = new Intent(AgsmKeys.Action.Server.ON_SERVER_UPDATED)
-                    .putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerId);
+            Intent intent = new Intent(SharedItems.Action.Server.ON_SERVER_UPDATED)
+                    .putExtra(SharedItems.Extra.GAME_SERVER_ID, gameServerId);
             sendBroadcast(intent);
 
             if(--count == 0)
@@ -137,7 +136,7 @@ public class AgsmService extends Service
 
         private void onAllServerUpdated()
         {
-            Intent intent = new Intent(AgsmKeys.Action.Server.ON_SERVERS_UPDATED);
+            Intent intent = new Intent(SharedItems.Action.Server.ON_SERVERS_UPDATED);
             sendBroadcast(intent);
 
             stopSelf(startId);

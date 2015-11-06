@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import net.myacxy.agsm.utils.AgsmKeys;
+import net.myacxy.agsm.utils.SharedItems;
 
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.ReceiverAction;
@@ -19,7 +19,7 @@ public class BootReceiver extends BroadcastReceiver
                 new Intent(
                         context,
                         PeriodicRefreshReceiver_.class
-                ).setAction(AgsmKeys.Action.Service.ENSURE_PERIODIC_REFRESH)
+                ).setAction(SharedItems.Action.Service.ENSURE_PERIODIC_REFRESH)
         );
     }
 

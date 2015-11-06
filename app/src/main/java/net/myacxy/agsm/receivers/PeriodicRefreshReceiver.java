@@ -8,8 +8,7 @@ import android.os.SystemClock;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
 import net.myacxy.agsm.AgsmService_;
-import net.myacxy.agsm.activities.MainActivity;
-import net.myacxy.agsm.utils.AgsmKeys;
+import net.myacxy.agsm.utils.SharedItems;
 
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.ReceiverAction;
@@ -26,21 +25,21 @@ public class PeriodicRefreshReceiver extends WakefulBroadcastReceiver
         // empty, will be overridden in generated subclass
     }
 
-    @ReceiverAction(actions = AgsmKeys.Action.Service.PERIODIC_REFRESH)
+    @ReceiverAction(actions = SharedItems.Action.Service.PERIODIC_REFRESH)
     void periodicRefresh(Context context)
     {
-        startWakefulService(context, getIntent(context, MainActivity.UPDATE_REASON_PERIODIC));
+        startWakefulService(context, getIntent(context, SharedItems.UpdateReason.PERIODIC));
     }
 
     private Intent getIntent(Context context, int reason)
     {
         return AgsmService_.intent(context)
-                .action(AgsmKeys.Action.Server.UPDATE_SERVERS)
-                .extra(MainActivity.EXTRA_UPDATE_REASON, reason)
+                .action(SharedItems.Action.Server.UPDATE_SERVERS)
+                .extra(SharedItems.Extra.UPDATE_REASON, reason)
                 .get();
     }
 
-    @ReceiverAction(actions = AgsmKeys.Action.Service.ENSURE_PERIODIC_REFRESH)
+    @ReceiverAction(actions = SharedItems.Action.Service.ENSURE_PERIODIC_REFRESH)
     void ensurePeriodicRefresh(Context context)
     {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
@@ -49,7 +48,7 @@ public class PeriodicRefreshReceiver extends WakefulBroadcastReceiver
                 new Intent(
                         context,
                         PeriodicRefreshReceiver_.class
-                ).setAction(AgsmKeys.Action.Service.PERIODIC_REFRESH),
+                ).setAction(SharedItems.Action.Service.PERIODIC_REFRESH),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         alarmManager.cancel(pendingIntent);

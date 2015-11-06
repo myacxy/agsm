@@ -1,7 +1,6 @@
 package net.myacxy.agsm.utils;
 
-
-public class AgsmKeys
+public class SharedItems
 {
     public static class Action
     {
@@ -23,5 +22,26 @@ public class AgsmKeys
             public static final String ENSURE_PERIODIC_REFRESH = "net.myacxy.agsm.action.ENSURE_PERIODIC_REFRESH";
             public static final String PERIODIC_REFRESH = "net.myacxy.agsm.action.PERIODIC_REFRESH";
         }
+    }
+
+    public static class UpdateReason
+    {
+        public static final int MANUAL = 0;
+        public static final int PERIODIC = 1;
+    }
+
+    public static class Identifier
+    {
+        public static final int HOME = -10;
+        public static final int NOTIFICATIONS = -11;
+        public static final int SETTINGS = -12;
+        public static final int ADD_SERVER = -13;
+
+    }
+
+    public static class Extra
+    {
+        public static final String UPDATE_REASON = "net.myacxy.agsm.extra.UPDATE_REASON";
+        public static final String GAME_SERVER_ID = "net.myacxy.agsm.extra.GAME_SERVER_ID";
     }
 }

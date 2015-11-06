@@ -9,7 +9,7 @@ import net.myacxy.agsm.activities.MainActivity_;
 import net.myacxy.agsm.interfaces.ServerFinder;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
-import net.myacxy.agsm.utils.AgsmKeys;
+import net.myacxy.agsm.utils.SharedItems;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EService;
@@ -97,10 +97,10 @@ public class AgsmDashClockExtension extends DashClockExtension
     } // onUpdateData
 
     @Receiver(actions = {
-            AgsmKeys.Action.Server.ON_SERVER_ADDED,
-            AgsmKeys.Action.Server.ON_SERVER_UPDATED,
-            AgsmKeys.Action.Server.ON_SERVERS_UPDATED,
-            AgsmKeys.Action.Server.ON_SERVER_REMOVED } )
+            SharedItems.Action.Server.ON_SERVER_ADDED,
+            SharedItems.Action.Server.ON_SERVER_UPDATED,
+            SharedItems.Action.Server.ON_SERVERS_UPDATED,
+            SharedItems.Action.Server.ON_SERVER_REMOVED } )
     void onServersUpdated()
     {
         onUpdateData(DashClockExtension.UPDATE_REASON_MANUAL);

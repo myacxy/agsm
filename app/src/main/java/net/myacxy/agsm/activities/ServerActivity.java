@@ -38,8 +38,8 @@ import net.myacxy.agsm.managers.GreenEventManager;
 import net.myacxy.agsm.managers.JgsqServerManager;
 import net.myacxy.agsm.models.GameServerEntity;
 import net.myacxy.agsm.utils.ActiveServerFinder;
-import net.myacxy.agsm.utils.AgsmKeys;
 import net.myacxy.agsm.utils.JgsqGameFinder;
+import net.myacxy.agsm.utils.SharedItems;
 import net.myacxy.agsm.views.adapters.ServerFragmentPagerAdapter;
 import net.myacxy.jgsq.helpers.ServerResponseStatus;
 import net.myacxy.jgsq.models.Game;
@@ -148,8 +148,8 @@ public class ServerActivity extends AppCompatActivity implements AppBarLayout.On
                                     ).show();
                                 }
 
-                                Intent intent = new Intent(AgsmKeys.Action.Server.ON_SERVER_UPDATED)
-                                        .putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerId);
+                                Intent intent = new Intent(SharedItems.Action.Server.ON_SERVER_UPDATED)
+                                        .putExtra(SharedItems.Extra.GAME_SERVER_ID, gameServerId);
                                 sendBroadcast(intent);
 
                                 reinitialize();
@@ -203,8 +203,8 @@ public class ServerActivity extends AppCompatActivity implements AppBarLayout.On
                                 // remove database entry
                                 databaseManager.remove(gameServerEntity);
                                 // notify receivers
-                                Intent intent = new Intent(AgsmKeys.Action.Server.ON_SERVER_REMOVED);
-                                intent.putExtra(MainActivity.EXTRA_GAME_SERVER_ID, gameServerId);
+                                Intent intent = new Intent(SharedItems.Action.Server.ON_SERVER_REMOVED);
+                                intent.putExtra(SharedItems.Extra.GAME_SERVER_ID, gameServerId);
                                 sendBroadcast(intent);
                                 // close this activity
                                 finish();
@@ -251,13 +251,13 @@ public class ServerActivity extends AppCompatActivity implements AppBarLayout.On
         return true;
     }
 
-    @Receiver(actions = AgsmKeys.Action.Server.ON_UPDATE_SERVERS)
+    @Receiver(actions = SharedItems.Action.Server.ON_UPDATE_SERVERS)
     void onUpdateServers()
     {
         swipeContainer.setRefreshing(true);
     }
 
-    @Receiver(actions = AgsmKeys.Action.Server.ON_SERVERS_UPDATED)
+    @Receiver(actions = SharedItems.Action.Server.ON_SERVERS_UPDATED)
     void onServersUpdated()
     {
         reinitialize();
