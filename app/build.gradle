@@ -10,6 +10,10 @@ def getRevision = { ->
     return stdout.toString().trim()
 }
 
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
@@ -43,7 +47,9 @@ apt {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+//    compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    compile 'com.github.myacxy:jgsq:2982edb'
 
     apt 'org.androidannotations:androidannotations:4.0-SNAPSHOT'
     compile 'org.androidannotations:androidannotations-api:4.0-SNAPSHOT'
