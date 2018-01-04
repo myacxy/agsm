@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ public class ItemServerCardView extends LinearLayout
     private GameServerEntity server;
 
     @ViewById(R.id.tv_sc_title)           TextView title;
+    @ViewById(R.id.iv_sc_password)        ImageView password;
     @ViewById(R.id.tv_sc_status)          TextView status;
     @ViewById(R.id.tv_sc_ping)            TextView ping;
     @ViewById(R.id.tv_sc_game)            TextView game;
@@ -93,6 +95,7 @@ public class ItemServerCardView extends LinearLayout
                             server.getClients(),
                             server.maxClients)
             );
+            password.setVisibility(server.isPasswordProtected ? VISIBLE : GONE);
         }
         else
         {
@@ -100,6 +103,7 @@ public class ItemServerCardView extends LinearLayout
             ping.setText("\u2014");
             map.setText("\u2014");
             playerCount.setText("\u2014");
+            password.setVisibility(GONE);
         }
         game.setText(server.game.alternativeName);
     }

@@ -41,6 +41,8 @@ public class GameServerEntity extends Model
     public TreeMap<String, String> parameters;
     @Column(name = "last_update")
     public DateTime lastUpdate;
+    @Column(name = "password_protected")
+    public boolean isPasswordProtected;
 
     public GameServerEntity()
     {
@@ -62,6 +64,7 @@ public class GameServerEntity extends Model
         parameters = server.parameters;
         rcon = server.rcon;
         queryPort = server.queryPort;
+        isPasswordProtected = server.isPasswordProtected;
     }
 
     public List<PlayerEntity> getClients()
